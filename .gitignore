@@ -1,0 +1,8 @@
+data/raw/
+data/trimmed/
+*.fastq
+*.fastq.gz
+*.bam
+*.bam.bai
+*.vcf
+reference/*.fasta
