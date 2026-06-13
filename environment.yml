@@ -1,0 +1,27 @@
+name: tb-resistance
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - numpy
+  - pandas
+  - scipy
+  - statsmodels
+  - scikit-learn
+  - umap-learn
+  - matplotlib
+  - seaborn
+  - jupyter
+  - nbformat
+  - sra-tools
+  - bwa
+  - samtools
+  - bcftools
+  - fastqc
+  - multiqc
+  - requests
+  - pip:
+    - biopython
