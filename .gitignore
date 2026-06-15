@@ -1,8 +1,43 @@
-data/raw/
-data/trimmed/
+# Genomics data - never commit raw sequencing or alignment files
 *.fastq
 *.fastq.gz
+*.fq
+*.fq.gz
 *.bam
 *.bam.bai
+*.cram
+*.cram.crai
+*.sam
 *.vcf
+*.vcf.gz
+*.bcf
+
+# Genome assemblies (large FASTA files)
+data/genomes/
 reference/*.fasta
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+
+# Environment
+.env
+environment.yml
+miniforge.sh
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp
+*.tmp
+*.temp

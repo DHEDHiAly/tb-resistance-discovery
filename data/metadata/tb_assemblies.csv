@@ -1,0 +1,3 @@
+assembly_acc,assembly_name,organism,ftp_path,biosample,bioproject,assembly_level
+GCF_000648395.1,VRF CWCF MDR 670,Mycobacterium tuberculosis CWCFVRF MDRTB 670 (high G+C Gram-positive bacteria),ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/648/395/GCF_000648395.1_VRF_CWCF_MDR_670,SAMN02630624,,
+GCF_000023625.1,ASM2362v1,Mycobacterium tuberculosis KZN 1435 (high G+C Gram-positive bacteria),ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/023/625/GCF_000023625.1_ASM2362v1,SAMN00763683,,
