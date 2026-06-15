@@ -1,0 +1,10 @@
+feature,importance
+min_dist_to_known_residue,0.59019375
+is_known_hotspot,0.30420586
+grantham,0.02747514
+is_transition,0.018412655
+blosum62,0.01773579
+rel_position,0.01611416
+codon_position,0.015720258
+near_terminus,0.010142383
+n_nuc_changes,0.0
