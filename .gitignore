@@ -41,3 +41,11 @@ Thumbs.db
 # Temp
 *.tmp
 *.temp
+
+# Large downloaded data (not committed to git)
+data/cryptic/*.csv.gz
+data/cryptic/cache/
+data/pdb/
+analysis/results/hotspot_model/*.pkl
+analysis/results/forecasting/xgboost_model.pkl
+analysis/results/forecasting/all_mutations_scored.csv

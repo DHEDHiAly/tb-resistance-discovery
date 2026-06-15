@@ -1,0 +1,6 @@
+tier,count,label
+0,30,Known WHO
+1,22,Tier 1 (FDR-sig)
+2,32,Tier 2 (low power)
+3,27,Tier 3 (no pheno)
+4,179,Tier 4 (forecast-only)

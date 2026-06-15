@@ -1,0 +1,75 @@
+{
+  "analyses": [
+    {
+      "mutation": "V170F",
+      "gene": "rpoB",
+      "position": 170,
+      "rank": 299,
+      "hotspot_prob": 0.8275,
+      "emergence_score": 0.2029,
+      "fitness_score": -0.2906,
+      "resistance_score": 0.3868,
+      "evo_score": 0.4,
+      "blosum62": -1,
+      "is_transition": false,
+      "primary_barrier": "evolutionary"
+    },
+    {
+      "mutation": "I491F",
+      "gene": "rpoB",
+      "position": 491,
+      "rank": 265,
+      "hotspot_prob": 0.8515,
+      "emergence_score": 0.2291,
+      "fitness_score": -0.1882,
+      "resistance_score": 0.3861,
+      "evo_score": 0.4,
+      "blosum62": 0,
+      "is_transition": false,
+      "primary_barrier": "evolutionary"
+    },
+    {
+      "mutation": "D435Y",
+      "gene": "rpoB",
+      "position": 435,
+      "rank": 301,
+      "hotspot_prob": 0.8532,
+      "emergence_score": 0.2007,
+      "fitness_score": -0.7671,
+      "resistance_score": 0.7228,
+      "evo_score": 0.4,
+      "blosum62": -3,
+      "is_transition": false,
+      "primary_barrier": "evolutionary"
+    },
+    {
+      "mutation": "S450W",
+      "gene": "rpoB",
+      "position": 450,
+      "rank": 284,
+      "hotspot_prob": 0.9847,
+      "emergence_score": 0.2171,
+      "fitness_score": -0.4348,
+      "resistance_score": 0.4167,
+      "evo_score": 0.4,
+      "blosum62": -3,
+      "is_transition": false,
+      "primary_barrier": "evolutionary"
+    },
+    {
+      "mutation": "V125G",
+      "gene": "pncA",
+      "position": 125,
+      "rank": 262,
+      "hotspot_prob": 0.8074,
+      "emergence_score": 0.2303,
+      "fitness_score": -0.879,
+      "resistance_score": 0.9743,
+      "evo_score": 0.4,
+      "blosum62": -3,
+      "is_transition": false,
+      "primary_barrier": "evolutionary"
+    }
+  ],
+  "method": "Model scores from 04e_mutation_forecasting.py full pipeline. Structural context from AlphaFold PDBs. Drug distances from 5UHB co-crystal (rpoB)."
+}

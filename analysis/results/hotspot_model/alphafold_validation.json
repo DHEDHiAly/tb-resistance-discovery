@@ -1,0 +1,14 @@
+{
+  "rpoB": {
+    "pdb_code": "5UHB",
+    "n_residues_aligned": 1126,
+    "rmsd_ca": 1.83,
+    "validated": true
+  },
+  "katG": {
+    "pdb_code": "2CAS",
+    "n_residues_aligned": 62,
+    "rmsd_ca": 25.934,
+    "validated": false
+  }
+}

@@ -1,0 +1,51 @@
+gene,mutation,overall_rank,emergence_score,status
+embB,G406D,1,0.6175,Known WHO
+gyrA,D94G,2,0.6173,Known WHO
+gyrA,A90T,3,0.5962,Forecast-only
+katG,S315G,4,0.5868,Observed
+gyrA,S91L,5,0.5867,Forecast-only
+embB,G406S,6,0.5866,Validated
+embB,M306T,7,0.5842,Observed
+pncA,Q10R,8,0.5797,Observed
+embB,Q497R,9,0.5787,Known WHO
+pncA,A20T,10,0.5735,Forecast-only
+gyrA,S91P,11,0.5714,Known WHO
+gyrA,D94N,12,0.5689,Known WHO
+katG,S315N,13,0.5673,Known WHO
+gyrA,D111G,14,0.5659,Observed
+rpoB,H445Y,15,0.5649,Known WHO
+rpsL,K88R,16,0.5643,Known WHO
+rpsL,K43R,17,0.5634,Known WHO
+embB,M306V,18,0.5619,Known WHO
+embB,M306I,19,0.561,Known WHO
+gyrA,A126T,20,0.5559,Forecast-only
+pncA,D12G,21,0.551,Known WHO
+gyrA,A90V,22,0.5509,Known WHO
+rpoB,S450P,23,0.5301,Forecast-only
+pncA,A20V,24,0.5299,Forecast-only
+pncA,D8G,25,0.5274,Observed
+pncA,L4S,26,0.5273,Known WHO
+rpsL,K88E,27,0.5225,Forecast-only
+rpsL,K43E,28,0.5217,Forecast-only
+gyrA,D111N,29,0.5216,Forecast-only
+rpoB,S450L,30,0.5159,Known WHO
+rpoB,H445R,31,0.5143,Validated
+gyrA,A126V,32,0.5137,Forecast-only
+pncA,D12N,33,0.5078,Observed
+rpoB,I491V,34,0.4885,Observed
+pncA,D8N,35,0.4861,Observed
+embB,D299G,36,0.4859,Forecast-only
+embB,Q445R,37,0.4822,Validated
+pncA,A79T,38,0.4813,Forecast-only
+pncA,H57Y,39,0.48,Observed
+pncA,V125I,40,0.4772,Forecast-only
+rpoB,D435G,41,0.477,Validated
+gyrB,Q538R,42,0.4724,Observed
+rpoB,V170I,43,0.4717,Forecast-only
+rpoB,D435N,44,0.4695,Forecast-only
+gyrA,G88D,45,0.462,Forecast-only
+rpoB,I491T,46,0.4594,Observed
+embB,S297L,47,0.4586,Forecast-only
+katG,V284I,48,0.4547,Forecast-only
+pncA,V125A,49,0.4544,Forecast-only
+embB,A510T,50,0.4542,Forecast-only

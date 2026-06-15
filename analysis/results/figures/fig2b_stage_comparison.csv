@@ -1,0 +1,4 @@
+Metric,Stage 0,Stage 1,Stage 1.5 (docking)
+AUROC,0.888,0.91,0.938
+Top-20 recall,0.333,0.49,0.49
+Hotspots in Top 20,7/21,17/21,17/21

@@ -1,0 +1,8 @@
+held_out_gene,n_residues,n_hotspots,min_hotspot_rank,top20_recall,mean_hotspot_rank,median_hotspot_rank
+embB,1098,3,1,1.0,3.0,2.0
+gyrA,838,3,1,1.0,6.0,8.0
+gyrB,675,1,49,0.0,49.0,49.0
+katG,740,1,1,1.0,1.0,1.0
+pncA,186,4,1,0.25,30.75,36.0
+rpoB,1172,7,2,0.42857142857142855,75.14285714285714,36.0
+rpsL,124,2,45,0.0,50.5,50.5
