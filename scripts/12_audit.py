@@ -73,9 +73,7 @@ print("=" * 70)
 print("COMPREHENSIVE PROJECT AUDIT")
 print("=" * 70)
 
-# ──────────────────────────────────────────────
 # SECTION 1: Directory Structure
-# ──────────────────────────────────────────────
 print("\n" + "=" * 70)
 print("SECTION 1: Directory Structure")
 print("=" * 70)
@@ -92,9 +90,7 @@ required_dirs = [
 for d, name in required_dirs:
     file_exists(d, f"Directory {name}")
 
-# ──────────────────────────────────────────────
 # SECTION 2: Script Files
-# ──────────────────────────────────────────────
 print("\n" + "=" * 70)
 print("SECTION 2: Core Scripts")
 print("=" * 70)
@@ -157,9 +153,7 @@ for src, targets in import_refs.items():
         else:
             check(False, f"{src} missing reference to {tgt}")
 
-# ──────────────────────────────────────────────
 # SECTION 3: Data Files
-# ──────────────────────────────────────────────
 print("\n" + "=" * 70)
 print("SECTION 3: Data Files")
 print("=" * 70)
@@ -209,9 +203,7 @@ if os.path.exists(mut_path):
     except Exception as e:
         check(False, f"MUTATIONS table readable: {e}")
 
-# ──────────────────────────────────────────────
 # SECTION 4: Analysis Results
-# ──────────────────────────────────────────────
 print("\n" + "=" * 70)
 print("SECTION 4: Analysis Results")
 print("=" * 70)
@@ -314,9 +306,7 @@ if os.path.exists(fa_path):
     n_cases = len(analyses)
     check(n_cases >= 5, f"Failure analysis has {n_cases} cases (expected 5)")
 
-# ──────────────────────────────────────────────
 # SECTION 5: Cross-Validation of Key Numbers
-# ──────────────────────────────────────────────
 print("\n" + "=" * 70)
 print("SECTION 5: Cross-Validation of Key Numbers")
 print("=" * 70)
@@ -377,9 +367,7 @@ if cv is not None:
 # Claim 5: AUROC improvement
 check(True, "AUROC claims: 0.888 (S0) -> 0.910 (S1) -> 0.938 (S1.5) [verified from code]")
 
-# ──────────────────────────────────────────────
 # SECTION 6: Figure Files
-# ──────────────────────────────────────────────
 print("\n" + "=" * 70)
 print("SECTION 6: Figure Files")
 print("=" * 70)
@@ -417,9 +405,7 @@ for fname in expected_csvs:
         if df is not None:
             check(len(df) > 0, f"{fname} has data")
 
-# ──────────────────────────────────────────────
 # SECTION 7: Scientific Consistency
-# ──────────────────────────────────────────────
 print("\n" + "=" * 70)
 print("SECTION 7: Scientific Consistency Checks")
 print("=" * 70)
@@ -492,9 +478,7 @@ if len(q10r) > 0:
 else:
     warn("pncA Q10R not found")
 
-# ──────────────────────────────────────────────
 # SECTION 8: Reproducibility
-# ──────────────────────────────────────────────
 print("\n" + "=" * 70)
 print("SECTION 8: Reproducibility Checks")
 print("=" * 70)
@@ -528,9 +512,7 @@ for pkg in required_pkgs:
     except ImportError:
         check(False, f"Package {pkg} is NOT installed")
 
-# ──────────────────────────────────────────────
 # SUMMARY
-# ──────────────────────────────────────────────
 print("\n" + "=" * 70)
 print("AUDIT SUMMARY")
 print("=" * 70)

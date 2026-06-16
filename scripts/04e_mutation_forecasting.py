@@ -30,7 +30,7 @@ OUTPUT_DIR = RESULTS_DIR / "forecasting"
 HOTSPOT_DIR = RESULTS_DIR / "hotspot_model"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-# ── Genetic code and biochemistry ──
+# Genetic code and biochemistry
 
 GENETIC_CODE = {
     'TTT':'F','TTC':'F','TTA':'L','TTG':'L','TCT':'S','TCC':'S',
@@ -145,9 +145,7 @@ CORE_BINDING = {
 }
 
 
-# ═══════════════════════════════════════════════════
 # STEP 1: LOAD HOTSPOT PREDICTIONS
-# ═══════════════════════════════════════════════════
 
 def load_hotspot_predictions():
     """Load ranked hotspot predictions and feature data."""
@@ -179,9 +177,7 @@ def load_hotspot_predictions():
     return df
 
 
-# ═══════════════════════════════════════════════════
 # STEP 2: ENUMERATE MUTATIONS AT HIGH-RISK RESIDUES
-# ═══════════════════════════════════════════════════
 
 def revcomp(seq):
     c = {"A":"T","T":"A","G":"C","C":"G","N":"N"}
@@ -281,9 +277,7 @@ def enumerate_snv_mutations(cds_seq, residue_pos):
     return results
 
 
-# ═══════════════════════════════════════════════════
 # STEP 3: COMPUTE MUTATION FEATURES
-# ═══════════════════════════════════════════════════
 
 def compute_mutation_features(mut, inner_dist, drug_dist):
     """Compute fitness, resistance, and accessibility scores for a mutation."""
@@ -291,10 +285,10 @@ def compute_mutation_features(mut, inner_dist, drug_dist):
     mut_aa = mut["mut_aa"]
     feats = {}
     
-    # ── Evolutionary accessibility ──
+    # Evolutionary accessibility
     feats["is_transition"] = mut["is_transition"]
     
-    # ── Fitness preservation ──
+    # Fitness preservation
     blosum_key = (wt, mut_aa)
     feats["blosum62"] = BLOSUM62.get(blosum_key, BLOSUM62.get((mut_aa, wt), -4))
     
@@ -332,7 +326,7 @@ def compute_mutation_features(mut, inner_dist, drug_dist):
     # Using a simple physicochemical distance based on available properties
     feats["grantham"] = feats["blosum62"] * -1  # rough inverse: lower blosum = larger distance
     
-    # ── Resistance potential ──
+    # Resistance potential
     feats["inner_distance"] = inner_dist
     feats["drug_distance"] = drug_dist if drug_dist is not None else 100.0
     
@@ -353,7 +347,7 @@ def compute_mutation_features(mut, inner_dist, drug_dist):
     )
     feats["resistance_score"] = proximity * disruptiveness
     
-    # ── Combined scores ──
+    # Combined scores
     # Fitness score (higher = better fitness)
     feats["fitness_score"] = (
         max(feats["blosum62"], -4) / 9  # normalized 0-1
@@ -372,9 +366,7 @@ def compute_mutation_features(mut, inner_dist, drug_dist):
     return feats
 
 
-# ═══════════════════════════════════════════════════
 # STEP 4: SCORE MUTATIONS
-# ═══════════════════════════════════════════════════
 
 def score_mutations(mutations_df):
     """
@@ -420,9 +412,7 @@ def score_mutations(mutations_df):
     return df
 
 
-# ═══════════════════════════════════════════════════
 # MAIN PIPELINE
-# ═══════════════════════════════════════════════════
 
 def main():
     print("=" * 60)
@@ -520,7 +510,7 @@ def main():
     df_muts = df_muts.sort_values("emergence_score", ascending=False)
     df_muts["overall_rank"] = range(1, len(df_muts) + 1)
     
-    # ── Validation: known resistance mutations in top N ──
+    # Validation: known resistance mutations in top N
     known = df_muts[df_muts["is_known_resistance"] == 1].copy()
     print(f"\n  Validation: Known resistance mutations:")
     print(f"  {'Mutation':<20} {'Gene':<8} {'Rank':<8} {'Score':<10}")
@@ -535,7 +525,7 @@ def main():
     print(f"  Known resistance mutations in top 50: {df_muts.head(50)['is_known_resistance'].sum()} / {len(known)}")
     print(f"  Known resistance mutations in top 100: {df_muts.head(100)['is_known_resistance'].sum()} / {len(known)}")
     
-    # ── Output: Surveillance watchlist ──
+    # Output: Surveillance watchlist
     output_cols = [
         "overall_rank", "gene", "residue_pos", "wt_aa", "mut_aa", "mutation",
         "emergence_score", "hotspot_score", "mutation_score",

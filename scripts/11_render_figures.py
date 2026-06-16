@@ -34,7 +34,7 @@ plt.rcParams.update({
 })
 
 
-# ── Figure 1: Study Design Pipeline ──
+# Figure 1: Study Design Pipeline
 
 def fig1_pipeline():
     fig, ax = plt.subplots(figsize=(10, 7))
@@ -89,7 +89,7 @@ def fig1_pipeline():
     print(f"  Saved {path}")
 
 
-# ── Figure 2: Structural Validation ──
+# Figure 2: Structural Validation
 
 def fig2_structural():
     fig = plt.figure(figsize=(10, 8))
@@ -190,7 +190,7 @@ def fig2_structural():
     print(f"  Saved {path}")
 
 
-# ── Figure 3: Feature Importance ──
+# Figure 3: Feature Importance
 
 def fig3_features():
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
@@ -258,7 +258,7 @@ def fig3_features():
     print(f"  Saved {path}")
 
 
-# ── Figure 4: Mutation Forecasting ──
+# Figure 4: Mutation Forecasting
 
 def fig4_forecasting():
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5), gridspec_kw={"width_ratios": [1, 1.5]})
@@ -342,7 +342,7 @@ def fig4_forecasting():
     print(f"  Saved {path}")
 
 
-# ── Figure 5: CRyPTIC Validation ──
+# Figure 5: CRyPTIC Validation
 
 def fig5_validation():
     fig = plt.figure(figsize=(12, 8))
@@ -437,7 +437,7 @@ def fig5_validation():
     print(f"  Saved {path}")
 
 
-# ── Figure 6: Clinical Impact ──
+# Figure 6: Clinical Impact
 
 def fig6_impact():
     fig, ax = plt.subplots(figsize=(10, 6))
@@ -500,7 +500,7 @@ def fig6_impact():
     print(f"  Saved {path}")
 
 
-# ── Supplementary Figures ──
+# Supplementary Figures
 
 def figS1_roc():
     """ROC curves across development stages."""
@@ -677,7 +677,7 @@ def figS4_watchlist():
     print(f"  Saved {path}")
 
 
-# ── Main ──
+# Main
 
 def main():
     print("Rendering all paper figures...")

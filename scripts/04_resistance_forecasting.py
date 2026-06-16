@@ -34,9 +34,7 @@ RESULTS_DIR = BASE / "analysis" / "results"
 OUTPUT_DIR = RESULTS_DIR / "forecasting"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-# ═══════════════════════════════════════════════════
 # 1. KNOWN RESISTANCE GENES AND BINDING POCKETS
-# ═══════════════════════════════════════════════════
 
 # Each entry: (gene, locus, drug, known_pocket_residues)
 # Pocket residues are derived from published crystal structures
@@ -173,9 +171,7 @@ GENE_NAME_TO_LOCUS = {g[0]: g[1] for g in RESISTANCE_GENES}
 LOCUS_TO_GENE_NAME = {g[1]: g[0] for g in RESISTANCE_GENES}
 GENE_TO_POCKET = {g[0]: g[3] for g in RESISTANCE_GENES}
 
-# ═══════════════════════════════════════════════════
 # 2. GENETIC CODE AND AMINO ACID PROPERTIES
-# ═══════════════════════════════════════════════════
 
 GENETIC_CODE = {
     'TTT':'F','TTC':'F','TTA':'L','TTG':'L','TCT':'S','TCC':'S',
@@ -256,9 +252,7 @@ HBOND = {aa: int(aa in {"S","T","N","Q","C","Y","H","R","K","D","E","W"})
          for aa in ["A","R","N","D","C","Q","E","G","H","I","L","K",
                      "M","F","P","S","T","W","Y","V","*"]}
 
-# ═══════════════════════════════════════════════════
 # 3. SEQUENCE UTILITIES
-# ═══════════════════════════════════════════════════
 
 def revcomp(seq):
     c = {"A":"T","T":"A","G":"C","C":"G","N":"N"}
@@ -356,9 +350,7 @@ def enumerate_snv_mutations(cds_seq, protein_seq, residue_pos):
     return results
 
 
-# ═══════════════════════════════════════════════════
 # 4. FEATURE COMPUTATION
-# ═══════════════════════════════════════════════════
 #
 # Features are computed WITHOUT using hotspot membership or
 # distance to known resistance residues. The model must learn
@@ -393,11 +385,11 @@ def compute_features(mutation, protein_length, pocket_residues, core_residues=No
     pos = mutation["residue_pos"]
     f = {}
 
-    # ── Evolutionary accessibility ──
+    # Evolutionary accessibility
     f["is_transition"] = mutation["is_transition"]
     # n_nuc_changes is always 1 for SNV enumeration, so not included as feature
 
-    # ── Fitness preservation ──
+    # Fitness preservation
     blosum_key = (wt, mut)
     f["blosum62"] = BLOSUM62.get(blosum_key, BLOSUM62.get((mut, wt), -4))
     f["grantham"] = GRANTHAM.get((wt, mut), GRANTHAM.get((mut, wt), 50))
@@ -441,7 +433,7 @@ def compute_features(mutation, protein_length, pocket_residues, core_residues=No
         + 3.0 * f["mut_is_stop"]
     )
 
-    # ── Resistance potential ──
+    # Resistance potential
     # Distance to core drug-binding residues (from crystal structures)
     if core_residues:
         f["inner_distance"] = min(abs(pos - p) for p in core_residues) if core_residues else 500
@@ -462,9 +454,7 @@ def compute_features(mutation, protein_length, pocket_residues, core_residues=No
     return f
 
 
-# ═══════════════════════════════════════════════════
 # 5. BUILD TRAINING DATASET
-# ═══════════════════════════════════════════════════
 
 def enumerate_all_candidates():
     """Enumerate single-nucleotide mutations across all resistance genes."""
@@ -563,7 +553,7 @@ def build_training_dataset(df_all, cryptic_negatives):
     n_pos = len(positives)
     n_neg_target = max(n_pos * 8, 200)
 
-    # ── 1. Pocket-residue negatives (hard) ──
+    # 1. Pocket-residue negatives (hard)
     pocket_neg = df_all[
         (df_all["is_positive"] == 0) &
         (df_all["_pocket_dist"] <= 5)
@@ -572,7 +562,7 @@ def build_training_dataset(df_all, cryptic_negatives):
     pocket_sampled = pocket_neg.sample(n_pocket, random_state=42) if n_pocket > 0 else pd.DataFrame()
     print(f"  Negative (pocket residues, hard): {n_pocket}")
 
-    # ── 2. Moderate-distance negatives (medium) ──
+    # 2. Moderate-distance negatives (medium)
     mod_neg = df_all[
         (df_all["is_positive"] == 0) &
         (df_all["_pocket_dist"] >= 10) &
@@ -582,7 +572,7 @@ def build_training_dataset(df_all, cryptic_negatives):
     mod_sampled = mod_neg.sample(n_mod, random_state=42) if n_mod > 0 else pd.DataFrame()
     print(f"  Negative (10-30 residues from pocket): {n_mod}")
 
-    # ── 3. Far-distance negatives (easy) ──
+    # 3. Far-distance negatives (easy)
     far_neg = df_all[
         (df_all["is_positive"] == 0) &
         (df_all["_pocket_dist"] >= 30)
@@ -604,9 +594,7 @@ def build_training_dataset(df_all, cryptic_negatives):
     return df_train
 
 
-# ═══════════════════════════════════════════════════
 # 6. TRAIN AND VALIDATE XGBoost
-# ═══════════════════════════════════════════════════
 
 def get_feature_cols():
     """Return feature columns used by the model.
@@ -678,11 +666,11 @@ def train_and_validate(df_train):
     for _, r in imp.iterrows():
         print(f"    {r['feature']}: {r['importance']:.4f}")
 
-    # ── Validation ──
+    # Validation
     print("\n  Cross-validation:")
     results = {}
 
-    # ── 1. Leave-one-gene-out ──
+    # 1. Leave-one-gene-out
     all_genes = df_model["gene"].unique()
     gene_aurocs, gene_auprcs, gene_top20 = [], [], []
 
@@ -720,7 +708,7 @@ def train_and_validate(df_train):
         print(f"    >>> Leave-one-gene-out: AUROC={np.mean(gene_aurocs):.3f} "
               f"AUPRC={np.mean(gene_auprcs):.3f} Top20={np.mean(gene_top20):.3f}")
 
-    # ── 2. Leave-one-drug-out ──
+    # 2. Leave-one-drug-out
     all_drugs = df_model["drug"].unique()
     drug_aurocs, drug_auprcs, drug_top20 = [], [], []
 
@@ -755,7 +743,7 @@ def train_and_validate(df_train):
         print(f"    >>> Leave-one-drug-out: AUROC={np.mean(drug_aurocs):.3f} "
               f"AUPRC={np.mean(drug_auprcs):.3f} Top20={np.mean(drug_top20):.3f}")
 
-    # ── 3. Leave-one-hotspot-out ──
+    # 3. Leave-one-hotspot-out
     # A "hotspot" = a specific residue position in a specific gene that
     # has at least one known resistance mutation.
     hotspot_keys = set()
@@ -814,9 +802,7 @@ def train_and_validate(df_train):
     return model, results, imp
 
 
-# ═══════════════════════════════════════════════════
 # 7. SCORE AND RANK CANDIDATES
-# ═══════════════════════════════════════════════════
 
 def score_and_rank(model, df_candidates):
     """Score all candidate mutations and output ranked watchlist."""
@@ -864,9 +850,7 @@ def score_and_rank(model, df_candidates):
     return df_score
 
 
-# ═══════════════════════════════════════════════════
 # 8. MAIN
-# ═══════════════════════════════════════════════════
 
 def main():
     print("=" * 70)
@@ -937,7 +921,7 @@ def main():
     print(f"  Surveillance watchlist saved: {watchlist_path}")
     print(f"    (Top 200 mutations prioritized for surveillance)")
 
-    # ── Print results ──
+    # Print results
     print("\n" + "=" * 70)
     print("VALIDATION RESULTS")
     print("=" * 70)

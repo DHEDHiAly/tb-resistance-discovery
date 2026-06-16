@@ -57,7 +57,7 @@ META_DIR = os.path.join(BASE, "data", "metadata")
 OUTPUT_DIR = os.path.join(BASE, "analysis", "results", "forecasting")
 CACHE_DIR = os.path.join(CRYPTIC_DIR, "cache")
 
-# ─── Target genes ───
+# Target genes
 TARGET_GENES = [
     "rpoB", "katG", "embB", "gyrA", "gyrB", "pncA", "rpsL",
     "inhA", "eis", "tap", "mmpL5", "mmpR5", "tlyA",
@@ -323,7 +323,7 @@ def run_stress_tests():
     wl = wl.sort_values("emergence_score", ascending=False)
     wl = wl.drop_duplicates(subset=["gene", "mutation"], keep="first")
     
-    # ─── Multiple hypothesis correction ───
+    # Multiple hypothesis correction
     print("\n" + "=" * 70)
     print("MULTIPLE HYPOTHESIS CORRECTION")
     print("=" * 70)
@@ -353,7 +353,7 @@ def run_stress_tests():
             print(f"    {r['mutation']:<8} {r['gene']:<8} carriers={r['n_carriers']:<4} "
                   f"p_raw={r['raw_pvalue']:.4e} p_fdr={r['pvalue_fdr']:.4e}")
     
-    # ─── Literature cross-reference ───
+    # Literature cross-reference
     print("\n" + "=" * 70)
     print("LITERATURE STATUS OF NOVEL MUTATIONS")
     print("=" * 70)
@@ -385,7 +385,7 @@ def run_stress_tests():
     for _, r in recently_described.sort_values("n_carriers", ascending=False).head(5).iterrows():
         print(f"    {r['mutation']:<8} {r['gene']:<8} carriers={r['n_carriers']:<4} - {r['literature_status'][:80]}")
     
-    # ─── TIERED CATEGORIZATION ───
+    # TIERED CATEGORIZATION
     print("\n" + "=" * 70)
     print("TIERED VALIDATION CATEGORIES")
     print("=" * 70)
@@ -520,7 +520,7 @@ def run_stress_tests():
         ef.to_csv(ef_path, index=False)
         print(f"  FDR analysis saved to {ef_path}")
     
-    # ─── Final verdict ───
+    # Final verdict
     print("\n" + "=" * 70)
     print("FINAL VERDICT")
     print("=" * 70)

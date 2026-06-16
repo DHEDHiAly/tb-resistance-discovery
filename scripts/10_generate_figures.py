@@ -32,9 +32,7 @@ META_DIR = os.path.join(BASE, "data", "metadata")
 
 os.makedirs(FIGURE_DIR, exist_ok=True)
 
-# ──────────────────────────────────────────────
 # Helper: load all analysis data
-# ──────────────────────────────────────────────
 
 def load_all_data():
     """Load all analysis results into a single dict."""
@@ -98,9 +96,7 @@ def load_all_data():
     return data
 
 
-# ──────────────────────────────────────────────
 # Figure 1: Study Design Pipeline
-# ──────────────────────────────────────────────
 
 def generate_figure1(data):
     """Pipeline summary with key numbers."""
@@ -132,9 +128,7 @@ def generate_figure1(data):
     return stats
 
 
-# ──────────────────────────────────────────────
 # Figure 2: Structural Validation
-# ──────────────────────────────────────────────
 
 def generate_figure2(data):
     """AlphaFold validation + Stage 0 vs Stage 1 comparison."""
@@ -204,9 +198,7 @@ def generate_figure2(data):
     return results
 
 
-# ──────────────────────────────────────────────
 # Figure 3: Feature Importance
-# ──────────────────────────────────────────────
 
 def generate_figure3(data):
     """Feature importance from Stage 1 model."""
@@ -240,9 +232,7 @@ def generate_figure3(data):
     return results
 
 
-# ──────────────────────────────────────────────
 # Figure 4: Mutation Forecasting
-# ──────────────────────────────────────────────
 
 def generate_figure4(data):
     """Top watchlist mutations with novelty status."""
@@ -295,9 +285,7 @@ def generate_figure4(data):
     return results
 
 
-# ──────────────────────────────────────────────
 # Figure 5: Prospective Clinical Validation
-# ──────────────────────────────────────────────
 
 def generate_figure5(data):
     """CRyPTIC validation cascade and Tier 1 hits."""
@@ -366,9 +354,7 @@ def generate_figure5(data):
     return results
 
 
-# ──────────────────────────────────────────────
 # Figure 6: Clinical Impact Pipeline
-# ──────────────────────────────────────────────
 
 def generate_figure6(data):
     """Clinical impact summary - narrative figure, just generate summary stats."""
@@ -403,9 +389,7 @@ def generate_figure6(data):
     return stats
 
 
-# ──────────────────────────────────────────────
 # Supplementary Figures
-# ──────────────────────────────────────────────
 
 def generate_supplementary(data):
     """All supplementary figure data."""
@@ -487,9 +471,7 @@ def generate_supplementary(data):
     return results
 
 
-# ──────────────────────────────────────────────
 # Main
-# ──────────────────────────────────────────────
 
 def main():
     print("=" * 70)
@@ -521,7 +503,7 @@ def main():
     print("\n[Supplementary] All supplementary figures...")
     supp = generate_supplementary(data)
     
-    # ─── Paper summary JSON ───
+    # Paper summary JSON
     summary = {
         "pipeline": fig1,
         "structural_validation": fig2,
@@ -541,7 +523,7 @@ def main():
     with open(summary_path, "w") as f:
         json.dump(summary, f, indent=2, default=str)
     
-    # ─── Key numbers for the abstract ───
+    # Key numbers for the abstract
     tv = data.get("tiered_validation")
     n_tier1 = len(tv[tv["tier"] == 1]) if tv is not None else 0
     n_tier2 = len(tv[tv["tier"] == 2]) if tv is not None else 0

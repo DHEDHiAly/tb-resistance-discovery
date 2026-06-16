@@ -52,7 +52,7 @@ MAX_ASA = {
 }
 
 
-# ── Utility ──
+# Utility
 
 def load_existing_data():
     """Load the existing residue-level feature data."""
@@ -159,9 +159,7 @@ def extract_pdb_sequence(pdb_path):
     return residues
 
 
-# ────────────────────────────────────────────
 # TASK 1: SOLVENT ACCESSIBILITY (SASA)
-# ────────────────────────────────────────────
 
 def task1_compute_sasa():
     """
@@ -232,9 +230,7 @@ def task1_compute_sasa():
     return sasa_data
 
 
-# ────────────────────────────────────────────
 # TASK 2: ESM-2 MUTATION INTOLERANCE
-# ────────────────────────────────────────────
 
 def task2_compute_esm2_intolerance():
     """
@@ -372,9 +368,7 @@ def task2_compute_esm2_intolerance():
     return esm_data
 
 
-# ────────────────────────────────────────────
 # TASK 3: 3D CONTACT DENSITY
-# ────────────────────────────────────────────
 
 def task3_compute_contact_density_3d():
     """
@@ -440,9 +434,7 @@ def task3_compute_contact_density_3d():
     return contact_data
 
 
-# ────────────────────────────────────────────
 # TASK 4: ALPHAFOLD STRUCTURAL VALIDATION
-# ────────────────────────────────────────────
 
 def task4_validate_alphafold():
     """
@@ -574,9 +566,7 @@ def task4_validate_alphafold():
     return results
 
 
-# ────────────────────────────────────────────
 # TASK 5: MODEL BENCHMARKING
-# ────────────────────────────────────────────
 
 def task5_benchmark_models():
     """
@@ -748,9 +738,7 @@ def task5_benchmark_models():
     return best_model, all_features, scaler, df_model
 
 
-# ────────────────────────────────────────────
 # TASK 6: RANKED OUTPUT
-# ────────────────────────────────────────────
 
 def task6_generate_ranked_output(model_result):
     """
@@ -809,9 +797,7 @@ def task6_generate_ranked_output(model_result):
     print("TASK 6 COMPLETE")
 
 
-# ────────────────────────────────────────────
 # MAIN
-# ────────────────────────────────────────────
 
 def main():
     print("=" * 60)

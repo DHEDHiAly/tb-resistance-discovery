@@ -23,7 +23,7 @@ warnings.filterwarnings("ignore", message="Unverified HTTPS request")
 # Disable SSL warnings for lab network
 requests.packages.urllib3.disable_warnings()
 
-# ============ CONFIG ============
+# CONFIG
 EMAIL = "farasatdhedhi@example.com"
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
@@ -100,7 +100,7 @@ def download_file(url, outpath, desc=""):
         return False
 
 
-# ============ STEP 1: Download H37Rv reference ============
+# STEP 1: Download H37Rv reference
 def download_reference():
     """Download M. tuberculosis H37Rv reference genome"""
     ref_fasta = REFERENCE_DIR / "H37Rv.fasta"
@@ -153,7 +153,7 @@ def download_reference():
     return ref_fasta if ref_fasta.exists() else None
 
 
-# ============ STEP 2: Find MDR-TB assemblies ============
+# STEP 2: Find MDR-TB assemblies
 def search_mdr_tb_assemblies(max_results=50):
     """Search for MDR-TB genome assemblies"""
     print(f"\n[2/5] Searching for MDR-TB genome assemblies (max: {max_results})...")
@@ -199,7 +199,7 @@ def search_mdr_tb_assemblies(max_results=50):
     return assemblies
 
 
-# ============ STEP 3: Save metadata ============
+# STEP 3: Save metadata
 def save_metadata(assemblies, filepath):
     """Save metadata to CSV"""
     with open(filepath, "w", newline="") as f:
@@ -211,7 +211,7 @@ def save_metadata(assemblies, filepath):
     return filepath
 
 
-# ============ STEP 4: Download genome assemblies ============
+# STEP 4: Download genome assemblies
 def download_assemblies(assemblies, n=5):
     """Download N genome assemblies"""
     print(f"\n[3/5] Downloading {n} genome assemblies...")
@@ -258,7 +258,7 @@ def download_assemblies(assemblies, n=5):
     return downloaded
 
 
-# ============ STEP 5: Verify ============
+# STEP 5: Verify
 def verify_downloads(reference, genome_files):
     """Verify downloaded files"""
     print("\n[4/5] Verifying downloads...")
@@ -278,7 +278,7 @@ def verify_downloads(reference, genome_files):
             print(f"  {path.name}: {seq_count} contigs, {path.stat().st_size / 1e6:.1f} MB")
 
 
-# ============ MAIN ============
+# MAIN
 if __name__ == "__main__":
     print("=" * 60)
     print("TB Resistance Discovery - Phase 1: Data Acquisition")

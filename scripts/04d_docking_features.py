@@ -56,7 +56,7 @@ AA_3TO1 = {
     "THR": "T", "TRP": "W", "TYR": "Y", "VAL": "V",
 }
 
-# ── Co-crystal structure definitions ──
+# Co-crystal structure definitions
 # (pdb_code, gene, target_chain, ligand_resname)
 CO_CRYSTAL_STRUCTURES = [
     ("5UHB", "rpoB", "C", "RFP"),   # rpoB + rifampicin
@@ -151,9 +151,7 @@ def compute_position_mapping(gene):
     return mapping
 
 
-# ────────────────────────────────────────────
 # TASK 1: EXTRACT RFP CONTACT FROM 5UHB
-# ────────────────────────────────────────────
 
 def task1_rfp_contact():
     """
@@ -291,9 +289,7 @@ def task1_rfp_contact():
     return result
 
 
-# ────────────────────────────────────────────
 # TASK 2: COMPUTE DRUG CONTACT FEATURE
-# ────────────────────────────────────────────
 
 def task2_drug_contact_feature(rfp_contacts):
     """
@@ -344,9 +340,7 @@ def task2_drug_contact_feature(rfp_contacts):
     return df
 
 
-# ────────────────────────────────────────────
 # TASK 3: MODEL RETRAINING & EVALUATION
-# ────────────────────────────────────────────
 
 def task3_evaluate_with_docking(df):
     """
@@ -497,9 +491,7 @@ def task3_evaluate_with_docking(df):
     print(f"\n  Saved to {output_path}")
 
 
-# ────────────────────────────────────────────
 # MAIN
-# ────────────────────────────────────────────
 
 def main():
     print("=" * 60)

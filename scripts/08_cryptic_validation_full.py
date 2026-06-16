@@ -36,13 +36,13 @@ CACHE_DIR = os.path.join(CRYPTIC_DIR, "cache")
 
 os.makedirs(CACHE_DIR, exist_ok=True)
 
-# ─── Target resistance genes ───
+# Target resistance genes
 TARGET_GENES = [
     "rpoB", "katG", "embB", "gyrA", "gyrB", "pncA", "rpsL",
     "inhA", "eis", "tap", "mmpL5", "mmpR5", "tlyA",
 ]
 
-# ─── Drug mapping ───
+# Drug mapping
 GENE_DRUG_MAP = {
     "rpoB": "RIF_BINARY_PHENOTYPE",
     "katG": "INH_BINARY_PHENOTYPE",

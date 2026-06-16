@@ -32,7 +32,7 @@ OUTPUT_DIR = BASE / "analysis" / "results" / "forecasting"
 HOTSPOT_DIR = BASE / "analysis" / "results" / "hotspot_model"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-# ── Genetic code and biochemistry ──
+# Genetic code and biochemistry
 
 GENETIC_CODE = {
     'TTT':'F','TTC':'F','TTA':'L','TTG':'L','TCT':'S','TCC':'S',
@@ -451,9 +451,7 @@ def enumerate_and_score_mutations(held_out_gene, hotspot_df, gff_genes, genome):
     return df_muts
 
 
-# ═══════════════════════════════════════════════════
 # MAIN
-# ═══════════════════════════════════════════════════
 
 def main():
     print("=" * 70)
