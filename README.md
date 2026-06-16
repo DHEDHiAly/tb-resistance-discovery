@@ -1,7 +1,7 @@
 # Forecasting Emerging Tuberculosis Drug Resistance
 
 **Structural hotspot prediction → mutation forecasting → prospective clinical validation**
-
+Aly Dhedhi. Pranava Kumar, Vinay Singamsetty, Li-Lun Ho. Manolis Kellis
 Kellis Lab, MIT
 
 ---
