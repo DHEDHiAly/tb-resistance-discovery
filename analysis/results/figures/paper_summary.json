@@ -564,5 +564,27 @@
       }
     ],
     "watchlist_size": 290
+  },
+  "limitations": {
+    "n_positive_examples": 21,
+    "n_residue_total": 6566,
+    "positive_fraction": "0.32% — severe class imbalance limits power",
+    "fdr_yield": "22/290 testable (7.6%) at q<0.05 — ~1.5x above global null expectation",
+    "phenotype_blind_spots": {
+      "pncA_Q10R": "Rank #8 watchlist, 155 carriers — no PZA binary phenotype in CRyPTIC",
+      "tier3_count": 27,
+      "tier3_reason": "pncA and rpsL mutations lack binary phenotype columns"
+    },
+    "evidence_level": "Observational only — no gene editing, fitness assays, or controlled experiments",
+    "emergence_vs_resistance": "Model predicts P(emergence), not P(resistance|mutation). Observational enrichment in R isolates is a proxy."
+  },
+  "benchmarking": {
+    "no_direct_comparison": "No existing model predicts emergence of unseen resistance mutations",
+    "nearest_approaches": [
+      {"method": "WHO catalog (Walker 2021)", "what": "Retrospective curation of known mutations", "prospective": false},
+      {"method": "CRyPTIC ML (Crook 2022)", "what": "Genotype→phenotype classifier using known variants", "prospective": false},
+      {"method": "ESM-1v saturation mutagenesis", "what": "Predicts mutational tolerance, not emergence under selection", "prospective": false}
+    ],
+    "recommended_benchmark": "Run sequence-only models (e.g., ESM-1v log-likelihood ratios) through same pipeline to quantify added value of structural features"
   }
 }

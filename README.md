@@ -188,6 +188,29 @@ Full environment: see `environment.yml` or `requirements.txt`.
 
 ---
 
+---
+
+## Limitations & Caveats
+
+1. **Small positive set.** Only 21 known hotspot residues across 13 genes (33 known mutations). Training a binary classifier on ~6,600 residues with 21 positives limits statistical power — the AUROC-based ranking is informative, but individual coefficient estimates and confidence intervals should be interpreted cautiously.
+
+2. **Modest FDR yield.** 22 of 290 testable predictions (7.6%) survive Benjamini-Hochberg correction at q < 0.05. This is ~1.5× above the 5% expected under the global null — a real but modest enrichment. The signal is driven by the strongest individual hits (G406S, Q445R, D94A), while many Tier 2-3 mutations lack sufficient power to reach significance.
+
+3. **Phenotype blind spots.** The top novel prediction by carrier count — **pncA Q10R** (rank #8, 155 carriers) — cannot be evaluated because CRyPTIC lacks a pyrazinamide binary phenotype column. pncA is a prodrug activator, and its mutations are typically validated via PZA susceptibility, which is measured as a MIC rather than a binary outcome in this dataset. Other pncA and rpsL mutations fall into the same blind spot (27 Tier 3).
+
+4. **Observational, not causal.** All validation is observational — association between mutation and resistance phenotype in clinical isolates. No gene editing, fitness assays, or controlled experiments were performed. Mutations enriched in resistant isolates may be resistance-causing, compensatory, or linked to other drivers by population structure.
+
+5. **Emergence ≠ resistance.** The model predicts P(emergence) — the probability a mutation will appear under drug pressure — not P(resistance | mutation). A mutation can have high emergence probability but confer low resistance (e.g., conservative substitutions at conserved residues that provide minor fitness advantages). The CRyPTIC validation tests the observational consequence: do mutations with high predicted emergence appear in resistant isolates?
+
+6. **No directly comparable benchmark.** No existing model predicts *emergence* of unseen resistance mutations. The closest literature is:
+   - **WHO catalog (Walker 2021)** — retrospective curation of known mutations, not prospective
+   - **CRyPTIC ML (Crook 2022)** — genotype→phenotype classifier using known variants
+   - **ESM-1v saturation** — predicts mutational tolerance but not emergence under selection
+   
+   A rigorous comparison would require running sequence-only models (e.g., ESM-1v log-likelihood ratios) through the same pipeline to quantify the added value of our structural features. This is a straightforward extension.
+
+---
+
 ## Reference
 
 Walker, T. M., et al. (2021). "The 2021 WHO catalogue of Mycobacterium tuberculosis complex mutations associated with drug resistance." *The Lancet Microbe*.
