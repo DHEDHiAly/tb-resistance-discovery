@@ -113,6 +113,8 @@ expected_scripts = [
     "10_generate_figures.py",
     "11_render_figures.py",
     "12_audit.py",
+    "download_cryptic_data.py",
+    "extract_data.py",
 ]
 
 for s in expected_scripts:
