@@ -190,6 +190,36 @@ Full environment: see `environment.yml` or `requirements.txt`.
 
 ---
 
+---
+
+## Reproducibility: Getting the Data
+
+The pipeline requires external data. Here's how to set up:
+
+### 1. Extract committed archives
+
+PDB structures and CRyPTIC supplement files are committed as `data/*.tar.gz`:
+
+```bash
+python scripts/extract_data.py
+```
+
+### 2. Download CRyPTIC MUTATIONS table (1.4 GB)
+
+The full mutation table is too large for git. Download it from the CRyPTIC repository:
+
+```bash
+python scripts/download_cryptic_data.py
+```
+
+This tries multiple mirrors (Zenodo, EBI FTP). Alternatively, download manually from [Zenodo v1.1.1](https://zenodo.org/records/15679731) and place the file at `data/cryptic/MUTATIONS.csv.gz`.
+
+### 3. Run the pipeline
+
+Scripts are numbered in dependency order. Each script auto-downloads missing AlphaFold PDBs and caches intermediate results.
+
+---
+
 ## Limitations & Caveats
 
 1. **Small positive set.** Only 21 known hotspot residues across 13 genes (33 known mutations). Training a binary classifier on ~6,600 residues with 21 positives limits statistical power — the AUROC-based ranking is informative, but individual coefficient estimates and confidence intervals should be interpreted cautiously.
