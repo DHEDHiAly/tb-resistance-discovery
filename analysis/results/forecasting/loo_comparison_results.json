@@ -1,0 +1,44 @@
+{
+  "embB": {
+    "lr_auroc": 0.9988,
+    "xgb_depth3_auroc": 0.9918,
+    "lr_top20_hits": 3,
+    "xgb_depth3_top20_hits": 3,
+    "n_positives": 3
+  },
+  "gyrA": {
+    "lr_auroc": 0.9928,
+    "xgb_depth3_auroc": 0.9701,
+    "lr_top20_hits": 3,
+    "xgb_depth3_top20_hits": 1,
+    "n_positives": 3
+  },
+  "inhA": {
+    "lr_auroc": 0.7414,
+    "xgb_depth3_auroc": 0.8004,
+    "lr_top20_hits": 2,
+    "xgb_depth3_top20_hits": 2,
+    "n_positives": 6
+  },
+  "pncA": {
+    "lr_auroc": 0.8929,
+    "xgb_depth3_auroc": 0.8008,
+    "lr_top20_hits": 2,
+    "xgb_depth3_top20_hits": 1,
+    "n_positives": 4
+  },
+  "rpoB": {
+    "lr_auroc": 0.9207,
+    "xgb_depth3_auroc": 0.8987,
+    "lr_top20_hits": 2,
+    "xgb_depth3_top20_hits": 2,
+    "n_positives": 7
+  },
+  "rpsL": {
+    "lr_auroc": 0.8934,
+    "xgb_depth3_auroc": 0.9918,
+    "lr_top20_hits": 1,
+    "xgb_depth3_top20_hits": 2,
+    "n_positives": 2
+  }
+}

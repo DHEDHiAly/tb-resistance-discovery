@@ -1,23 +1,18 @@
 """
-Stage 1.5: Drug-Specific Docking Features for Hotspot Prediction
+Stage 3: Per-Gene Drug Contact Features via Co-Crystal + Pocket Distance
 
-Computes per-residue distances to bound drug molecules from
-co-crystal structures and AutoDock Vina docking, then evaluates
-whether drug-specific interactions rescue the final 4 missed hotspots.
+For every resistance gene, computes a per-residue distance to the
+drug-binding region. Uses co-crystal structures where available (rpoB,
+gyrA) and a pocket-centroid proxy for all other genes. Then retrains
+the hotspot model and evaluates the per-gene improvement.
 
-Tasks:
-  1. Compute sequence mapping: AlphaFold PDB residue <-> H37Rv genome coordinate
-  2. Extract rifampicin contact distances from 5UHB co-crystal (rpoB)
-  3. Dock drugs to remaining targets via AutoDock Vina
-  4. Compute per-residue drug_contact feature
-  5. Add feature to model, retrain, and evaluate rescue
+Key change from v1: each gene gets its own drug-distance value instead
+of a constant 92.0 A fill for non-rpoB genes.
 """
 
 import json
 import pickle
 import re
-import subprocess
-import sys
 import warnings
 from pathlib import Path
 
@@ -31,7 +26,6 @@ PDB_DIR = BASE / "data" / "pdb"
 ALPHAFOLD_DIR = PDB_DIR / "alphafold"
 CRYSTAL_DIR = PDB_DIR / "crystal"
 OUTPUT_DIR = BASE / "analysis" / "results" / "hotspot_model"
-VINA_PATH = Path(__file__).resolve().parent / "vina.exe"
 
 GENE_UNIPROT = {
     "rpoB": "P9WGY9", "katG": "P9WIE5", "embB": "P9WNL7",
@@ -39,13 +33,6 @@ GENE_UNIPROT = {
     "rpsL": "P9WH63", "eis": "P9WFK7", "tap": "P9WJX9",
     "mmpR5": "I6Y8F7", "mmpL5": "P9WJV1", "tlyA": "P9WJ63",
     "inhA": "P9WGR1",
-}
-
-MAX_ASA = {
-    "A": 121.0, "R": 265.0, "N": 187.0, "D": 187.0, "C": 148.0,
-    "Q": 214.0, "E": 214.0, "G": 97.0, "H": 216.0, "I": 195.0,
-    "L": 191.0, "K": 230.0, "M": 203.0, "F": 228.0, "P": 154.0,
-    "S": 143.0, "T": 163.0, "W": 264.0, "Y": 255.0, "V": 165.0,
 }
 
 AA_3TO1 = {
@@ -56,33 +43,60 @@ AA_3TO1 = {
     "THR": "T", "TRP": "W", "TYR": "Y", "VAL": "V",
 }
 
-# Co-crystal structure definitions
-# (pdb_code, gene, target_chain, ligand_resname)
-CO_CRYSTAL_STRUCTURES = [
-    ("5UHB", "rpoB", "C", "RFP"),   # rpoB + rifampicin
-]
-
-# Drug SMILES for AutoDock Vina docking
-DRUG_SMILES = {
-    "rifampicin": "CC1=C(C(=O)C2=C(C3=C(C(=C(C=C3O)C(=O)NCC4=CC=CC=C4)O)C(=C2O1)C)O)OC5C(C(C(C(O5)C)O)N)O",
-    "isoniazid": "C1=CC(=CN=C1)C(=O)NN",
-    "ethambutol": "CCN(CC)C(CO)C(CO)NCC",
-    "levofloxacin": "CC1COC2=C(C(=CC(=C2C1)N3C=C(C(=O)C3=O)C(=O)O)F)N4CCNCC4",
-    "moxifloxacin": "CC1COC2=C(C(=CC(=C2C1)N3C=C(C(=O)C3=O)C(=O)O)F)N4CCNCC4",
-    "pyrazinamide": "C1=CN=C(C=N1)C(=O)N",
-    "streptomycin": "C1C(C(C(C(O1)OC2C(C(C(C(O2)CN)O)O)O)N)N)O",
+# Known binding-pocket residue positions per gene (H37Rv numbering)
+# These define the pocket centroid for non-co-crystal genes
+POCKET_RESIDUES = {
+    "rpoB": list(range(426, 453)),   # RRDR
+    "katG": [315],                     # INH activation site
+    "embB": [306, 406, 497],          # EMB resistance cluster
+    "gyrA": [90, 91, 94],             # FQ binding
+    "gyrB": [538],                    # FQ resistance
+    "pncA": [4, 7, 8, 9, 10, 11, 12, 13, 20, 49, 51, 71, 85, 96, 125, 133, 138],  # PZA active site core
+    "rpsL": [43, 88],                 # STR binding
+    "eis": [48, 49, 50, 51, 52, 53, 54, 57, 58, 59, 60, 63, 64, 65, 66,
+            74, 75, 78, 85, 86, 87, 88, 92, 93, 94, 98, 99, 100, 103, 104,
+            105, 116, 117, 118, 119, 120, 121, 122, 126, 128, 130, 134,
+            139, 140, 142, 144, 147, 189, 289, 295, 310, 350],
+    "tap": [0],  # membrane protein, no reliable pocket definition
+    "mmpR5": [36, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
+              51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64,
+              65, 66, 67, 68, 69, 70, 71, 72, 82, 89, 90, 91, 92, 93,
+              94, 95, 96, 97, 98, 99, 100, 101, 104, 107, 108, 110,
+              112, 114, 115, 117, 118, 119, 120, 121, 122, 123, 124,
+              125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135,
+              136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146,
+              147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157],
+    "mmpL5": [0],  # membrane protein, no reliable pocket definition
+    "tlyA": [0],   # rRNA methyltransferase; binding pocket uncertain
+    "inhA": [14, 16, 17, 18, 21, 65, 66, 67, 68, 94, 95, 96, 97, 98,
+             99, 100, 101, 102, 103, 104, 105, 106, 110, 113, 122, 147,
+             148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159,
+             160, 161, 162, 163, 164, 165, 172, 173, 174, 175, 176, 177,
+             178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189,
+             190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201,
+             202, 203],
 }
+
+# Co-crystal definitions: (pdb_code, gene, chain, ligand_resname)
+CO_CRYSTALS = [
+    ("5UHB", "rpoB", "C", "RFP"),
+    ("5BS8", "gyrA", "A", "MFX"),
+]
 
 
 def load_feature_data():
-    """Load the existing residue-level feature data."""
     path = OUTPUT_DIR / "residue_hotspot_data.csv"
     df = pd.read_csv(path)
     return df
 
 
+def get_genome_sequence(gene):
+    df = load_feature_data()
+    gdf = df[df["gene"] == gene].sort_values("residue_pos")
+    return "".join(gdf["wt_aa"].values)
+
+
 def get_pdb_sequence_and_positions(pdb_path):
-    """Extract 1-letter sequence and (chain, resid) tuples from PDB."""
     from Bio.PDB import PDBParser
     parser = PDBParser(QUIET=True)
     struct = parser.get_structure("prot", str(pdb_path))
@@ -99,18 +113,8 @@ def get_pdb_sequence_and_positions(pdb_path):
     return "".join(seq), pos
 
 
-def get_genome_sequence(gene):
-    """Get H37Rv sequence from feature data."""
-    df = load_feature_data()
-    gdf = df[df["gene"] == gene].sort_values("residue_pos")
-    return "".join(gdf["wt_aa"].values)
-
-
-def compute_position_mapping(gene):
-    """
-    Compute mapping from H37Rv genome positions to PDB residue positions.
-    Returns dict: H37Rv_position -> PDB_position (or None if no match)
-    """
+def compute_smith_waterman_mapping(gene):
+    """Map H37Rv genome positions to PDB residue IDs via Smith-Waterman."""
     from Bio import pairwise2
 
     uniprot = GENE_UNIPROT.get(gene)
@@ -125,10 +129,8 @@ def compute_position_mapping(gene):
     genome_seq = get_genome_sequence(gene)
 
     if pdb_seq == genome_seq:
-        # Perfect match: 1:1 mapping
         return {i + 1: pdb_pos[i][1] for i in range(len(genome_seq))}
 
-    # Need alignment
     align = pairwise2.align.globalms(pdb_seq, genome_seq, 2, -1, -2, -1)
     if not align:
         return {}
@@ -151,62 +153,48 @@ def compute_position_mapping(gene):
     return mapping
 
 
-# TASK 1: EXTRACT RFP CONTACT FROM 5UHB
-
-def task1_rfp_contact():
-    """
-    Compute per-residue distance to rifampicin in the 5UHB co-crystal,
-    then map to M. tuberculosis rpoB positions via structural alignment.
-    """
-    print("\n" + "=" * 60)
-    print("TASK 1: RIFAMPICIN CONTACT DISTANCES")
-    print("=" * 60)
-
+def extract_co_crystal_distances(gene, pdb_code, chain_id, ligand_resn):
+    """Extract per-residue distances to a co-crystallized ligand."""
     from Bio.PDB import PDBParser, Superimposer
 
-    # Step 1: Get RFP coordinates from 5UHB
-    crystal_path = CRYSTAL_DIR / "5UHB_rpoB.pdb"
+    crystal_path = CRYSTAL_DIR / f"{pdb_code}_{gene}.pdb"
     if not crystal_path.exists():
-        print("  ERROR: 5UHB crystal structure not found")
+        print(f"  WARNING: {crystal_path} not found")
         return {}
 
     parser = PDBParser(QUIET=True)
-    crystal = parser.get_structure("5uhb", str(crystal_path))
+    crystal = parser.get_structure("crystal", str(crystal_path))
 
-    # Find RFP in 5UHB (chain C)
-    rfp_atoms = []
-    rfp_chain = None
-    for chain in crystal[0]:
-        for res in chain:
-            if res.get_id()[0].startswith("H_") and res.get_resname() == "RFP":
-                rfp_atoms = [a.get_vector().get_array() for a in res.get_atoms()]
-                rfp_chain = chain.get_id()
-                break
-        if rfp_atoms:
-            break
+    # Find ligand atoms
+    lig_atoms = []
+    for model in crystal:
+        for chain in model:
+            for res in chain:
+                if res.get_id()[0].startswith("H_") and res.get_resname() == ligand_resn:
+                    lig_atoms.extend([a.get_vector().get_array() for a in res.get_atoms()])
+                elif res.get_resname() == ligand_resn and not res.get_id()[0].startswith("H_"):
+                    lig_atoms.extend([a.get_vector().get_array() for a in res.get_atoms()])
 
-    if not rfp_atoms:
-        print("  ERROR: RFP not found in 5UHB structure")
+    if not lig_atoms:
+        print(f"  WARNING: {ligand_resn} not found in {pdb_code}")
         return {}
 
-    rfp_coords = np.array(rfp_atoms)
-    print(f"  Found RFP in 5UHB chain {rfp_chain}, {len(rfp_coords)} atoms")
+    lig_coords = np.array(lig_atoms)
+    print(f"  Found {ligand_resn} in {pdb_code}: {len(lig_coords)} atoms")
 
-    # Step 2: Align AlphaFold M. tb rpoB to 5UHB chain C
-    af_path = ALPHAFOLD_DIR / "rpoB_P9WGY9_alphafold.pdb"
+    # Align AlphaFold structure to crystal
+    af_path = ALPHAFOLD_DIR / f"{gene}_{GENE_UNIPROT[gene]}_alphafold.pdb"
     if not af_path.exists():
-        print("  ERROR: AlphaFold rpoB not found")
         return {}
 
     af_struct = parser.get_structure("af", str(af_path))
 
-    # Extract aligned residues sequence-wise
-    def get_ca_atoms(structure, chain_id=None):
-        """Extract C-alpha atoms for sequence alignment."""
+    # Get C-alpha atoms from both structures for alignment
+    def get_ca_items(structure, chain_filter=None):
         items = []
         for model in structure:
             for chain in model:
-                if chain_id and chain.get_id() != chain_id:
+                if chain_filter and chain.get_id() != chain_filter:
                     continue
                 for res in chain:
                     if res.get_id()[0].startswith("H_"):
@@ -216,147 +204,344 @@ def task1_rfp_contact():
                         items.append((res.get_id()[1], aa, chain.get_id(), res["CA"]))
         return items
 
-    # Get 5UHB chain C residues
-    cry_items = get_ca_atoms(crystal, "C")
-    # Get AF residues (chain A)
-    af_items = get_ca_atoms(af_struct, None)
+    cry_items = get_ca_items(crystal, chain_id)
+    af_items = get_ca_items(af_struct, None)
 
     cry_seq = "".join(item[1] for item in cry_items)
     af_seq = "".join(item[1] for item in af_items)
 
-    # Simple sequence-guided alignment: match residues in order
-    cry_aligned = []
-    af_aligned = []
-    af_start = 0
-
-    for cry_idx, (cry_resid, cry_aa, cry_chain, cry_ca) in enumerate(cry_items):
-        for af_idx in range(af_start, min(af_start + 50, len(af_items))):
-            af_resid, af_aa, af_chain, af_ca = af_items[af_idx]
-            if af_aa == cry_aa:
-                cry_aligned.append(cry_ca)
-                af_aligned.append(af_ca)
-                af_start = af_idx + 1
-                break
-
-    print(f"  Aligned {len(cry_aligned)} residues for structural superposition")
-
-    if len(cry_aligned) < 100:
-        print("  ERROR: Too few aligned residues")
+    # Smith-Waterman alignment for structural superposition
+    from Bio import pairwise2
+    align = pairwise2.align.globalms(cry_seq, af_seq, 2, -1, -2, -1)
+    if not align:
+        print("  WARNING: alignment failed for structural superposition")
         return {}
 
-    # Superimpose
+    best = align[0]
+    cry_a, af_a = best.seqA, best.seqB
+
+    cry_aligned_ca = []
+    af_aligned_ca = []
+    cry_idx = 0
+    af_idx = 0
+    for i in range(len(cry_a)):
+        if cry_a[i] != "-" and af_a[i] != "-":
+            cry_aligned_ca.append(cry_items[cry_idx][3])
+            af_aligned_ca.append(af_items[af_idx][3])
+        if cry_a[i] != "-":
+            cry_idx += 1
+        if af_a[i] != "-":
+            af_idx += 1
+
+    if len(cry_aligned_ca) < 50:
+        print(f"  WARNING: too few aligned residues ({len(cry_aligned_ca)})")
+        return {}
+
+    # Superpose
     sup = Superimposer()
-    sup.set_atoms(cry_aligned, af_aligned)
-    # Apply rotation to all AF atoms
-    for chain in af_struct[0]:
-        for res in chain:
-            for atom in res:
-                atom.transform(sup.rotran[0], sup.rotran[1])
+    sup.set_atoms(cry_aligned_ca, af_aligned_ca)
+    for model in af_struct:
+        for chain in model:
+            for res in chain:
+                for atom in res:
+                    atom.transform(sup.rotran[0], sup.rotran[1])
 
-    print(f"  Superposition RMSD: {sup.rms:.3f}A")
+    print(f"  Superposition RMSD: {sup.rms:.3f}A over {len(cry_aligned_ca)} residues")
 
-    # Step 3: For each AF residue, compute min distance to RFP
-    # Build position mapping first (H37Rv genome -> AF PDB resid)
-    pos_map = compute_position_mapping("rpoB")
+    # Get genome mapping
+    pos_map = compute_smith_waterman_mapping(gene)
 
-    # Compute min distance for each AF residue
-    af_distances = {}  # (gene, pdb_resid) -> min_dist
-    for chain in af_struct[0]:
-        for res in chain:
-            if res.get_id()[0].startswith("H_"):
-                continue
-            res_coords = np.array([a.get_vector().get_array() for a in res.get_atoms()])
-            if len(res_coords) == 0:
-                continue
-            min_dist = float(np.min(np.linalg.norm(res_coords[:, None] - rfp_coords[None, :], axis=-1)))
-            af_distances[(chain.get_id(), res.get_id()[1])] = min_dist
+    # Compute distances
+    distances = {}
+    for model in af_struct:
+        for chain in model:
+            for res in chain:
+                if res.get_id()[0].startswith("H_"):
+                    continue
+                res_coords = np.array([a.get_vector().get_array() for a in res.get_atoms()])
+                if len(res_coords) == 0:
+                    continue
+                min_dist = float(np.min(np.linalg.norm(
+                    res_coords[:, None] - lig_coords[None, :], axis=-1
+                )))
+                distances[(chain.get_id(), res.get_id()[1])] = min_dist
 
-    # Step 4: Map to H37Rv genome positions
-    result = {}  # (gene, genome_pos) -> min_dist_to_drug
+    # Map to genome positions
+    result = {}
     for genome_pos, pdb_resid in pos_map.items():
-        # Find the chain for this PDB residue
-        for (chain_id, resid), dist in af_distances.items():
+        for (ch, resid), dist in distances.items():
             if resid == pdb_resid:
-                result[("rpoB", genome_pos)] = dist
+                result[("rpoB" if gene == "rpoB" else gene, genome_pos)] = dist
                 break
 
-    print(f"  Computed RFP distances for {len(result)} rpoB positions")
-    print(f"  Missed hotspots:")
-    for hpos in [170, 491]:
-        dist = result.get(("rpoB", hpos), "N/A")
-        print(f"    rpoB {hpos}: {dist:.2f}A" if isinstance(dist, float) else f"    rpoB {hpos}: {dist}")
-
+    print(f"  Computed distances for {len(result)} positions")
     return result
 
 
-# TASK 2: COMPUTE DRUG CONTACT FEATURE
+def dilate_pocket(pocket_res, gene, distance_threshold=10.0):
+    """Expand pocket residues to include all residues within threshold A of any pocket CA."""
+    uniprot = GENE_UNIPROT.get(gene)
+    if not uniprot or not pocket_res or pocket_res[0] == 0:
+        return pocket_res
+    from Bio.PDB import PDBParser
+    pdb_path = ALPHAFOLD_DIR / f"{gene}_{uniprot}_alphafold.pdb"
+    if not pdb_path.exists():
+        return pocket_res
+    parser = PDBParser(QUIET=True)
+    struct = parser.get_structure("af", str(pdb_path))
+    pos_map = compute_smith_waterman_mapping(gene)
+    pdb_to_genome = {v: k for k, v in pos_map.items()}
+    pocket_ca_coords = []
+    for model in struct:
+        for chain in model:
+            for res in chain:
+                if res.get_id()[0].startswith("H_"):
+                    continue
+                resid = res.get_id()[1]
+                genome_pos = pdb_to_genome.get(resid)
+                if genome_pos in pocket_res and "CA" in res:
+                    pocket_ca_coords.append(res["CA"].get_vector().get_array())
+    if not pocket_ca_coords:
+        return pocket_res
+    pocket_coords = np.array(pocket_ca_coords)
+    dilated = set(pocket_res)
+    for model in struct:
+        for chain in model:
+            for res in chain:
+                if res.get_id()[0].startswith("H_"):
+                    continue
+                resid = res.get_id()[1]
+                genome_pos = pdb_to_genome.get(resid)
+                if genome_pos is None or genome_pos in dilated:
+                    continue
+                if "CA" not in res:
+                    continue
+                ca = res["CA"].get_vector().get_array()
+                if np.min(np.linalg.norm(pocket_coords - ca, axis=1)) <= distance_threshold:
+                    dilated.add(genome_pos)
+    return sorted(dilated)
 
-def task2_drug_contact_feature(rfp_contacts):
+
+def compute_pocket_distances(gene):
+    """For genes without co-crystals, compute distance to pocket centroid."""
+    from Bio.PDB import PDBParser
+
+    uniprot = GENE_UNIPROT.get(gene)
+    pocket_res = POCKET_RESIDUES.get(gene, [])
+    if not pocket_res or pocket_res[0] == 0:
+        return {}
+
+    # Dilate pocket to include structural neighbors of binding site
+    dilated = dilate_pocket(pocket_res, gene, distance_threshold=10.0)
+    if len(dilated) > len(pocket_res):
+        print(f"  Dilated pocket: {len(pocket_res)} -> {len(dilated)} residues")
+    pocket_res = dilated
+
+    af_path = ALPHAFOLD_DIR / f"{gene}_{uniprot}_alphafold.pdb"
+    if not af_path.exists():
+        return {}
+
+    parser = PDBParser(QUIET=True)
+    struct = parser.get_structure("af", str(af_path))
+
+    # Get mapping
+    pos_map = compute_smith_waterman_mapping(gene)
+    # Reverse: pdb_resid -> genome_pos
+    pdb_to_genome = {v: k for k, v in pos_map.items()}
+
+    # Find pocket residue CA coordinates
+    pocket_ca_coords = []
+    for model in struct:
+        for chain in model:
+            for res in chain:
+                if res.get_id()[0].startswith("H_"):
+                    continue
+                resid = res.get_id()[1]
+                # Check if this PDB residue maps to a known pocket position
+                genome_pos = pdb_to_genome.get(resid)
+                if genome_pos in pocket_res and "CA" in res:
+                    pocket_ca_coords.append(res["CA"].get_vector().get_array())
+
+    if not pocket_ca_coords:
+        return {}
+
+    pocket_centroid = np.mean(pocket_ca_coords, axis=0)
+    print(f"  Pocket centroid from {len(pocket_ca_coords)} residues: {pocket_centroid}")
+
+    # Compute distance of each residue to pocket centroid
+    result = {}
+    for model in struct:
+        for chain in model:
+            for res in chain:
+                if res.get_id()[0].startswith("H_"):
+                    continue
+                resid = res.get_id()[1]
+                genome_pos = pdb_to_genome.get(resid)
+                if genome_pos is None:
+                    continue
+                if "CA" in res:
+                    ca = res["CA"].get_vector().get_array()
+                    dist = float(np.linalg.norm(ca - pocket_centroid))
+                    result[(gene, genome_pos)] = dist
+
+    # Also compute min heavy-atom distance to any pocket residue
+    result_fine = {}
+    for model in struct:
+        for chain in model:
+            for res_target in chain:
+                if res_target.get_id()[0].startswith("H_"):
+                    continue
+                resid = res_target.get_id()[1]
+                genome_pos = pdb_to_genome.get(resid)
+                if genome_pos is None:
+                    continue
+
+                target_coords = np.array([a.get_vector().get_array()
+                                          for a in res_target.get_atoms()])
+                if len(target_coords) == 0:
+                    continue
+
+                # Compute min distance to any pocket residue atom
+                min_to_pocket = float("inf")
+                for model2 in struct:
+                    for chain2 in model2:
+                        for res_pocket in chain2:
+                            if res_pocket.get_id()[0].startswith("H_"):
+                                continue
+                            p_resid = res_pocket.get_id()[1]
+                            p_genome = pdb_to_genome.get(p_resid)
+                            if p_genome is None or p_genome not in pocket_res:
+                                continue
+                            # Exclude the query residue to avoid self-distance=0 circularity
+                            if p_genome == genome_pos:
+                                continue
+                            pocket_atom_coords = np.array([
+                                a.get_vector().get_array() for a in res_pocket.get_atoms()
+                            ])
+                            if len(pocket_atom_coords) == 0:
+                                continue
+                            d = np.min(np.linalg.norm(
+                                target_coords[:, None] - pocket_atom_coords[None, :], axis=-1
+                            ))
+                            if d < min_to_pocket:
+                                min_to_pocket = d
+
+                if min_to_pocket != float("inf"):
+                    result_fine[(gene, genome_pos)] = round(min_to_pocket, 2)
+
+    return result_fine
+
+
+def compute_plddt_features():
+    """Extract pLDDT score (AlphaFold confidence) from each AlphaFold PDB.
+    Returns dict: (gene, residue_pos) -> (plddt_score, local_env_score)
+    where local_env_score = average pLDDT of residues within 8A in 3D space.
     """
-    Compute drug_contact feature for all residues.
-    - rpoB: use RFP distances from 5UHB
-    - Others: placeholder for future docking
-    Feature is distance to drug in Angstroms (NaN = no drug data for this gene)
-    """
-    print("\n" + "=" * 60)
-    print("TASK 2: DRUG CONTACT FEATURE")
-    print("=" * 60)
+    from Bio.PDB import PDBParser, NeighborSearch
+    import warnings
+    warnings.filterwarnings("ignore")
 
-    df = load_feature_data()
+    result_plddt = {}
+    result_env = {}
 
-    # Initialize with NaN
-    df["drug_distance"] = np.nan
+    for gene, uniprot in GENE_UNIPROT.items():
+        pdb_path = ALPHAFOLD_DIR / f"{gene}_{uniprot}_alphafold.pdb"
+        if not pdb_path.exists():
+            continue
 
-    # Map RFP contacts
-    for (gene, pos), dist in rfp_contacts.items():
-        mask = (df["gene"] == gene) & (df["residue_pos"] == pos)
-        df.loc[mask, "drug_distance"] = round(dist, 2)
+        parser = PDBParser(QUIET=True)
+        struct = parser.get_structure("af", str(pdb_path))
+        pos_map = compute_smith_waterman_mapping(gene)
 
-    n_nonnull = df["drug_distance"].notna().sum()
-    print(f"  Drug distance assigned for {n_nonnull} residues")
+        # Extract pLDDT (stored in B-factor column in AlphaFold PDBs)
+        ca_atoms = []
+        res_plddt = {}
+        for model in struct:
+            for chain in model:
+                for res in chain:
+                    if res.get_id()[0].startswith("H_"):
+                        continue
+                    resid = res.get_id()[1]
+                    genome_pos = pos_map.get(resid)
+                    if genome_pos is None:
+                        continue
+                    bfactor = res.get_list()[0].get_bfactor() if res.get_list() else 0.0
+                    res_plddt[(gene, genome_pos)] = round(bfactor, 2)
+                    if "CA" in res:
+                        ca_atoms.append((res["CA"], gene, genome_pos))
 
-    # For residues without computed drug distance,
-    # set a large default based on inner_distance
-    # This avoids dropping these samples from the model
-    # while still providing signal for residues near drugs
-    default_dist = df["drug_distance"].max() + 10 if n_nonnull > 0 else 100
-    df["drug_distance"] = df["drug_distance"].fillna(default_dist)
+        # Compute local environment score: average pLDDT of neighbors within 8A
+        if len(ca_atoms) > 5:
+            ca_coords = np.array([a[0].get_vector().get_array() for a in ca_atoms])
+            for i, (atom, gene_i, pos_i) in enumerate(ca_atoms):
+                atom_coord = atom.get_vector().get_array()
+                dists = np.linalg.norm(ca_coords - atom_coord, axis=1)
+                neighbors = np.where((dists > 0) & (dists <= 8.0))[0]
+                if len(neighbors) > 0:
+                    neighbor_plddt = np.mean([res_plddt.get((ca_atoms[j][1], ca_atoms[j][2]), 50.0)
+                                              for j in neighbors])
+                    result_env[(gene_i, pos_i)] = round(neighbor_plddt, 2)
 
-    # Also compute drug_contact_binary (within 5A = contact)
-    df["drug_contact"] = (df["drug_distance"] <= 5.0).astype(int)
+        for key, val in res_plddt.items():
+            result_plddt[key] = val
 
-    print(f"  Residues with drug contact (<=5A): {df['drug_contact'].sum()}")
-    print(f"  Feature range: {df['drug_distance'].min():.1f} - {df['drug_distance'].max():.1f}A")
+    plddt_series = pd.Series(result_plddt, name="plddt_score")
+    env_series = pd.Series(result_env, name="plddt_environment")
+    plddt_df = pd.DataFrame({"plddt_score": plddt_series, "plddt_environment": env_series})
+    plddt_df.index = pd.MultiIndex.from_tuples(plddt_df.index, names=["gene", "residue_pos"])
+    plddt_df = plddt_df.reset_index()
 
     # Save
-    feat_path = OUTPUT_DIR / "drug_contact_features.pkl"
-    with open(feat_path, "wb") as f:
-        pickle.dump({
-            "drug_distance": df["drug_distance"].values,
-            "drug_contact": df["drug_contact"].values,
-        }, f)
-    print(f"  Saved to {feat_path}")
-
-    return df
+    plddt_df.to_pickle(OUTPUT_DIR / "plddt_data.pkl")
+    print(f"  pLDDT features saved for {len(result_plddt)} residues across {len(plddt_df['gene'].unique())} genes")
+    return result_plddt, result_env
 
 
-# TASK 3: MODEL RETRAINING & EVALUATION
-
-def task3_evaluate_with_docking(df):
+def proximity_transform(distances, k=10.0):
+    """Convert raw drug distance to a bounded proximity score [0,1].
+    proximity = 1 / (1 + d/k)
+    At d=0: proximity=1.0, at d=k: proximity=0.5, at d=3k: proximity=0.25
     """
-    Add drug contact features to the model, retrain, and evaluate
-    whether the 4 missed hotspots are rescued.
-    """
-    print("\n" + "=" * 60)
-    print("TASK 3: MODEL EVALUATION WITH DOCKING FEATURES")
-    print("=" * 60)
+    return {key: round(1.0 / (1.0 + dist / k), 4) for key, dist in distances.items()}
 
+
+def compute_all_drug_distances():
+    """Compute drug-distance feature for every gene."""
+    all_distances = {}
+
+    # Co-crystal genes
+    for pdb_code, gene, chain, ligand_resn in CO_CRYSTALS:
+        print(f"\n  [{gene}] Co-crystal {pdb_code} + {ligand_resn}")
+        dists = extract_co_crystal_distances(gene, pdb_code, chain, ligand_resn)
+        all_distances.update(dists)
+
+    # Pocket-distance genes (all 13 genes, co-crystal results will overwrite)
+    for gene in GENE_UNIPROT:
+        if gene in [c[1] for c in CO_CRYSTALS]:
+            continue
+        print(f"\n  [{gene}] Pocket-distance proxy")
+        dists = compute_pocket_distances(gene)
+        all_distances.update(dists)
+
+    return all_distances
+
+
+def integrate_and_evaluate(all_distances):
+    """Add drug_distance feature, retrain model, evaluate per-gene AUROC."""
     from sklearn.linear_model import LogisticRegression
     from sklearn.model_selection import StratifiedKFold
     from sklearn.preprocessing import StandardScaler
     from sklearn.metrics import roc_auc_score, average_precision_score
+    from xgboost import XGBClassifier
 
-    # Load existing features from pickle caches
+    print("\n" + "=" * 60)
+    print("INTEGRATING DRUG DISTANCE FEATURE + RETRAINING")
+    print("=" * 60)
+
+    # Load Stage 1 data
+    df = load_feature_data()
+
+    # Add features we need
     sasa_path = OUTPUT_DIR / "sasa_data.pkl"
     if sasa_path.exists():
         with open(sasa_path, "rb") as f:
@@ -381,134 +566,333 @@ def task3_evaluate_with_docking(df):
             lambda r: contact_data.get((r["gene"], r["residue_pos"]), np.nan), axis=1
         )
 
-    # Features
+    plddt_path = OUTPUT_DIR / "plddt_data.pkl"
+    if plddt_path.exists():
+        plddt_df = pd.read_pickle(plddt_path)
+        # Drop duplicate pLDDT columns before merge
+        for c in ['plddt_score_x','plddt_environment_x','plddt_score_y','plddt_environment_y']:
+            if c in df.columns:
+                del df[c]
+        df = df.merge(plddt_df, on=["gene", "residue_pos"], how="left")
+
+    # Add mutation_sensitivity removed: only 2 unique values (0.778, 1.0), 99.7% constant.
+    # BLOSUM-based approximation too coarse to capture TB-specific mutation spectrum.
+
+    # Expand known hotspots: add inhA known resistance residues
+    for pos in [21, 94, 95, 99, 103, 203]:
+        mask = (df["gene"] == "inhA") & (df["residue_pos"] == pos)
+        df.loc[mask, "is_hotspot"] = 1
+
+    # Assign drug_distance (raw) + drug_proximity (saturating transform)
+    drug_dist_col = np.full(len(df), np.nan)
+    for (gene, pos), dist in all_distances.items():
+        mask = (df["gene"] == gene) & (df["residue_pos"] == pos)
+        drug_dist_col[mask] = dist
+
+    # Fill remaining NaN with a large default
+    default_val = 100.0
+    drug_dist_col = np.where(np.isnan(drug_dist_col), default_val, drug_dist_col)
+    df["drug_distance"] = drug_dist_col
+    # Proximity score: bounded [0,1], 1.0 at d=0, 0.5 at d=10A, ~0.09 at d=100A
+    df["drug_proximity"] = 1.0 / (1.0 + df["drug_distance"] / 10.0)
+
+    # Print coverage per gene
+    print("\n  Drug distance coverage per gene:")
+    for gene in sorted(GENE_UNIPROT.keys()):
+        gdf = df[df["gene"] == gene]
+        n_with_data = (gdf["drug_distance"] < default_val).sum()
+        n_total = len(gdf)
+        print(f"    {gene}: {n_with_data}/{n_total} residues with real drug distance")
+
+    # Define features
     base_features = [
         "inner_distance", "homoplasy_count", "homoplasy_alleles",
         "helix_propensity", "strand_propensity", "hydrophobicity",
         "volume", "charge", "hbond", "rel_position",
         "conservation_blosum", "contact_density_seq",
     ]
-    stage1_features = ["sasa_relative", "esm2_intolerance", "contact_density_3d"]
-    docking_features = ["drug_distance", "drug_contact"]
+    new_features = ["sasa_relative", "esm2_intolerance", "contact_density_3d",
+                     "plddt_score", "plddt_environment"]
+    stage1_features = [f for f in base_features + new_features if f in df.columns]
+    all_features = stage1_features + ["drug_proximity"]
 
-    # Compare models with and without docking features
-    for feature_set_name, features in [
-        ("Stage 1 (no docking)", base_features + [f for f in stage1_features if f in df.columns]),
-        ("Stage 1 + docking", base_features + [f for f in stage1_features + docking_features if f in df.columns]),
-    ]:
-        available = [f for f in features if f in df.columns]
-        print(f"\n  {feature_set_name}")
-        print(f"  Features ({len(available)}): {available}")
+    df_model = df.dropna(subset=all_features).copy()
+    y = df_model["is_hotspot"].values
+    print(f"\n  Model samples: {len(df_model)}, positives: {y.sum()}")
 
-        df_model = df.dropna(subset=available).copy()
-        print(f"  Samples: {len(df_model)}, Hotspots: {df_model['is_hotspot'].sum()}")
+    # Per-gene evaluation
+    print("\n  Per-gene AUROC comparison:")
+    print(f"  {'Gene':<8} {'Stage1 AUROC':<15} {'+Docking AUROC':<17} {'Delta':<8} {'n_pos':<6}")
+    print(f"  {'-'*56}")
 
-        if len(df_model) < 100:
-            print("  SKIP: too few samples")
+    gene_results = {}
+    for gene in sorted(GENE_UNIPROT.keys()):
+        gmask = df_model["gene"] == gene
+        gy = y[gmask]
+        if gy.sum() < 2:
             continue
 
-        X = df_model[available].values
-        y = df_model["is_hotspot"].values
+        gx1 = df_model.loc[gmask, stage1_features].values
+        gx2 = df_model.loc[gmask, all_features].values
 
+        skf = StratifiedKFold(n_splits=3, shuffle=True, random_state=42)
+        aucs1, aucs2 = [], []
+        for train_idx, test_idx in skf.split(gx1, gy):
+            scaler = StandardScaler()
+            gx1_train = scaler.fit_transform(gx1[train_idx])
+            gx1_test = scaler.transform(gx1[test_idx])
+            gx2_train = scaler.fit_transform(gx2[train_idx])
+            gx2_test = scaler.transform(gx2[test_idx])
+
+            m1 = LogisticRegression(C=1.0, class_weight="balanced", max_iter=1000, random_state=42)
+            m1.fit(gx1_train, gy[train_idx])
+            aucs1.append(roc_auc_score(gy[test_idx], m1.predict_proba(gx1_test)[:, 1]))
+
+            m2 = XGBClassifier(scale_pos_weight=10, max_depth=6, learning_rate=0.05,
+                               n_estimators=300, subsample=0.8, colsample_bytree=0.8,
+                               eval_metric="logloss", random_state=42)
+            m2.fit(gx2[train_idx], gy[train_idx])
+            aucs2.append(roc_auc_score(gy[test_idx], m2.predict_proba(gx2[test_idx])[:, 1]))
+
+        a1 = np.mean(aucs1)
+        a2 = np.mean(aucs2)
+        delta = a2 - a1
+        gene_results[gene] = {"stage1_auroc": a1, "stage3_auroc": a2, "delta": delta}
+        print(f"  {gene:<8} {a1:<15.4f} {a2:<17.4f} {delta:<+8.4f} {gy.sum():<6}")
+
+    # Global 5-fold CV
+    print("\n  Global 5-fold CV:")
+    X1 = df_model[stage1_features].values
+    X2 = df_model[all_features].values
+
+    skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+    glob_auc1, glob_auc2 = [], []
+    glob_ap1, glob_ap2 = [], []
+    top20_1, top20_2 = [], []
+
+    for train_idx, test_idx in skf.split(X2, y):
         scaler = StandardScaler()
-        X_scaled = scaler.fit_transform(X)
+        X1_train = scaler.fit_transform(X1[train_idx])
+        X1_test = scaler.transform(X1[test_idx])
+        X2_train = scaler.fit_transform(X2[train_idx])
+        X2_test = scaler.transform(X2[test_idx])
 
-        # Cross-validation
-        skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-        model = LogisticRegression(C=1.0, class_weight="balanced", max_iter=1000, random_state=42)
-        aurocs, auprcs, top20s = [], [], []
+        m1 = LogisticRegression(C=1.0, class_weight="balanced", max_iter=1000, random_state=42)
+        m1.fit(X1_train, y[train_idx])
+        p1 = m1.predict_proba(X1_test)[:, 1]
 
-        for train_idx, test_idx in skf.split(X_scaled, y):
-            X_train, X_test = X_scaled[train_idx], X_scaled[test_idx]
-            y_train, y_test = y[train_idx], y[test_idx]
-            model.fit(X_train, y_train)
-            y_prob = model.predict_proba(X_test)[:, 1]
-            aurocs.append(roc_auc_score(y_test, y_prob))
-            auprcs.append(average_precision_score(y_test, y_prob))
-            top20s.append(y_test[np.argsort(y_prob)[::-1][:20]].sum() / max(y_test.sum(), 1))
+        m2 = XGBClassifier(scale_pos_weight=10, max_depth=6, learning_rate=0.05,
+                           n_estimators=300, subsample=0.8, colsample_bytree=0.8,
+                           eval_metric="logloss", random_state=42)
+        m2.fit(X2[train_idx], y[train_idx])
+        p2 = m2.predict_proba(X2[test_idx])[:, 1]
 
-        print(f"    AUROC = {np.mean(aurocs):.4f} +/- {np.std(aurocs):.4f}")
-        print(f"    AUPRC = {np.mean(auprcs):.4f} +/- {np.std(auprcs):.4f}")
-        print(f"    Top-20 recall = {np.mean(top20s):.4f} +/- {np.std(top20s):.4f}")
+        glob_auc1.append(roc_auc_score(y[test_idx], p1))
+        glob_auc2.append(roc_auc_score(y[test_idx], p2))
+        glob_ap1.append(average_precision_score(y[test_idx], p1))
+        glob_ap2.append(average_precision_score(y[test_idx], p2))
+        top20_1.append(y[test_idx][np.argsort(p1)[::-1][:20]].sum() / max(y[test_idx].sum(), 1))
+        top20_2.append(y[test_idx][np.argsort(p2)[::-1][:20]].sum() / max(y[test_idx].sum(), 1))
 
-        # Feature coefficients
-        coefs = model.coef_[0]
-        coef_df = pd.DataFrame({"feature": available, "coefficient": coefs}).sort_values("coefficient", ascending=False)
-        print(f"    Top features:")
-        for _, r in coef_df.head(8).iterrows():
-            print(f"      {r['feature']}: {r['coefficient']:.4f}")
+    print(f"    Stage 1: AUROC={np.mean(glob_auc1):.4f}+-{np.std(glob_auc1):.4f}  "
+          f"AUPRC={np.mean(glob_ap1):.4f}  Top20={np.mean(top20_1):.3f}")
+    print(f"    Stage 3: AUROC={np.mean(glob_auc2):.4f}+-{np.std(glob_auc2):.4f}  "
+          f"AUPRC={np.mean(glob_ap2):.4f}  Top20={np.mean(top20_2):.3f}")
 
-    # Full retrain with docking
-    available = base_features + [f for f in stage1_features + docking_features if f in df.columns]
-    available = [f for f in available if f in df.columns]
-    df_model = df.dropna(subset=available).copy()
-    X_all = StandardScaler().fit_transform(df_model[available].values)
-    model = LogisticRegression(C=1.0, class_weight="balanced", max_iter=1000, random_state=42)
-    model.fit(X_all, df_model["is_hotspot"].values)
-    df_model["hotspot_score"] = model.predict_proba(X_all)[:, 1]
-    df_model["rank"] = df_model["hotspot_score"].rank(ascending=False).astype(int)
-    df_model = df_model.sort_values("hotspot_score", ascending=False)
+    # Save updated data
+    df.to_csv(OUTPUT_DIR / "residue_hotspot_data_with_docking.csv", index=False)
+    print(f"\n  Updated data saved")
 
-    # Print top 30
-    print("\n  Top 30 Predicted Hotspot Residues (with docking):")
-    print(f"  {'Rank':<6} {'Gene':<8} {'Pos':<6} {'AA':<4} {'Score':<10} {'Known':<10} {'DrugDist':<10}")
-    print("  " + "-" * 60)
-    known_hotspots = {
-        ("rpoB", 170), ("rpoB", 430), ("rpoB", 435), ("rpoB", 445),
-        ("rpoB", 450), ("rpoB", 452), ("rpoB", 491),
-        ("katG", 315), ("embB", 306), ("embB", 406), ("embB", 497),
-        ("gyrA", 90), ("gyrA", 91), ("gyrA", 94),
-        ("gyrB", 538), ("pncA", 4), ("pncA", 10), ("pncA", 12), ("pncA", 125),
-        ("rpsL", 43), ("rpsL", 88),
+    results = {
+        "global": {
+            "stage1_auroc": float(np.mean(glob_auc1)),
+            "stage3_auroc": float(np.mean(glob_auc2)),
+            "stage1_auprc": float(np.mean(glob_ap1)),
+            "stage3_auprc": float(np.mean(glob_ap2)),
+            "stage1_top20": float(np.mean(top20_1)),
+            "stage3_top20": float(np.mean(top20_2)),
+        },
+        "per_gene": gene_results,
     }
+    return results
 
-    for i, (_, row) in enumerate(df_model.head(30).iterrows(), 1):
-        is_known = (row["gene"], row["residue_pos"]) in known_hotspots
-        known_str = "[KNOWN]" if is_known else ""
-        dd = f"{row.get('drug_distance', 0):.1f}" if "drug_distance" in row else "N/A"
-        print(f"  {i:<6} {row['gene']:<8} {row['residue_pos']:<6} {row['wt_aa']:<4} {row['hotspot_score']:<10.4f} {known_str:<10} {dd:<10}")
-
-    # Evaluate rescue of missed hotspots
-    print("\n  Missed Hotspot Rescue Analysis:")
-    print(f"  {'Hotspot':<15} {'Prev Rank':<12} {'New Rank':<10} {'Score':<8} {'DrugDist':<10} {'Rescued?':<10}")
-    print("  " + "-" * 65)
-    missed = [(170, "rpoB"), (491, "rpoB"), (125, "pncA"), (538, "gyrB")]
-    prev_ranks = {"rpoB_170": 24, "rpoB_491": 21, "pncA_125": 26, "gyrB_538": 28}
-    for pos, gene in missed:
-        row = df_model[(df_model["gene"] == gene) & (df_model["residue_pos"] == pos)]
-        if len(row) == 0:
-            continue
-        r = row.iloc[0]
-        key = f"{gene}_{pos}"
-        prev = prev_ranks.get(key, "?")
-        rescued = "YES" if r["rank"] <= 20 else "NO"
-        dd = f"{r.get('drug_distance', 0):.1f}" if "drug_distance" in r else "N/A"
-        print(f"  {gene} {pos:<10} {prev:<12} {r['rank']:<10} {r['hotspot_score']:<8.4f} {dd:<10} {rescued:<10}")
-
-    # Save output
-    output_path = OUTPUT_DIR / "ranked_predictions_with_docking.csv"
-    df_model.to_csv(output_path, index=False)
-    print(f"\n  Saved to {output_path}")
-
-
-# MAIN
 
 def main():
     print("=" * 60)
-    print("Stage 1.5: Drug-Specific Docking Features")
+    print("Stage 3: Per-Gene Drug Contact Features")
     print("=" * 60)
 
-    # Task 1: RFP contact distances
-    rfp_contacts = task1_rfp_contact()
+    print("\n[Phase 1] Computing drug distances for all genes...")
+    all_distances = compute_all_drug_distances()
+    print(f"\n  Total residues with drug-distance data: {len(all_distances)}")
 
-    # Task 2: Build drug contact feature
-    df = task2_drug_contact_feature(rfp_contacts)
+    # Save distances
+    dist_path = OUTPUT_DIR / "drug_distances.pkl"
+    with open(dist_path, "wb") as f:
+        pickle.dump(all_distances, f)
+    print(f"  Distances saved to {dist_path}")
 
-    # Task 3: Retrain and evaluate
-    task3_evaluate_with_docking(df)
+    print("\n[Phase 1b] Computing pLDDT confidence features...")
+    compute_plddt_features()
+
+    print("\n[Phase 2] Integrating feature and retraining model...")
+    results = integrate_and_evaluate(all_distances)
+
+    # Save results
+    results_path = OUTPUT_DIR / "stage3_results.json"
+    with open(results_path, "w") as f:
+        json.dump(results, f, indent=2, default=str)
+    print(f"\n  Results saved to {results_path}")
+
+    # Phase 3: Retrain on full data, produce ranked predictions
+    # (overwrites 04c outputs so 04e onwards pick up Stage 3 features)
+    print("\n" + "=" * 60)
+    print("PHASE 3: FULL MODEL RANKED PREDICTIONS")
+    print("=" * 60)
+
+    from xgboost import XGBClassifier
+    from sklearn.preprocessing import StandardScaler
+
+    # Reload data with drug_distance
+    df = load_feature_data()
+    sasa_path = OUTPUT_DIR / "sasa_data.pkl"
+    if sasa_path.exists():
+        with open(sasa_path, "rb") as f:
+            sasa_data = pickle.load(f)
+        df["sasa_relative"] = df.apply(
+            lambda r: sasa_data.get((r["gene"], r["residue_pos"]), np.nan), axis=1
+        )
+    esm_path = OUTPUT_DIR / "esm2_data.pkl"
+    if esm_path.exists():
+        with open(esm_path, "rb") as f:
+            esm_data = pickle.load(f)
+        df["esm2_intolerance"] = df.apply(
+            lambda r: esm_data.get((r["gene"], r["residue_pos"]), np.nan), axis=1
+        )
+    contact_path = OUTPUT_DIR / "contact_density_3d.pkl"
+    if contact_path.exists():
+        with open(contact_path, "rb") as f:
+            contact_data = pickle.load(f)
+        df["contact_density_3d"] = df.apply(
+            lambda r: contact_data.get((r["gene"], r["residue_pos"]), np.nan), axis=1
+        )
+
+    plddt_path = OUTPUT_DIR / "plddt_data.pkl"
+    if plddt_path.exists():
+        plddt_df = pd.read_pickle(plddt_path)
+        for c in ['plddt_score_x','plddt_environment_x','plddt_score_y','plddt_environment_y',
+                   'plddt_score','plddt_environment']:
+            if c in df.columns:
+                del df[c]
+        df = df.merge(plddt_df, on=["gene", "residue_pos"], how="left")
+    for c in list(df.columns):
+        if c.startswith('plddt_') and c.endswith(('_x','_y')):
+            base = c.rsplit('_', 1)[0]
+            if base not in df.columns:
+                df.rename(columns={c: base}, inplace=True)
+            else:
+                del df[c]
+    # Clean any merge-suffixed pLDDT columns
+    for c in list(df.columns):
+        if c.startswith('plddt_') and c.endswith(('_x','_y')):
+            base = c.rsplit('_', 1)[0]
+            if base not in df.columns:
+                df.rename(columns={c: base}, inplace=True)
+            else:
+                del df[c]
+
+    # mutation_sensitivity removed: only 2 unique values, 99.7% constant. BLOSUM too coarse.
+
+    # Apply drug distances + transform to proximity
+    drug_dist_col = np.full(len(df), 100.0)
+    for (gene, pos), dist in all_distances.items():
+        mask = (df["gene"] == gene) & (df["residue_pos"] == pos)
+        drug_dist_col[mask] = dist
+    df["drug_distance"] = drug_dist_col
+    df["drug_proximity"] = 1.0 / (1.0 + df["drug_distance"] / 10.0)
+
+    # Expand known hotspots: add inhA residues to is_hotspot
+    for pos in [21, 94, 95, 99, 103, 203]:
+        mask = (df["gene"] == "inhA") & (df["residue_pos"] == pos)
+        df.loc[mask, "is_hotspot"] = 1
+    n_expanded = df[df["gene"] == "inhA"]["is_hotspot"].sum()
+    print(f"\n  Expanded hotspots: {df['is_hotspot'].sum()} total ({n_expanded} from inhA)")
+
+    base_features = [
+        "inner_distance", "homoplasy_count", "homoplasy_alleles",
+        "helix_propensity", "strand_propensity", "hydrophobicity",
+        "volume", "charge", "hbond", "rel_position",
+        "conservation_blosum", "contact_density_seq",
+    ]
+    new_features = ["sasa_relative", "esm2_intolerance", "contact_density_3d",
+                     "plddt_score", "plddt_environment"]
+    all_feat = [f for f in base_features + new_features if f in df.columns] + ["drug_proximity"]
+
+    df_model = df.dropna(subset=all_feat).copy()
+    y = df_model["is_hotspot"].values
+    X = df_model[all_feat].values
+
+    model = XGBClassifier(scale_pos_weight=10, max_depth=6, learning_rate=0.05,
+                          n_estimators=300, subsample=0.8, colsample_bytree=0.8,
+                          eval_metric="logloss", random_state=42)
+    model.fit(X, y)
+    df_model["hotspot_score"] = model.predict_proba(X)[:, 1]
+    sc = df_model["hotspot_score"]
+    df_model["rank_numeric"] = sc.rank(ascending=False)
+
+    # Save ranked predictions (column 'rank' for 04e compatibility)
+    ranked_cols = ["gene", "residue_pos", "wt_aa", "is_hotspot", "drug_distance",
+                    "drug_proximity", "hotspot_score", "rank_numeric"]
+    ranked_cols = [c for c in ranked_cols if c in df_model.columns]
+    ranked = df_model[ranked_cols].copy()
+    ranked.columns = [c if c != "rank_numeric" else "rank" for c in ranked.columns]
+    ranked["rank"] = ranked["rank"].astype(int)
+    ranked = ranked.sort_values("rank")
+    ranked_path = OUTPUT_DIR / "ranked_predictions.csv"
+    ranked.to_csv(ranked_path, index=False)
+    print(f"  Ranked predictions saved to {ranked_path}")
+
+    # Show Top 20
+    has_prox = "drug_proximity" in df_model.columns
+    print("\n  Top 20 Predicted Hotspots (Stage 3):")
+    hdr = f"  {'Rank':<6} {'Gene':<8} {'Pos':<6} {'AA':<4} {'Score':<8} {'Known':<10}"
+    if has_prox:
+        hdr += f" {'Prox':<7}"
+    print(hdr)
+    print(f"  {'-'*(51 + (8 if has_prox else 0))}")
+    for i, (_, r) in enumerate(ranked.head(26).iterrows()):
+        known = "[KNOWN]" if r["is_hotspot"] else ""
+        line = f"  {i+1:<6} {r['gene']:<8} {int(r['residue_pos']):<6} {r['wt_aa']:<4} "
+        line += f"{r['hotspot_score']:<8.4f} {known:<10}"
+        if has_prox and "drug_proximity" in r:
+            line += f" {r['drug_proximity']:<7.4f}"
+        print(line)
+
+    # Save feature importance
+    importances = model.feature_importances_
+    coef_df = pd.DataFrame({"feature": all_feat, "importance": importances})
+    coef_df = coef_df.sort_values("importance", ascending=False)
+    coef_path = OUTPUT_DIR / "feature_coefficients.csv"
+    coef_df.to_csv(coef_path, index=False)
+    print(f"\n  Feature importances saved to {coef_path}")
+    print("\n  Feature importance (XGBoost gain):")
+    for _, r in coef_df.iterrows():
+        print(f"    {r['feature']}: {r['importance']:.4f}")
+
+    # Save updated feature data (drop prediction/rank columns to avoid merge conflicts)
+    drop_cols = [c for c in df_model.columns
+                 if c in ("hotspot_score", "rank_numeric", "rank",
+                          "stage3_score", "stage3_rank",
+                          "stage0_rank", "stage1_rank",
+                          "stage0_score", "stage1_score",
+                          "overall_rank")]
+    df_out = df_model.drop(columns=drop_cols)
+    feature_data_path = OUTPUT_DIR / "residue_hotspot_data.csv"
+    df_out.to_csv(feature_data_path, index=False)
+    print(f"\n  Feature data updated at {feature_data_path}")
 
     print("\n" + "=" * 60)
-    print("Stage 1.5 complete.")
+    print("Stage 3 complete.")
     print("=" * 60)
 
 

@@ -9,7 +9,6 @@ For each missed mutation:
 """
 
 import json
-import pickle
 import sys
 from pathlib import Path
 
@@ -115,20 +114,14 @@ def structural_context(gene, pos, pdb_chain='A'):
     except Exception as e:
         info["error"] = str(e)
     
-    # RFP distance for rpoB from co-crystal alignment
-    if gene == "rpoB":
-        try:
-            drug_path = HOTSPOT_DIR / "drug_contact_features.pkl"
-            if drug_path.exists():
-                with open(drug_path, "rb") as f:
-                    drug_data = pickle.load(f)
-                df = pd.read_csv(HOTSPOT_DIR / "residue_hotspot_data.csv")
-                idx = df[(df["gene"]=="rpoB") & (df["residue_pos"]==pos)].index
-                if len(idx) > 0:
-                    info["drug_distance_A"] = float(drug_data["drug_distance"][idx[0]])
-                    info["drug_contact"] = bool(drug_data["drug_contact"][idx[0]])
-        except:
-            pass
+    # Drug distance from Stage 3 per-gene features
+    try:
+        df = pd.read_csv(HOTSPOT_DIR / "residue_hotspot_data.csv")
+        idx = df[(df["gene"]==gene) & (df["residue_pos"]==pos)].index
+        if len(idx) > 0 and "drug_distance" in df.columns:
+            info["drug_distance_A"] = float(df.loc[idx[0], "drug_distance"])
+    except:
+        pass
     
     return info
 
@@ -253,7 +246,7 @@ def main():
         print(f"\n  Structural context:")
         if "drug_distance_A" in struct:
             print(f"    Distance to drug (3D): {struct['drug_distance_A']:.1f}A")
-            print(f"    Drug contact: {struct['drug_contact']}")
+            print(f"    Drug proximity: {1/(1+struct['drug_distance_A']/10):.3f}")
         print(f"    3D contact density: {struct.get('contact_density_3d', 'N/A')} neighbors within 8A")
         if "pdb_aa" in struct:
             print(f"    PDB residue: {struct['pdb_aa']} at position {pos_n}")

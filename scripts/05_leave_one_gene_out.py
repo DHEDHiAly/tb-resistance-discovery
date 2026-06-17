@@ -343,12 +343,6 @@ def load_features():
         df["contact_density_3d"] = df.apply(
             lambda r: contact_data.get((r["gene"], r["residue_pos"]), np.nan), axis=1
         )
-    drug_path = HOTSPOT_DIR / "drug_contact_features.pkl"
-    if drug_path.exists():
-        with open(drug_path, "rb") as f:
-            drug_data = pickle.load(f)
-        df["drug_distance"] = drug_data["drug_distance"]
-        df["drug_contact"] = drug_data["drug_contact"]
     return df
 
 
@@ -364,8 +358,9 @@ def train_and_predict_for_gene(held_out_gene, df_all):
         "volume", "charge", "hbond", "rel_position",
         "conservation_blosum", "contact_density_seq",
     ]
-    new_features = ["sasa_relative", "esm2_intolerance", "contact_density_3d"]
-    all_features = base_features + [f for f in new_features if f in df_all.columns]
+    new_features = ["sasa_relative", "esm2_intolerance", "contact_density_3d",
+                     "plddt_score", "plddt_environment"]
+    all_features = base_features + [f for f in new_features if f in df_all.columns] + ["drug_proximity"]
 
     train = df_all[df_all["gene"] != held_out_gene].dropna(subset=all_features).copy()
     test = df_all[df_all["gene"] == held_out_gene].dropna(subset=all_features).copy()
@@ -383,7 +378,7 @@ def train_and_predict_for_gene(held_out_gene, df_all):
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(test[all_features].values)
 
-    # Train with L2 regularization (no penalty for being wrong on unseen genes)
+    # Train with L2 regularization (simple model generalizes better to unseen genes)
     model = LogisticRegression(
         C=10.0, class_weight="balanced", max_iter=1000, random_state=42
     )

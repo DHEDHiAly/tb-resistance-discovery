@@ -11,7 +11,6 @@ Pipeline:
 """
 
 import json
-import pickle
 import re
 import sys
 import warnings
@@ -164,14 +163,6 @@ def load_hotspot_predictions():
         ranked[["gene", "residue_pos", "hotspot_score", "rank"]],
         on=["gene", "residue_pos"], how="left"
     )
-    
-    # Load drug contact feature if available
-    drug_path = HOTSPOT_DIR / "drug_contact_features.pkl"
-    if drug_path.exists():
-        with open(drug_path, "rb") as f:
-            drug_data = pickle.load(f)
-        df["drug_distance"] = drug_data["drug_distance"]
-        df["drug_contact"] = drug_data["drug_contact"]
     
     print(f"Loaded {len(df)} residues, {df['is_hotspot'].sum()} known hotspots")
     return df

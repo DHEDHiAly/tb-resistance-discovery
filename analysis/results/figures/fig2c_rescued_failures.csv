@@ -1,5 +1,7 @@
-Hotspot,Stage 0 Rank,Stage 1 Rank
-rpoB_D435,597,20
-rpoB_V170,953,24
-rpoB_L452,526,19
-rpsL_K88,278,3
+Hotspot,Stage 0 Rank,Stage 1 Rank,Stage 3 Rank
+rpoB_D435,597,20,30
+rpoB_V170,953,24,41
+rpoB_L452,526,19,64
+rpsL_K88,278,3,19
+gyrB_N538,3208,3208,43
+pncA_V125,2899,2899,55

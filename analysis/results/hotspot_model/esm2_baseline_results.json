@@ -1,0 +1,32 @@
+{
+  "ESM-2 only (XGB)": {
+    "auroc": 0.6178,
+    "auprc": 0.0085,
+    "auroc_std": 0.0984,
+    "auprc_std": 0.003
+  },
+  "ESM-2 only (LR)": {
+    "auroc": 0.6552,
+    "auprc": 0.0156,
+    "auroc_std": 0.0707,
+    "auprc_std": 0.0128
+  },
+  "Stage 0 (XGB)": {
+    "auroc": 0.8784,
+    "auprc": 0.3164,
+    "auroc_std": 0.0699,
+    "auprc_std": 0.1626
+  },
+  "Stage 1 (XGB)": {
+    "auroc": 0.893,
+    "auprc": 0.3386,
+    "auroc_std": 0.0564,
+    "auprc_std": 0.1152
+  },
+  "Full Stage 3 (XGB)": {
+    "auroc": 0.92,
+    "auprc": 0.3109,
+    "auroc_std": 0.0414,
+    "auprc_std": 0.1322
+  }
+}

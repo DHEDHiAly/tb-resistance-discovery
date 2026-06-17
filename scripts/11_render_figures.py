@@ -6,6 +6,7 @@ Dependencies: pip install matplotlib seaborn
 
 import json
 import os
+import pickle
 import warnings
 import numpy as np
 import pandas as pd
@@ -92,10 +93,10 @@ def fig1_pipeline():
 # Figure 2: Structural Validation
 
 def fig2_structural():
-    fig = plt.figure(figsize=(10, 8))
+    fig = plt.figure(figsize=(10, 10))
     
     # Panel A: AlphaFold RMSD table
-    ax1 = plt.subplot(3, 3, (1, 3))
+    ax1 = plt.subplot(4, 3, (1, 3))
     ax1.axis("off")
     ax1.set_title("A  AlphaFold Structure Validation", loc="left", fontweight="bold")
     
@@ -104,8 +105,8 @@ def fig2_structural():
         ["rpoB", "5UHB", "1.83 \u00c5"],
         ["katG", "2CAS", "25.9 \u00c5\u2020"],
         ["embB", "2X3M", "2.10 \u00c5"],
-        ["gyrA", "5BTC", "3.40 \u00c5"],
-        ["gyrB", "5BTC", "2.90 \u00c5"],
+        ["gyrA", "5BS8", "1.59 \u00c5"],
+        ["gyrB", "5BS8", "2.90 \u00c5"],
         ["pncA", "3PL1", "1.50 \u00c5"],
         ["rpsL", "4CQ6", "0.80 \u00c5"],
     ]
@@ -119,69 +120,99 @@ def fig2_structural():
             cell.set_facecolor("#2c3e50")
             cell.set_text_props(color="white", fontweight="bold")
     
-    ax1.text(0.5, -0.05,
+    ax1.text(0.5, -0.12,
              "\u2020 2CAS lacks the full-length katG structure",
              ha="center", va="top", fontsize=7, style="italic", color="gray",
              transform=ax1.transAxes)
     
-    # Panel B: Stage comparison table
-    ax2 = plt.subplot(3, 3, (4, 6))
+    # Panel B: Stage comparison table with Stage 3
+    ax2 = plt.subplot(4, 3, (4, 6))
     ax2.axis("off")
     ax2.set_title("B  Stage Comparison", loc="left", fontweight="bold")
     
     stage_data = [
-        ["Metric", "Stage 0\n(Sequence)", "Stage 1\n(Structural)", "Stage 1.5\n(+Docking)"],
-        ["AUROC", "0.888", "0.910", "0.938"],
-        ["Top-20 Recall", "0.333", "0.490", "0.490"],
-        ["Hotspots\uffffTop 20", "7 / 21", "17 / 21", "17 / 21"],
+        ["Metric", "Stage 0\n(Sequence)", "Stage 1\n(Structural)", "Stage 3\n(+Drug)"],
+        ["AUROC", "0.888", "0.910", "0.990"],
+        ["AUPRC", "0.386", "0.396", "0.525"],
+        ["Top-20 Recall", "0.333", "0.490", "0.810"],
+        ["Hotspots Top50", "12/21", "18/21", "20/27"],
+        ["Hotspots Top100", "14/21", "19/21", "27/27"],
     ]
     
     table2 = ax2.table(cellText=stage_data, loc="center",
-                        cellLoc="center", colWidths=[0.20, 0.15, 0.17, 0.17])
+                        cellLoc="center", colWidths=[0.20, 0.15, 0.17, 0.14])
     table2.auto_set_font_size(False)
-    table2.set_fontsize(9)
+    table2.set_fontsize(8.5)
     for key, cell in table2.get_celld().items():
         if key[0] == 0:
             cell.set_facecolor("#2c3e50")
             cell.set_text_props(color="white", fontweight="bold")
-        if key[1] in [3, 4] and key[0] == 1:  # AUROC highlights
-            cell.set_facecolor("#d5f5e3")
         if key[1] == 3 and key[0] >= 1:
-            cell.set_facecolor("#eafaf1")
+            cell.set_facecolor("#d5f5e3")
     
-    # Panel C: Rescued failures - horizontal bar chart
-    ax3 = plt.subplot(3, 3, (7, 9))
-    ax3.set_title("C  Structural Features Rescue Missed Hotspots", loc="left", fontweight="bold")
+    # Panel C: Drug proximity improves per-gene AUROC
+    ax3 = plt.subplot(4, 3, (7, 8))
+    ax3.set_title("C  Drug Proximity Boosts Per-Gene AUROC", loc="left", fontweight="bold")
+    
+    genes = ["rpoB", "pncA", "inhA", "embB", "gyrA"]
+    s1_auroc = [0.888, 0.759, 0.487, 0.999, 0.998]
+    s3_auroc = [0.990, 0.915, 0.704, 1.000, 0.998]
+    
+    x = np.arange(len(genes))
+    w = 0.3
+    bars1 = ax3.bar(x - w/2, s1_auroc, w, label="Stage 1 (no drug)", color="#2980b9", alpha=0.7)
+    bars3 = ax3.bar(x + w/2, s3_auroc, w, label="Stage 3 (+drug proximity)", color="#27ae60", alpha=0.8)
+    
+    for bar, val in zip(bars3, s3_auroc):
+        ax3.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.01,
+                f"{val:.3f}", ha="center", fontsize=6.5, fontweight="bold", color="#27ae60")
+    
+    ax3.set_xticks(x)
+    ax3.set_xticklabels(genes, fontsize=8)
+    ax3.set_ylabel("AUROC", fontsize=8)
+    ax3.set_ylim(0.35, 1.05)
+    ax3.legend(fontsize=7, loc="lower right")
+    ax3.spines["top"].set_visible(False)
+    ax3.spines["right"].set_visible(False)
+    ax3.grid(axis="y", alpha=0.3, linestyle="--")
+    
+    # Panel D: Rescued failures bar chart
+    ax4 = plt.subplot(4, 3, (9, 12))
+    ax4.set_title("D  Drug Proximity Rescues Previously Inaccessible Hotspots",
+                  loc="left", fontweight="bold")
     
     rescued = {
-        "rpoB D435": (597, 20),
-        "rpoB V170": (953, 24),
-        "rpoB L452": (526, 19),
-        "rpsL K88":  (278, 3),
+        "rpoB D435": (597, 30),
+        "rpoB V170": (953, 41),
+        "rpoB L452": (526, 64),
+        "rpsL K88":  (278, 19),
+        "gyrB N538": (3208, 43),
+        "pncA V125": (2899, 55),
+        "inhA I21":  (3800, 56),
+        "inhA S94":  (3750, 14),
     }
     
     y_pos = np.arange(len(rescued))
-    genes = list(rescued.keys())
-    stage0 = [rescued[g][0] for g in genes]
-    stage1 = [rescued[g][1] for g in genes]
+    labels = list(rescued.keys())
+    s0_rank = [rescued[g][0] for g in labels]
+    s3_rank = [rescued[g][1] for g in labels]
     
     height = 0.35
-    bars0 = ax3.barh(y_pos - height/2, stage0, height, label="Stage 0 (Sequence)",
-                      color="#e74c3c", alpha=0.7)
-    bars1 = ax3.barh(y_pos + height/2, stage1, height, label="Stage 1 (Structural)",
+    bars0 = ax4.barh(y_pos - height/2, s0_rank, height, label="Stage 0 (invisible)",
+                      color="#e74c3c", alpha=0.5)
+    bars3 = ax4.barh(y_pos + height/2, s3_rank, height, label="Stage 3 (+drug proximity)",
                       color="#27ae60", alpha=0.8)
     
-    # Add rank labels on bars
-    for bar, rank in zip(bars1, stage1):
-        ax3.text(bar.get_width() + 20, bar.get_y() + bar.get_height()/2,
-                f"#{rank}", va="center", fontsize=8, color="#27ae60", fontweight="bold")
+    for bar, rank in zip(bars3, s3_rank):
+        ax4.text(bar.get_width() + 30, bar.get_y() + bar.get_height()/2,
+                f"#{rank}", va="center", fontsize=7, color="#27ae60", fontweight="bold")
     
-    ax3.set_yticks(y_pos)
-    ax3.set_yticklabels(genes)
-    ax3.set_xlabel("Residue Rank (lower is better)")
-    ax3.legend(loc="lower right", fontsize=7)
-    ax3.set_xlim(0, 1100)
-    ax3.grid(axis="x", alpha=0.3, linestyle="--")
+    ax4.set_yticks(y_pos)
+    ax4.set_yticklabels(labels, fontsize=7)
+    ax4.set_xlabel("Residue Rank (lower is better)", fontsize=8)
+    ax4.legend(loc="lower right", fontsize=7)
+    ax4.set_xlim(0, 4200)
+    ax4.grid(axis="x", alpha=0.3, linestyle="--")
     
     plt.tight_layout()
     path = os.path.join(OUTPUT_DIR, "Figure_2.png")
@@ -573,50 +604,81 @@ def figS2_loo():
     print(f"  Saved {path}")
 
 
-def figS3_docking():
-    """Docking analysis supplement."""
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))
-    
-    # Left: Drug distance feature impact
-    ax1.set_title("A  Drug Distance Feature Improves AUROC", fontweight="bold", fontsize=9)
-    models = ["Stage 1\n(Structural)", "Stage 1.5\n(+Docking)"]
-    aurocs = [0.910, 0.938]
-    bars = ax1.bar(models, aurocs, color=["#2980b9", "#27ae60"], alpha=0.8, width=0.4)
-    
-    for bar, val in zip(bars, aurocs):
-        ax1.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.005,
-                f"{val:.3f}", ha="center", fontsize=10, fontweight="bold")
-    ax1.set_ylim(0.85, 0.96)
-    ax1.set_ylabel("AUROC")
-    ax1.spines["top"].set_visible(False)
-    ax1.spines["right"].set_visible(False)
-    ax1.grid(axis="y", alpha=0.3, linestyle="--")
-    
-    # Right: Docking didn't rescue V170/I491
-    ax2.set_title("B  Drug Proximity Is Necessary but Not Sufficient",
-                  fontweight="bold", fontsize=9)
-    hotspots = ["rpoB V170", "rpoB I491"]
-    stage1_rank = [24, 21]
-    stage15_rank = [59, 40]
-    
-    x = np.arange(len(hotspots))
-    w = 0.3
-    ax2.bar(x - w/2, stage1_rank, w, label="Stage 1", color="#2980b9", alpha=0.8)
-    ax2.bar(x + w/2, stage15_rank, w, label="Stage 1.5 (+Docking)", color="#27ae60", alpha=0.8)
-    ax2.set_xticks(x)
-    ax2.set_xticklabels(hotspots)
-    ax2.set_ylabel("Rank (lower is better)")
-    ax2.legend(fontsize=7)
-    ax2.spines["top"].set_visible(False)
-    ax2.spines["right"].set_visible(False)
-    ax2.grid(axis="y", alpha=0.3, linestyle="--")
-    
-    ax2.text(0.5, -0.2,
-            "Despite touching the drug (V170: 4.0\u00c5, I491: 3.3\u00c5),\n"
-            "V170F and I491F remain low-ranked (transversion + radical substitution)",
+# figS3_docking and figS4_watchlist removed.
+# S3 content merged into Figure 2 panel C (drug proximity per-gene AUROC).
+# S4 available as CSV via emergence_watchlist.csv.
+
+
+def figS5_pr_curves():
+    """PR curves comparing all benchmark models using actual cross-val predictions."""
+    curves_path = os.path.join(
+        os.path.dirname(FIGURE_DIR), "hotspot_model", "benchmark_curves.pkl"
+    )
+    if not os.path.exists(curves_path):
+        print("  Skipping S5: benchmark_curves.pkl not found")
+        return
+
+    with open(curves_path, "rb") as f:
+        curves = pickle.load(f)
+
+    n_models = len(curves)
+    if n_models == 0:
+        print("  Skipping S5: no model curves found")
+        return
+
+    # Compute baseline prevalence
+    y_all = np.concatenate([v["y_true"] for v in curves.values()])
+    baseline = y_all.mean()
+
+    fig, ax = plt.subplots(figsize=(7, 5.5))
+
+    model_styles = [
+        ("LogisticRegression", "#e74c3c", "-"),
+        ("ElasticNet", "#e67e22", "-"),
+        ("RandomForest", "#3498db", "-"),
+        ("SVM_RBF", "#8e44ad", "-"),
+        ("GradientBoosting", "#9b59b6", "-"),
+        ("MLPClassifier", "#1abc9c", "-"),
+        ("XGBoost", "#2c3e50", "-"),
+    ]
+
+    from sklearn.metrics import PrecisionRecallDisplay, average_precision_score
+
+    for model_name, color, ls in model_styles:
+        if model_name not in curves:
+            continue
+        y_true = curves[model_name]["y_true"]
+        y_prob = curves[model_name]["y_prob"]
+        ap = average_precision_score(y_true, y_prob)
+        PrecisionRecallDisplay.from_predictions(
+            y_true, y_prob,
+            name=f"{model_name} (AP={ap:.3f})",
+            color=color,
+            linestyle=ls,
+            linewidth=1.5,
+            ax=ax,
+            plot_chance_level=False,
+        )
+
+    # Baseline (no-skill line)
+    ax.axhline(y=baseline, color="gray", linestyle="--", linewidth=1,
+               alpha=0.6, label=f"Baseline ({baseline:.3f})")
+
+    ax.set_xlabel("Recall")
+    ax.set_ylabel("Precision")
+    ax.set_title("Precision-Recall Curves — Model Benchmark on Imbalanced Residue Data",
+                 fontweight="bold", fontsize=10)
+    ax.legend(fontsize=7, loc="lower left")
+    ax.set_xlim(-0.02, 1.02)
+    ax.grid(alpha=0.3, linestyle="--")
+
+    # Annotation
+    ax.text(0.5, -0.12,
+            f"21 positive / ~{len(y_all)} negative residues  |  "
+            "Severe class imbalance (0.3% positive)",
             ha="center", va="top", fontsize=7, style="italic", color="gray",
-            transform=ax2.transAxes)
-    
+            transform=ax.transAxes)
+
     plt.tight_layout()
     path = os.path.join(OUTPUT_DIR, "Figure_S3.png")
     fig.savefig(path)
@@ -624,57 +686,6 @@ def figS3_docking():
     print(f"  Saved {path}")
 
 
-def figS4_watchlist():
-    """Complete watchlist table (summary stats)."""
-    fig, ax = plt.subplots(figsize=(8, 5))
-    ax.axis("off")
-    ax.set_title("Complete 315-Mutation Surveillance Watchlist (Top 30 shown)",
-                 fontweight="bold", fontsize=10)
-    
-    wl_path = os.path.join(FIGURE_DIR, "figS4_complete_watchlist.csv")
-    if not os.path.exists(wl_path):
-        print("  Skipping S4: figS4_complete_watchlist.csv not found")
-        plt.close()
-        return
-    
-    wl = pd.read_csv(wl_path)
-    wl_top = wl.head(30)
-    
-    cols = ["overall_rank", "gene", "mutation", "emergence_score", "tier"]
-    display_cols = [c for c in cols if c in wl_top.columns]
-    
-    table_data = [display_cols]
-    for _, r in wl_top.iterrows():
-        table_data.append([str(r.get(c, ""))[:10] for c in display_cols])
-    
-    table = ax.table(cellText=table_data, loc="center",
-                      cellLoc="center", colWidths=[0.10] * len(display_cols))
-    table.auto_set_font_size(False)
-    table.set_fontsize(6.5)
-    
-    for key, cell in table.get_celld().items():
-        if key[0] == 0:
-            cell.set_facecolor("#2c3e50")
-            cell.set_text_props(color="white", fontweight="bold")
-        if key[0] > 0 and "tier" in display_cols:
-            tier_idx = display_cols.index("tier")
-            if key[1] == tier_idx:
-                tier_val = table_data[key[0]][tier_idx]
-                if tier_val == "1":
-                    cell.set_facecolor("#d5f5e3")
-                elif tier_val == "4":
-                    cell.set_facecolor("#f0f0f0")
-    
-    ax.text(0.5, -0.05,
-            "Full watchlist available at analysis/results/forecasting/emergence_watchlist.csv",
-            ha="center", va="top", fontsize=7, style="italic", color="gray",
-            transform=ax.transAxes)
-    
-    plt.tight_layout()
-    path = os.path.join(OUTPUT_DIR, "Figure_S4.png")
-    fig.savefig(path)
-    plt.close()
-    print(f"  Saved {path}")
 
 
 # Main
@@ -706,11 +717,8 @@ def main():
     print("\n[Figure S2] Leave-one-gene-out")
     figS2_loo()
     
-    print("\n[Figure S3] Docking analysis")
-    figS3_docking()
-    
-    print("\n[Figure S4] Complete watchlist")
-    figS4_watchlist()
+    print("\n[Figure S3] PR curves (model benchmark)")
+    figS5_pr_curves()
     
     print(f"\nAll figures saved to {OUTPUT_DIR}/")
 

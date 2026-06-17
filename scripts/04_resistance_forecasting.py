@@ -143,6 +143,7 @@ CORE_BINDING_RESIDUES = {
     "gyrB": set(range(495, 556)),   # FQ-binding region
     "pncA": set(range(1, 187)),     # entire PZase domain
     "rpsL": set(range(23, 99)),     # streptomycin-binding domain
+    "inhA": set(range(1, 270)),     # entire INH-NADH binding domain
 }
 
 # Known resistance mutations: (gene_mutation) -> drug
@@ -163,8 +164,12 @@ KNOWN_RES_MUTATIONS = {
     "gyrA_D94N": "fluoroquinolones", "gyrA_A90V": "fluoroquinolones",
     "gyrA_S91P": "fluoroquinolones", "gyrB_N538D": "fluoroquinolones",
     "pncA_L4P": "pyrazinamide", "pncA_V125G": "pyrazinamide",
-    "pncA_Q10P": "pyrazinamide", "pncA_L4S": "pyrazinamide",
+    "pncA_Q10P": "pyrazinamide",     "pncA_L4S": "pyrazinamide",
     "pncA_D12G": "pyrazinamide",
+    "inhA_S94A": "isoniazid", "inhA_I95P": "isoniazid",
+    "inhA_L99M": "isoniazid", "inhA_M103I": "isoniazid",
+    "inhA_V203A": "isoniazid", "inhA_I21V": "isoniazid",
+    "inhA_I21T": "isoniazid",
 }
 
 GENE_NAME_TO_LOCUS = {g[0]: g[1] for g in RESISTANCE_GENES}

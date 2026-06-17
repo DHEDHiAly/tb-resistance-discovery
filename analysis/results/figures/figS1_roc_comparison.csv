@@ -2,3 +2,4 @@ Model,AUROC
 Stage 0 (Sequence),0.888
 Stage 1 (Structural),0.91
 Stage 1.5 (+Docking),0.938
+Stage 3 (per-gene drug),0.977

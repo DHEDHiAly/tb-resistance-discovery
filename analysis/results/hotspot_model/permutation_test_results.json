@@ -1,0 +1,64 @@
+{
+  "n_samples": 6338,
+  "n_positives": 27,
+  "n_features": 17,
+  "features": [
+    "inner_distance",
+    "homoplasy_count",
+    "homoplasy_alleles",
+    "helix_propensity",
+    "strand_propensity",
+    "hydrophobicity",
+    "volume",
+    "charge",
+    "hbond",
+    "rel_position",
+    "conservation_blosum",
+    "contact_density_seq",
+    "sasa_relative",
+    "esm2_intolerance",
+    "contact_density_3d",
+    "mutation_sensitivity",
+    "drug_proximity"
+  ],
+  "real_cv": {
+    "auroc_mean": 0.928375161395967,
+    "auroc_std": 0.030933985508526,
+    "auprc_mean": 0.29657297245951897,
+    "auprc_std": 0.14057355147152165,
+    "per_fold_aurocs": [
+      0.9860649247822645,
+      0.9158742736397254,
+      0.8954041204437402,
+      0.9305863708399366,
+      0.913946117274168
+    ]
+  },
+  "bootstrap_95ci": {
+    "auroc": [
+      0.8742254473332874,
+      0.9630939272121273
+    ],
+    "auprc": [
+      0.13983609525307888,
+      0.4760776884739996
+    ]
+  },
+  "permutation_test": {
+    "real_auroc": 0.928375161395967,
+    "perm_mean": 0.503010544316917,
+    "perm_max": 0.6889189952230558,
+    "perm_std": 0.07223525135160215,
+    "n_exceeded": 0,
+    "p_value": 0.004975124378109453
+  },
+  "mutation_sensitivity": {
+    "min": 0.7777777777777778,
+    "max": 1.0,
+    "mean": 0.9966340591143367,
+    "unique_values": 2,
+    "with_feature_auroc": 0.928375161395967,
+    "without_feature_auroc": 0.928422755168749,
+    "delta": -4.7593772781961974e-05
+  }
+}

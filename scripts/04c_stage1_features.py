@@ -579,10 +579,12 @@ def task5_benchmark_models():
     print("=" * 60)
 
     from sklearn.linear_model import LogisticRegression
-    from sklearn.ensemble import RandomForestClassifier
+    from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+    from sklearn.neural_network import MLPClassifier
+    from sklearn.svm import SVC
     from sklearn.model_selection import StratifiedKFold
     from sklearn.preprocessing import StandardScaler
-    from sklearn.metrics import roc_auc_score, average_precision_score
+    from sklearn.metrics import roc_auc_score, average_precision_score, precision_recall_curve, roc_curve
 
     # Load existing data
     df = load_existing_data()
@@ -649,7 +651,11 @@ def task5_benchmark_models():
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
 
-    # Models
+    # Models — extended benchmark beyond LR/RF
+    n_pos = y.sum()
+    n_neg = len(y) - n_pos
+    scale_pos = n_neg / n_pos if n_pos > 0 else 1.0
+
     models = {
         "LogisticRegression": LogisticRegression(
             C=1.0, class_weight="balanced", max_iter=1000, random_state=42
@@ -663,16 +669,43 @@ def task5_benchmark_models():
             n_estimators=100, max_depth=5,
             class_weight="balanced", random_state=42,
         ),
+        "SVM_RBF": SVC(
+            kernel="rbf", C=1.0, probability=True,
+            class_weight="balanced", random_state=42,
+        ),
+        "GradientBoosting": GradientBoostingClassifier(
+            n_estimators=100, max_depth=3, learning_rate=0.1,
+            random_state=42,
+        ),
+        "MLPClassifier": MLPClassifier(
+            hidden_layer_sizes=(64, 32), activation="relu",
+            solver="adam", max_iter=500, random_state=42,
+        ),
     }
+
+    # XGBoost (optional — may not be installed in all envs)
+    try:
+        import xgboost as xgb
+        models["XGBoost"] = xgb.XGBClassifier(
+            n_estimators=100, max_depth=4, learning_rate=0.1,
+            scale_pos_weight=scale_pos, use_label_encoder=False,
+            eval_metric="logloss", random_state=42,
+        )
+        have_xgb = True
+    except ImportError:
+        print("  XGBoost not installed — skipping")
+        have_xgb = False
 
     # Cross-validation
     skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
     results = []
+    all_curves = {}  # for PR / ROC curve plotting
 
     for model_name, model in models.items():
         aurocs, auprcs, top20s = [], [], []
+        fold_y_true, fold_y_prob = [], []
 
-        for train_idx, test_idx in skf.split(X_scaled, y):
+        for fold, (train_idx, test_idx) in enumerate(skf.split(X_scaled, y)):
             X_train, X_test = X_scaled[train_idx], X_scaled[test_idx]
             y_train, y_test = y[train_idx], y[test_idx]
 
@@ -681,12 +714,13 @@ def task5_benchmark_models():
 
             auroc = roc_auc_score(y_test, y_prob)
             auprc = average_precision_score(y_test, y_prob)
-            # Top-20 recall
             top20 = y_test[np.argsort(y_prob)[::-1][:20]].sum() / max(y_test.sum(), 1)
 
             aurocs.append(auroc)
             auprcs.append(auprc)
             top20s.append(top20)
+            fold_y_true.extend(y_test)
+            fold_y_prob.extend(y_prob)
 
         results.append({
             "model": model_name,
@@ -697,6 +731,12 @@ def task5_benchmark_models():
             "top20_mean": np.mean(top20s),
             "top20_std": np.std(top20s),
         })
+
+        # Save aggregate predictions for curve plotting
+        all_curves[model_name] = {
+            "y_true": np.array(fold_y_true),
+            "y_prob": np.array(fold_y_prob),
+        }
 
         print(f"\n  {model_name}:")
         print(f"    AUROC = {np.mean(aurocs):.4f} +/- {np.std(aurocs):.4f}")
@@ -725,6 +765,12 @@ def task5_benchmark_models():
     results_path = OUTPUT_DIR / "results_benchmark.csv"
     results_df.to_csv(results_path, index=False)
     print(f"\n  Benchmark results saved to {results_path}")
+
+    # Save per-model predictions for figure generation
+    curves_path = OUTPUT_DIR / "benchmark_curves.pkl"
+    with open(curves_path, "wb") as f:
+        pickle.dump(all_curves, f)
+    print(f"  Per-fold predictions saved to {curves_path}")
     print("TASK 5 COMPLETE")
 
     # Return best model (by AUROC)
