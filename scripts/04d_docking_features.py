@@ -583,6 +583,16 @@ def integrate_and_evaluate(all_distances):
         mask = (df["gene"] == "inhA") & (df["residue_pos"] == pos)
         df.loc[mask, "is_hotspot"] = 1
 
+    # Expand with CRyPTIC-validated Tier 1-2 residues (from independent clinical data)
+    cryptic_new_positives = [("gyrA", 88), ("inhA", 194), ("eis", 59), ("inhA", 16), ("rpoB", 483)]
+    df["is_cryptic_hotspot"] = 0
+    for gene, pos in cryptic_new_positives:
+        mask = (df["gene"] == gene) & (df["residue_pos"] == pos)
+        df.loc[mask, "is_hotspot"] = 1
+        df.loc[mask, "is_cryptic_hotspot"] = 1
+    print(f"  Added {len(cryptic_new_positives)} CRyPTIC-validated positive residues")
+    print(f"  Total hotspots: {df['is_hotspot'].sum()} ({df['is_cryptic_hotspot'].sum()} from CRyPTIC)")
+
     # Assign drug_distance (raw) + drug_proximity (saturating transform)
     drug_dist_col = np.full(len(df), np.nan)
     for (gene, pos), dist in all_distances.items():
@@ -815,8 +825,18 @@ def main():
     for pos in [21, 94, 95, 99, 103, 203]:
         mask = (df["gene"] == "inhA") & (df["residue_pos"] == pos)
         df.loc[mask, "is_hotspot"] = 1
-    n_expanded = df[df["gene"] == "inhA"]["is_hotspot"].sum()
-    print(f"\n  Expanded hotspots: {df['is_hotspot'].sum()} total ({n_expanded} from inhA)")
+
+    # Expand with CRyPTIC-validated Tier 1-2 residues
+    cryptic_new_positives = [("gyrA", 88), ("inhA", 194), ("eis", 59), ("inhA", 16), ("rpoB", 483)]
+    df["is_cryptic_hotspot"] = 0
+    for gene, pos in cryptic_new_positives:
+        mask = (df["gene"] == gene) & (df["residue_pos"] == pos)
+        df.loc[mask, "is_hotspot"] = 1
+        df.loc[mask, "is_cryptic_hotspot"] = 1
+
+    n_total = df["is_hotspot"].sum()
+    n_cryptic = df["is_cryptic_hotspot"].sum()
+    print(f"\n  Expanded hotspots: {n_total} total ({n_cryptic} from CRyPTIC)")
 
     base_features = [
         "inner_distance", "homoplasy_count", "homoplasy_alleles",
@@ -841,8 +861,8 @@ def main():
     df_model["rank_numeric"] = sc.rank(ascending=False)
 
     # Save ranked predictions (column 'rank' for 04e compatibility)
-    ranked_cols = ["gene", "residue_pos", "wt_aa", "is_hotspot", "drug_distance",
-                    "drug_proximity", "hotspot_score", "rank_numeric"]
+    ranked_cols = ["gene", "residue_pos", "wt_aa", "is_hotspot", "is_cryptic_hotspot",
+                    "drug_distance", "drug_proximity", "hotspot_score", "rank_numeric"]
     ranked_cols = [c for c in ranked_cols if c in df_model.columns]
     ranked = df_model[ranked_cols].copy()
     ranked.columns = [c if c != "rank_numeric" else "rank" for c in ranked.columns]

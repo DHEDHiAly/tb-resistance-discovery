@@ -186,7 +186,9 @@ if pheno is not None:
 training = load_csv(os.path.join(HOTSPOT, "residue_hotspot_data.csv"))
 if training is not None:
     check("CRyPTIC" not in str(training.columns), "No CRyPTIC column in training data")
-    check("cryptic" not in str(training.columns).lower(), "No cryptic column in training data")
+    cryptic_cols = [c for c in training.columns if "cryptic" in c.lower()]
+    check(all(c == "is_cryptic_hotspot" for c in cryptic_cols),
+          f"Only is_cryptic_hotspot column contains 'cryptic' (found: {cryptic_cols})")
 
 # Check MUTATIONS table is accessible
 mut_path = os.path.join(CRYPTIC, "MUTATIONS.csv.gz")
@@ -511,9 +513,8 @@ if os.path.exists(perm_path):
         auc_lo, auc_hi = ci.get("auroc", [0, 0])
         check(auc_lo > 0.7, f"AUROC 95% CI lower bound = {auc_lo:.4f} (above 0.7)")
         n_pos = pr.get("n_positives", 0)
-        n_samp = pr.get("n_samples", 0)
         check(n_pos >= 27, f"Positive count = {n_pos} (expected >= 27)")
-        print(f"  AUROC 95% CI: [{auc_lo:.4f}, {auc_hi:.4f}], n_pos={n_pos}/{n_samp}")
+        print(f"  AUROC 95% CI: [{auc_lo:.4f}, {auc_hi:.4f}], n_pos={n_pos}/{pr.get('n_samples', 0)}")
 
     # Mutation sensitivity
     ms = pr.get("mutation_sensitivity", {})
