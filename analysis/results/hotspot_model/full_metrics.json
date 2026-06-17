@@ -1,0 +1,55 @@
+{
+  "n_samples": 6326,
+  "n_positives": 32,
+  "n_features": 16,
+  "features": [
+    "inner_distance",
+    "homoplasy_count",
+    "homoplasy_alleles",
+    "helix_propensity",
+    "strand_propensity",
+    "hydrophobicity",
+    "volume",
+    "charge",
+    "hbond",
+    "rel_position",
+    "conservation_blosum",
+    "contact_density_seq",
+    "sasa_relative",
+    "esm2_intolerance",
+    "contact_density_3d",
+    "drug_proximity"
+  ],
+  "auroc": 0.9172,
+  "auprc": 0.186,
+  "auprc_x_random": 36.8,
+  "youden_threshold": 0.0009,
+  "youden_j": 0.7165,
+  "f1": 0.0628,
+  "precision": 0.0326,
+  "recall": 0.8438,
+  "specificity": 0.8727,
+  "mcc": 0.1507,
+  "tp": 27,
+  "fp": 801,
+  "fn": 5,
+  "tn": 5493,
+  "top20_recall": 0.2188,
+  "top20_n": 7,
+  "top50_recall": 0.375,
+  "top50_n": 12,
+  "bootstrap_95ci": {
+    "f1": [
+      0.04190555034856805,
+      0.08757759784075574
+    ],
+    "precision": [
+      0.02155624158381801,
+      0.046077353931971696
+    ],
+    "recall": [
+      0.7096774193548387,
+      0.9565217391304348
+    ]
+  }
+}
