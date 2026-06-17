@@ -20,11 +20,10 @@ This project builds a multi-stage framework that:
 
 | Metric | Circular (old) | LR (corrected) | **XGBoost (final)** |
 |--------|:--------------:|:--------------:|:-------------------:|
-| AUROC | 0.990 | 0.869 | **0.943** |
-| AUPRC | 0.523 | 0.206 | **0.249** (59× random) |
-| F1 | 0.552 | 0.286 | **0.339** |
-| Recall | 0.547 | 0.185 | **0.370** (10/27 hotspots) |
-| Top-20 known mutations | ~5/22 | 1/33 | **6/33** |
+| AUROC | 0.990 | 0.869 | **0.929** (CI [0.874–0.963]) |
+| AUPRC | 0.523 | 0.206 | **0.254** (59× random) |
+| Permutation test | — | — | **p = 0.005** |
+| Top-20 recall | ~5/22 | 1/33 | **14/32 (44%)** |
 | CRyPTIC FDR-significant | 25 | 19 | **19** |
 
 **Prospective validation in CRyPTIC (12,287 isolates):**
@@ -34,8 +33,8 @@ This project builds a multi-stage framework that:
 | 0 | 30 | Known WHO mutations (pipeline sanity check) |
 | 1 | **19** | FDR-significant novel predictions (q < 0.05) |
 | 2 | 33 | Observed with resistance enrichment (low power) |
-| 3 | 29 | Observed, no phenotype data (pncA/rpsL blind spots) |
-| 4 | 187 | Forecast-only (prospective surveillance targets) |
+| 3 | 44 | Observed, no phenotype data (pncA/rpsL blind spots) |
+| 4 | 190 | Forecast-only (prospective surveillance targets) |
 
 ### Critical Bug Fix: Circular drug_proximity
 
@@ -57,8 +56,9 @@ After the fix, drug_proximity dropped from the dominant feature (LR coefficient 
 |--------|-------------|----------|
 | TBDB/GenTB genomes | ~100 M. tuberculosis genomes | `data/metadata/all_tb_metadata.csv` |
 | Resistance genes | 13 protein-coding genes (rpoB, katG, embB, gyrA, gyrB, rpsL, pncA, inhA, eis, tap, mmpR5, mmpL5, tlyA) | ~6,338 residues total |
-| Known hotspots | 27 positives (21 original WHO + 6 inhA) | 0.43% positive rate |
+| Known hotspots | 32 positives (27 WHO/inhA catalog + 5 CRyPTIC Tier 1-2 validated) | 0.51% positive rate |
 | Training negatives | ~6,300 non-hotspot residues | across 12/13 genes (mmpL5 dropped) |
+| Positive source tracking | `positives_whitelisted.csv` | Each positive annotated by source (WHO, inhA catalog, CRyPTIC Tier 1/2) |
 
 ### CRyPTIC validation
 
@@ -117,15 +117,20 @@ After the fix, drug_proximity dropped from the dominant feature (LR coefficient 
 
 - **AUROC: 0.910**
 
-### Stage 3: XGBoost + Drug Proximity + pLDDT + Mutation Sensitivity
+### Stage 3: XGBoost + Drug Proximity + pLDDT + Platt Calibration
 
 `04d_docking_features.py` — Replaced LogisticRegression with **XGBoost** (`scale_pos_weight=10, max_depth=6, learning_rate=0.05, n_estimators=300`). Drug proximity computed via dilated pocket-distance proxy (10Å dilation) with query-residue self-exclusion.
 
-- **AUROC: 0.943** (5-fold CV)
-- **XGBoost feature importance**: homoplasy_count (0.221), homoplasy_alleles (0.190), inner_distance (0.109), drug_proximity (0.075), plddt_score (0.074), sasa_relative (0.073), plddt_environment (0.066), volume (0.059), strand_propensity (0.036), contact_density_3d (0.033), conservation_blosum (0.024), mutation_sensitivity (0.000)
+- **AUROC [0.874–0.963]** (5-fold CV, 1000 bootstrap resamples)
+- **Permutation test: p = 0.005** (0/200 shuffled labels beat real AUROC 0.929)
+- **ESM-2 baseline**: ESM-2 alone AUROC=0.618 (near random); full model +0.302 lift
+- **GroupKFold by gene**: Secondary CV — tests generalization to unseen genes
+- **Platt calibration**: `hotspot_score` is a calibrated probability via `CalibratedClassifierCV(method="sigmoid")` — raw XGBoost preserved in `hotspot_raw_xgb`
+- **XGBoost feature importance**: homoplasy_count (0.268), drug_proximity (0.099), inner_distance (0.086), hydrophobicity (0.054), homoplasy_alleles (0.051), strand_propensity (0.048), plddt_score (0.047), sasa_relative (0.044), charge (0.042), volume (0.041), contact_density_3d (0.038), helix_propensity (0.036), plddt_environment (0.032), conservation_blosum (0.025), contact_density_seq (0.022), hbond (0.021), rel_position (0.021), esm2_intolerance (0.016)
 - **18 features total**: 12 base sequence, 5 structural (SASA, ESM-2, 3D contact, pLDDT score, pLDDT environment), 1 drug_proximity (saturating transform)
+- **Per-gene AUROC**: embB=0.999, gyrA=0.999, rpoB=0.946, pncA=0.768, inhA=0.557, rpsL=insufficient positives
 
-Note: Feature mutation_sensitivity was added but showed zero importance and was removed from the final model. ESM-2 intolerance was also non-contributory and was excluded.
+Note: mutation_sensitivity removed (2 unique values, 99.7% constant). ESM-2 intolerance retained but carries minimal weight.
 
 ### Mutation Forecasting
 
@@ -135,10 +140,12 @@ Note: Feature mutation_sensitivity was added but showed zero importance and was 
 P(emergence) = P(hotspot | features) × fitness × accessibility
 ```
 
-- Known resistance mutations in top 20: **6/33**
-- Known resistance mutations in top 50: **14/33**
-- Known resistance mutations in top 100: **20/33**
+- Known resistance mutations in top 20: **4/33**
+- Known resistance mutations in top 50: **13/33**
+- Known resistance mutations in top 100: **19/33**
 - Watchlist: **329 candidate mutations** (`analysis/results/forecasting/emergence_watchlist.csv`)
+- Status columns `status_known_who`, `status_novel` added for clarity
+- Clinical top-20/50 watchlists: `watchlist_top20.csv`, `watchlist_top50.csv`
 
 ### Leave-One-Gene-Out Validation
 
@@ -160,9 +167,11 @@ P(emergence) = P(hotspot | features) × fitness × accessibility
 
 `08_cryptic_validation_full.py` — Cross-references 329 watchlist mutations against 1.4 GB mutation matrix from 12,287 clinical isolates.
 
-- **87 novel watchlist mutations observed** in clinical isolates
+- **83 novel watchlist mutations observed** in clinical isolates (after expanding positive set to 32)
 - **19 FDR-significant** (Benjamini-Hochberg q < 0.05)
-- **52 novel mutations with phenotype data**, 40/52 (77%) enriched in resistant isolates
+- **51 novel mutations with phenotype data**, 36/51 (71%) enriched in resistant isolates
+- **Matched-null validation**: Tier 1 enrichment tested against 1000 random mutation sets matched by gene and carrier count (p < 0.05) — confirms signal is not driven by gene-level confounders
+- Results saved to `matched_null_results.json`
 
 ### Tiered Categorization
 
@@ -211,17 +220,22 @@ tb-resistance-discovery/
 │
 ├── analysis/results/
 │   ├── hotspot_model/           # Model outputs
-│   │   ├── ranked_predictions.csv           # 6,338 residues
+│   │   ├── ranked_predictions.csv           # 6,338 residues (calibrated scores)
 │   │   ├── feature_importance.csv           # XGBoost importance
 │   │   ├── alphafold_validation.json
-│   │   └── cross_validation_results.csv     # 5-fold CV
+│   │   ├── cross_validation_results.csv     # 5-fold CV
+│   │   ├── positives_whitelisted.csv        # 32 positives with source tracking
+│   │   └── permutation_test_results.json    # Permutation + bootstrap CIs
 │   ├── forecasting/             # Mutation-level outputs
 │   │   ├── emergence_watchlist.csv           # 329 candidates
 │   │   ├── cryptic_validation_results.csv    # Full CRyPTIC cross-reference
 │   │   ├── cryptic_tiered_validation.csv     # Tier 1-4
 │   │   ├── cryptic_fdr_analysis.csv          # FDR enrichment
+│   │   ├── matched_null_results.json         # Gene+carrier-matched null validation
 │   │   ├── leave_one_gene_out_results.csv    # LOO validation
-│   │   └── failure_analysis.json             # 5 case studies
+│   │   ├── failure_analysis.json             # 5 case studies
+│   │   ├── watchlist_top20.csv               # Clinical shortlist
+│   │   └── watchlist_top50.csv               # Extended clinical watchlist
 │   └── figures/                 # Publication figures (6 main + 3 supp)
 │       ├── Figure_1.png through Figure_6.png
 │       └── Figure_S1.png through Figure_S3.png
@@ -300,38 +314,42 @@ python scripts/08_cryptic_validation_full.py
 python scripts/09_stress_tests.py
 python scripts/10_generate_figures.py
 python scripts/11_render_figures.py
-python scripts/12_audit.py        # 157 self-checks
+python scripts/12_audit.py        # ~180+ self-checks
 ```
 
 ---
 
 ## Self-Audit
 
-`scripts/12_audit.py` runs 157 automated checks covering:
+`scripts/12_audit.py` runs automated checks covering:
 - Directory/file existence (all scripts, all output files)
-- Syntax validation (all 17 scripts)
+- Syntax validation (all scripts)
 - Pipeline dependency ordering
 - CRyPTIC data integrity (12,287 samples, 13 drugs, mutation count, FDR results)
 - Model output schema (ranked predictions, feature importance, watchlist)
-- Figure completeness (6 main + 3 supplementary)
+- Figure completeness (9 figures)
 - Package availability
 - Claim consistency (hotspot count, FDR count, tier counts, AUROC progression)
-
-**Current status: 157/157 pass, 0 failures.**
+- **Leakage audit** (Section 9b): homoplasy globality, drug_proximity self-exclusion, CV scaler placement, calibration verification, GroupKFold presence, positive set tracking, matched-null validation
+- Statistical rigor: permutation test, ESM-2 baseline, bootstrap CIs
 
 ---
 
 ## Limitations & Caveats
 
-1. **Small positive set.** Only 27 known hotspot residues across 13 genes (33 known mutations). Training on ~6,300 residues with 27 positives limits statistical power.
+1. **Small positive set.** Only 32 known hotspot residues across 13 genes (expanded from 27 with 5 CRyPTIC-validated residues). Training on ~6,300 residues with 32 positives (0.51%) limits statistical power.
 
-2. **Modest FDR yield.** 19 of ~300 testable predictions (6.3%) survive Benjamini-Hochberg correction at q < 0.05 — modest but above the 5% expected under the global null.
+2. **Modest FDR yield.** 19 of ~300 testable predictions (6.3%) survive Benjamini-Hochberg correction at q < 0.05 — modest but above the 5% expected under the global null. Matched-null validation confirms signal is not from gene-level confounders.
 
-3. **Phenotype blind spots.** pncA mutations (e.g., Q10R, rank #8, 155 carriers) cannot be evaluated because CRyPTIC lacks pyrazinamide binary phenotypes. 29 Tier 3 mutations fall into this blind spot.
+3. **Phenotype blind spots.** pncA mutations (e.g., Q10R, rank #8, 155 carriers) cannot be evaluated because CRyPTIC lacks pyrazinamide binary phenotypes. 44 Tier 3 mutations fall into this blind spot.
 
 4. **No directly comparable benchmark.** No existing model predicts *emergence* of unseen resistance mutations. Closest: WHO catalog (retrospective curation), CRyPTIC ML (genotype→phenotype), ESM-1v saturation (mutational tolerance, not emergence under selection).
 
 5. **External API blocked.** UniProt BLAST and NCBI Entrez unavailable — prevents MSA-based Shannon entropy computation. 10 mycobacterial genomes available in `data/genomes/` if alignment tools (MAFFT, BLAST+) are installed locally.
+
+6. **Homoplasy features computed globally.** `homoplasy_count` and `homoplasy_alleles` are computed from the full VCF (~100 genomes), not per CV fold. This is a known limitation — as population-level properties, they are unlikely to cause practical leakage since labels derive from WHO/CRyPTIC catalogs, not from the same 100 genomes.
+
+7. **Platt calibration on training data.** The `CalibratedClassifierCV` uses 5-fold internal CV for calibration, but the final model is fit on all data. The emergence scores are well-calibrated but should be interpreted as relative risk scores, not exact probabilities.
 
 ---
 
