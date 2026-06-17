@@ -529,9 +529,10 @@ def compute_all_drug_distances():
 def integrate_and_evaluate(all_distances):
     """Add drug_distance feature, retrain model, evaluate per-gene AUROC."""
     from sklearn.linear_model import LogisticRegression
-    from sklearn.model_selection import StratifiedKFold
+    from sklearn.model_selection import StratifiedKFold, GroupKFold
     from sklearn.preprocessing import StandardScaler
     from sklearn.metrics import roc_auc_score, average_precision_score
+    from sklearn.calibration import CalibratedClassifierCV
     from xgboost import XGBClassifier
 
     print("\n" + "=" * 60)
@@ -640,6 +641,12 @@ def integrate_and_evaluate(all_distances):
         gmask = df_model["gene"] == gene
         gy = y[gmask]
         if gy.sum() < 2:
+            n_res = gmask.sum()
+            n_pos = int(gy.sum())
+            print(f"  {gene:<8} {'insufficient':<15} {'insufficient':<17} {'N/A':<8} {n_pos:<6} "
+                  f"(only {n_pos} positive(s) among {n_res} residues — need >= 2)")
+            gene_results[gene] = {"stage1_auroc": None, "stage3_auroc": None, "delta": None,
+                                  "status": f"insufficient positives ({n_pos}/{n_res})"}
             continue
 
         gx1 = df_model.loc[gmask, stage1_features].values
@@ -670,8 +677,8 @@ def integrate_and_evaluate(all_distances):
         gene_results[gene] = {"stage1_auroc": a1, "stage3_auroc": a2, "delta": delta}
         print(f"  {gene:<8} {a1:<15.4f} {a2:<17.4f} {delta:<+8.4f} {gy.sum():<6}")
 
-    # Global 5-fold CV
-    print("\n  Global 5-fold CV:")
+    # Global 5-fold CV (StratifiedKFold — residue-level)
+    print("\n  Global 5-fold CV (StratifiedKFold — residue-level):")
     X1 = df_model[stage1_features].values
     X2 = df_model[all_features].values
 
@@ -704,10 +711,48 @@ def integrate_and_evaluate(all_distances):
         top20_1.append(y[test_idx][np.argsort(p1)[::-1][:20]].sum() / max(y[test_idx].sum(), 1))
         top20_2.append(y[test_idx][np.argsort(p2)[::-1][:20]].sum() / max(y[test_idx].sum(), 1))
 
+    res_strat_auc = float(np.mean(glob_auc2))
+    res_strat_ap = float(np.mean(glob_ap2))
     print(f"    Stage 1: AUROC={np.mean(glob_auc1):.4f}+-{np.std(glob_auc1):.4f}  "
           f"AUPRC={np.mean(glob_ap1):.4f}  Top20={np.mean(top20_1):.3f}")
-    print(f"    Stage 3: AUROC={np.mean(glob_auc2):.4f}+-{np.std(glob_auc2):.4f}  "
-          f"AUPRC={np.mean(glob_ap2):.4f}  Top20={np.mean(top20_2):.3f}")
+    print(f"    Stage 3: AUROC={res_strat_auc:.4f}+-{np.std(glob_auc2):.4f}  "
+          f"AUPRC={res_strat_ap:.4f}  Top20={np.mean(top20_2):.3f}")
+
+    # GroupKFold by gene (more conservative — no gene-level leakage)
+    print("\n  GroupKFold by gene (5 folds):")
+    genes = df_model["gene"].values
+    gkf = GroupKFold(n_splits=5)
+    gkf_auc2, gkf_ap2 = [], []
+    gkf_top20_2 = []
+    n_folds_completed = 0
+
+    for train_idx, test_idx in gkf.split(X2, y, groups=genes):
+        test_genes = set(genes[test_idx])
+        n_pos_test = y[test_idx].sum()
+        if n_pos_test < 2:
+            print(f"    SKIP fold: held-out genes {test_genes} have {n_pos_test} positives (<2)")
+            continue
+        scaler = StandardScaler()
+        X2_train = scaler.fit_transform(X2[train_idx])
+        X2_test = scaler.transform(X2[test_idx])
+
+        m2 = XGBClassifier(scale_pos_weight=10, max_depth=6, learning_rate=0.05,
+                           n_estimators=300, subsample=0.8, colsample_bytree=0.8,
+                           eval_metric="logloss", random_state=42)
+        m2.fit(X2[train_idx], y[train_idx])
+        p2 = m2.predict_proba(X2[test_idx])[:, 1]
+
+        gkf_auc2.append(roc_auc_score(y[test_idx], p2))
+        gkf_ap2.append(average_precision_score(y[test_idx], p2))
+        gkf_top20_2.append(y[test_idx][np.argsort(p2)[::-1][:20]].sum() / max(y[test_idx].sum(), 1))
+        n_folds_completed += 1
+
+    if n_folds_completed > 0:
+        print(f"    Stage 3: AUROC={np.mean(gkf_auc2):.4f}+-{np.std(gkf_auc2):.4f}  "
+              f"AUPRC={np.mean(gkf_ap2):.4f}  Top20={np.mean(gkf_top20_2):.3f}")
+        print(f"    ({n_folds_completed}/5 folds completed; some folds skipped if <2 positives)")
+    else:
+        print("    No GroupKFold folds had >=2 positives — cannot compute")
 
     # Save updated data
     df.to_csv(OUTPUT_DIR / "residue_hotspot_data_with_docking.csv", index=False)
@@ -716,9 +761,11 @@ def integrate_and_evaluate(all_distances):
     results = {
         "global": {
             "stage1_auroc": float(np.mean(glob_auc1)),
-            "stage3_auroc": float(np.mean(glob_auc2)),
+            "stage3_auroc": res_strat_auc,
+            "stage3_groupkfold_auroc": float(np.mean(gkf_auc2)) if n_folds_completed > 0 else None,
+            "stage3_groupkfold_auprc": float(np.mean(gkf_ap2)) if n_folds_completed > 0 else None,
             "stage1_auprc": float(np.mean(glob_ap1)),
-            "stage3_auprc": float(np.mean(glob_ap2)),
+            "stage3_auprc": res_strat_ap,
             "stage1_top20": float(np.mean(top20_1)),
             "stage3_top20": float(np.mean(top20_2)),
         },
@@ -762,6 +809,7 @@ def main():
 
     from xgboost import XGBClassifier
     from sklearn.preprocessing import StandardScaler
+    from sklearn.calibration import CalibratedClassifierCV
 
     # Reload data with drug_distance
     df = load_feature_data()
@@ -852,17 +900,25 @@ def main():
     y = df_model["is_hotspot"].values
     X = df_model[all_feat].values
 
-    model = XGBClassifier(scale_pos_weight=10, max_depth=6, learning_rate=0.05,
-                          n_estimators=300, subsample=0.8, colsample_bytree=0.8,
-                          eval_metric="logloss", random_state=42)
+    base_model = XGBClassifier(scale_pos_weight=10, max_depth=6, learning_rate=0.05,
+                               n_estimators=300, subsample=0.8, colsample_bytree=0.8,
+                               eval_metric="logloss", random_state=42)
+    # Calibrate with Platt scaling (isotonic for larger datasets)
+    # Using 5-fold internal CV calibration to avoid overfitting
+    model = CalibratedClassifierCV(base_model, method="sigmoid", cv=5)
     model.fit(X, y)
+    df_model["hotspot_raw_xgb"] = base_model.fit(X, y).predict_proba(X)[:, 1]
     df_model["hotspot_score"] = model.predict_proba(X)[:, 1]
+    print(f"\n  Calibrated model: Platt-scaled XGBoost probabilities")
+    print(f"  Raw XGBoost range: [{df_model['hotspot_raw_xgb'].min():.4f}, {df_model['hotspot_raw_xgb'].max():.4f}]")
+    print(f"  Calibrated range:  [{df_model['hotspot_score'].min():.4f}, {df_model['hotspot_score'].max():.4f}]")
     sc = df_model["hotspot_score"]
     df_model["rank_numeric"] = sc.rank(ascending=False)
 
     # Save ranked predictions (column 'rank' for 04e compatibility)
     ranked_cols = ["gene", "residue_pos", "wt_aa", "is_hotspot", "is_cryptic_hotspot",
-                    "drug_distance", "drug_proximity", "hotspot_score", "rank_numeric"]
+                    "drug_distance", "drug_proximity", "hotspot_score", "hotspot_raw_xgb",
+                    "rank_numeric"]
     ranked_cols = [c for c in ranked_cols if c in df_model.columns]
     ranked = df_model[ranked_cols].copy()
     ranked.columns = [c if c != "rank_numeric" else "rank" for c in ranked.columns]
@@ -888,9 +944,9 @@ def main():
             line += f" {r['drug_proximity']:<7.4f}"
         print(line)
 
-    # Save feature importance
-    importances = model.feature_importances_
-    coef_df = pd.DataFrame({"feature": all_feat, "importance": importances})
+    # Save feature importance (from base XGBoost, not CalibratedClassifierCV wrapper)
+    base_importances = base_model.feature_importances_
+    coef_df = pd.DataFrame({"feature": all_feat, "importance": base_importances})
     coef_df = coef_df.sort_values("importance", ascending=False)
     coef_path = OUTPUT_DIR / "feature_coefficients.csv"
     coef_df.to_csv(coef_path, index=False)

@@ -517,6 +517,12 @@ def main():
     print(f"  Known resistance mutations in top 100: {df_muts.head(100)['is_known_resistance'].sum()} / {len(known)}")
     
     # Output: Surveillance watchlist
+    # Add status columns for clarity
+    df_muts["status_known_who"] = df_muts["is_known_resistance"]
+    df_muts["status_novel"] = 1 - df_muts["is_known_resistance"]
+    # Tier assignment placeholder (populated by CRyPTIC validation)
+    df_muts["tier_cryptic"] = 0
+
     output_cols = [
         "overall_rank", "gene", "residue_pos", "wt_aa", "mut_aa", "mutation",
         "emergence_score", "hotspot_score", "mutation_score",
@@ -524,6 +530,7 @@ def main():
         "blosum62", "charge_change", "size_change", "loss_of_hbond",
         "delta_dG_proxy", "inner_distance", "is_transition",
         "is_known_hotspot", "is_known_resistance",
+        "status_known_who", "status_novel",
     ]
     available = [c for c in output_cols if c in df_muts.columns]
     df_out = df_muts[available].copy()

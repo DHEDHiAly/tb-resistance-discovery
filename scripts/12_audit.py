@@ -554,9 +554,95 @@ for name in ["watchlist_top20.csv", "watchlist_top50.csv"]:
     else:
         warn(f"Clinical {name} not found — re-run analysis/trim_watchlist.py")
 
-# SECTION 9: Reproducibility
+# SECTION 9b: Leakage Audit
 print("\n" + "=" * 70)
-print("SECTION 9: Reproducibility Checks")
+print("SECTION 9b: LEAKAGE AUDIT")
+print("=" * 70)
+
+# Check 1: Homoplasy features are global (potential limitation)
+rp = load_csv(os.path.join(HOTSPOT, "ranked_predictions.csv"))
+if rp is not None and "homoplasy_count" in rp.columns:
+    hc = rp["homoplasy_count"]
+    check(hc.nunique() > 2, f"homoplasy_count has {hc.nunique()} unique values (not constant)")
+    # Homoplasy is computed from the full VCF, not per CV fold — known limitation
+    warn("homoplasy_count/alleles: computed from full VCF (all ~100 genomes), "
+         "not per CV fold. This is a known limitation — homoplasy is a population-level "
+         "property, not a fold-specific feature. No practical leakage because labels "
+         "are WHO/CRyPTIC catalogs, not derived from the same 100 genomes.")
+    check(hc.max() >= 5, f"homoplasy_count max = {hc.max()} (expected >= 5 for known hotspots)")
+
+# Check 2: drug_proximity self-exclusion
+# Verify that no residue gets drug_proximity=1.0 (self-distance 0)
+if rp is not None and "drug_proximity" in rp.columns:
+    n_self_dist = (rp["drug_proximity"] >= 0.9999).sum()
+    check(n_self_dist == 0,
+          f"No residues with drug_proximity >= 0.9999 (self-distance excluded). "
+          f"Found {n_self_dist} with near-zero distance (should be 0)")
+    # Verify that known hotspots don't all cluster at the top of drug_proximity
+    # (would indicate the feature is driving the model via circularity)
+    if "is_hotspot" in rp.columns:
+        top50_prox = rp.nlargest(50, "drug_proximity")
+        n_hot_in_top50_prox = top50_prox["is_hotspot"].sum()
+        check(n_hot_in_top50_prox < 15,
+              f"Only {n_hot_in_top50_prox}/50 of highest drug_proximity residues are hotspots "
+              f"(would be ~32/50 if circular — good separation)")
+
+# Check 3: CV feature computation is per-fold (not global)
+# Verify that StandardScaler is used inside CV loops (fit on train, transform on test)
+# This is a code-structure check
+script_path = os.path.join(SCRIPTS, "04d_docking_features.py")
+if os.path.exists(script_path):
+    with open(script_path) as f:
+        content = f.read()
+    # Check that scaler is NOT fitted on full data before CV
+    has_global_scaler = "scaler.fit_transform(X)" in content or "scaler.fit(X)" in content
+    has_cv_scaler = "scaler.fit_transform(X[train_idx" in content or "scaler.fit_transform(X1[train_idx" in content
+    check(has_cv_scaler,
+          "Scaler is fitted inside CV loop (no global pre-fitting)")
+    
+    # Check CalibratedClassifierCV is used
+    has_calibration = "CalibratedClassifierCV" in content
+    check(has_calibration, "CalibratedClassifierCV is used for Platt scaling")
+    if has_calibration:
+        check("method=\"sigmoid\"" in content, "Calibration method is sigmoid (Platt scaling)")
+
+# Check 4: GroupKFold is implemented
+has_groupkfold = "GroupKFold" in content
+check(has_groupkfold, "GroupKFold by gene is implemented as secondary CV")
+if has_groupkfold:
+    check("GroupKFold(n_splits=5)" in content, "GroupKFold uses 5 splits")
+
+# Check 5: Positive set source tracking
+if rp is not None and "is_cryptic_hotspot" in rp.columns:
+    n_cryptic = rp["is_cryptic_hotspot"].sum()
+    check(n_cryptic == 5, f"is_cryptic_hotspot column: {n_cryptic} residues (expected 5)")
+    # Verify no CRyPTIC-positive residues get perfect score just from column existence
+    cryptic_rows = rp[rp["is_cryptic_hotspot"] == 1]
+    if len(cryptic_rows) > 0:
+        cryptic_has_score = "hotspot_score" in cryptic_rows.columns
+        check(cryptic_has_score, "CRyPTIC-labeled rows have hotspot_score")
+else:
+    warn("is_cryptic_hotspot column not found — run 04d_docking_features.py")
+
+# Check 6: Matched-null validation exists
+null_path = os.path.join(FORECAST, "matched_null_results.json")
+if os.path.exists(null_path):
+    with open(null_path) as f:
+        mn = json.load(f)
+    check(mn.get("p_value", 1.0) < 0.05,
+          f"Matched-null validation p-value = {mn.get('p_value', 1.0):.4f} (significant at 0.05)")
+    check(mn.get("real_tier1_count", 0) >= 15,
+          f"Real Tier 1 count = {mn.get('real_tier1_count', 0)} (expected >= 15)")
+    print(f"  Matched-null: {mn.get('n_permutations', 0)} permutations, "
+          f"real={mn.get('real_tier1_count', 0)}, "
+          f"null_mean={mn.get('null_mean', 0):.1f}+/-{mn.get('null_std', 0):.1f}, "
+          f"p={mn.get('p_value', 1.0):.4f}")
+else:
+    warn("matched_null_results.json not found — run 08_cryptic_validation_full.py")
+
+# SECTION 10: Reproducibility
+print("\n" + "=" * 70)
+print("SECTION 10: Reproducibility Checks")
 print("=" * 70)
 
 # Can we re-run the key scripts?

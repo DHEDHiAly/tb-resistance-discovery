@@ -1,0 +1,33 @@
+residue_pos,gene,source,catalog_type,notes
+450,rpoB,WHO,catalog,WHO catalog mutation rpoB_S450L/S450W
+435,rpoB,WHO,catalog,WHO catalog mutation rpoB_D435V/D435Y
+445,rpoB,WHO,catalog,WHO catalog mutation rpoB_H445Y/H445D
+430,rpoB,WHO,catalog,WHO catalog mutation rpoB_L430P
+170,rpoB,WHO,catalog,WHO catalog mutation rpoB_V170F
+491,rpoB,WHO,catalog,WHO catalog mutation rpoB_I491F
+452,rpoB,WHO,catalog,WHO catalog mutation rpoB_L452P
+315,katG,WHO,catalog,WHO catalog mutation katG_S315T/S315N/S315I
+306,embB,WHO,catalog,WHO catalog mutation embB_M306V/M306I/M306L
+406,embB,WHO,catalog,WHO catalog mutation embB_G406D/G406A
+497,embB,WHO,catalog,WHO catalog mutation embB_Q497R
+43,rpsL,WHO,catalog,WHO catalog mutation rpsL_K43R
+88,rpsL,WHO,catalog,WHO catalog mutation rpsL_K88R
+94,gyrA,WHO,catalog,WHO catalog mutation gyrA_D94G/D94Y/D94N
+90,gyrA,WHO,catalog,WHO catalog mutation gyrA_A90V
+91,gyrA,WHO,catalog,WHO catalog mutation gyrA_S91P
+538,gyrB,WHO,catalog,WHO catalog mutation gyrB_N538D
+4,pncA,WHO,catalog,WHO catalog mutation pncA_L4P/L4S
+125,pncA,WHO,catalog,WHO catalog mutation pncA_V125G
+10,pncA,WHO,catalog,WHO catalog mutation pncA_Q10P
+12,pncA,WHO,catalog,WHO catalog mutation pncA_D12G
+21,inhA,inhA_catalog,catalog,inhA known resistance residue
+94,inhA,inhA_catalog,catalog,inhA known resistance residue
+95,inhA,inhA_catalog,catalog,inhA known resistance residue
+99,inhA,inhA_catalog,catalog,inhA known resistance residue
+103,inhA,inhA_catalog,catalog,inhA known resistance residue
+203,inhA,inhA_catalog,catalog,inhA known resistance residue
+88,gyrA,CRyPTIC_Tier1,cryptic_tier_1_2,CRyPTIC-validated Tier 1
+194,inhA,CRyPTIC_Tier1,cryptic_tier_1_2,CRyPTIC-validated Tier 1
+59,eis,CRyPTIC_Tier2,cryptic_tier_1_2,CRyPTIC-validated Tier 2
+16,inhA,CRyPTIC_Tier2,cryptic_tier_1_2,CRyPTIC-validated Tier 2
+483,rpoB,CRyPTIC_Tier2,cryptic_tier_1_2,CRyPTIC-validated Tier 2

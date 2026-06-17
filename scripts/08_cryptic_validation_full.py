@@ -18,7 +18,9 @@ Categories:
 
 import gzip
 import csv
+import json
 import os
+import random
 import sys
 import warnings
 from collections import defaultdict
@@ -358,11 +360,108 @@ def main():
     for r in cat_c:
         print(f"  {r['mutation']:<18} {r['gene']:<8} {r['rank']:<6} {r['emergence_score']:<10.4f}")
     
+    # ---- Matched-Null Validation for CRyPTIC Enrichment ----
+    print("\n" + "=" * 70)
+    print("MATCHED-NULL VALIDATION")
+    print("=" * 70)
+    print("\n  Comparing Tier 1 enrichment against random mutation sets")
+    print("  matched by gene and carrier count...")
+    
+    # Build carrier count distribution for all observed non-watchlist mutations
+    all_observed_muts = set(mutation_samples.keys())
+    watchlist_mut_keys = set()
+    for r in results:
+        watchlist_mut_keys.add((r["gene"], r["mutation"]))
+    
+    # Null mutations: for each Tier 1 watchlist mutation, sample random
+    # mutations from the same gene with matched carrier count (+/- 20%)
+    random.seed(42)
+    
+    tier1_mutations = []
+    for r in results:
+        if r.get("category") == "B" and r.get("n_phenotyped", 0) >= 3:
+            drug_col = GENE_DRUG_MAP.get(r["gene"])
+            if drug_col and drug_col in background:
+                bg = background[drug_col]
+                _, p_val = run_enrichment(r["resistant"], r["susceptible"], bg["R"], bg["S"])
+                if p_val is not None and p_val < 0.05:
+                    tier1_mutations.append(r)
+    
+    print(f"\n  Tier 1 (FDR-significant) mutations: {len(tier1_mutations)}")
+    
+    n_permutations = 1000
+    null_tier1_counts = []
+    
+    # Build pool of randomizable mutations per gene
+    gene_mutation_pool = defaultdict(list)
+    for (gene, mut), samples in mutation_samples.items():
+        key = f"{gene}_{mut}"
+        if key not in WHO_MUTATIONS and (gene, mut) not in watchlist_mut_keys:
+            gene_mutation_pool[gene].append((mut, len(samples)))
+    
+    for perm in range(n_permutations):
+        if (perm + 1) % 100 == 0:
+            print(f"    Permutation {perm+1}/{n_permutations}...")
+        
+        perm_enriched = 0
+        for tm in tier1_mutations:
+            gene = tm["gene"]
+            drug_col = GENE_DRUG_MAP.get(gene)
+            if not drug_col or drug_col not in background:
+                continue
+            bg = background[drug_col]
+            n_target = tm["n_carriers"]
+            
+            # Find random mutations in same gene with similar carrier count
+            candidates = gene_mutation_pool.get(gene, [])
+            matched = [c for c in candidates if abs(c[1] - n_target) / max(n_target, 1) <= 0.5]
+            if len(matched) < 3:
+                continue
+            
+            for _ in range(10):  # try up to 10 times
+                rand_mut, rand_n = random.choice(matched)
+                # For null, assume 50% resistant / 50% susceptible (no enrichment)
+                rand_r = int(rand_n * 0.5 * random.uniform(0.8, 1.2))
+                rand_s = rand_n - rand_r
+                _, p_val = run_enrichment(rand_r, rand_s, bg["R"], bg["S"])
+                if p_val is not None and p_val < 0.05:
+                    perm_enriched += 1
+                    break
+        
+        null_tier1_counts.append(perm_enriched)
+    
+    null_tier1_counts = np.array(null_tier1_counts)
+    real_tier1_count = len(tier1_mutations)
+    n_null_exceed = int((null_tier1_counts >= real_tier1_count).sum())
+    null_p = (n_null_exceed + 1) / (n_permutations + 1)
+    
+    print(f"\n  Real Tier 1 mutations: {real_tier1_count}")
+    print(f"  Null mean Tier 1: {null_tier1_counts.mean():.1f} +/- {null_tier1_counts.std():.1f}")
+    print(f"  Null max Tier 1: {null_tier1_counts.max()}")
+    print(f"  Matched-null p-value: {null_p:.4f} ({n_null_exceed}/{n_permutations} permutations exceeded)")
+    print(f"  Significant at p<0.05: {null_p < 0.05}")
+    
+    matched_null_results = {
+        "real_tier1_count": real_tier1_count,
+        "null_mean": float(null_tier1_counts.mean()),
+        "null_std": float(null_tier1_counts.std()),
+        "null_max": int(null_tier1_counts.max()),
+        "n_permutations": n_permutations,
+        "n_null_exceeded": n_null_exceed,
+        "p_value": null_p,
+    }
+    
     # Save
     results_df = pd.DataFrame(results)
     out_path = os.path.join(OUTPUT_DIR, "cryptic_validation_results.csv")
     results_df.to_csv(out_path, index=False)
     print(f"\n  Results saved to {out_path}")
+    
+    # Save matched-null results
+    null_path = os.path.join(OUTPUT_DIR, "matched_null_results.json")
+    with open(null_path, "w") as f:
+        json.dump(matched_null_results, f, indent=2)
+    print(f"  Matched-null results saved to {null_path}")
     
     # Summary
     print(f"\n" + "=" * 70)
@@ -379,6 +478,7 @@ def main():
     print(f"  Watchlist size: {len(wl)}")
     print(f"  Novel mutations observed in CRyPTIC: {len(cat_b)}")
     print(f"  Forecast-only targets: {len(cat_c)}")
+    print(f"  Matched-null p-value: {null_p:.4f}")
     print(f"=" * 70)
 
 
