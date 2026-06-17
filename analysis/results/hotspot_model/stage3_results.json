@@ -1,42 +1,86 @@
 {
   "global": {
-    "stage1_auroc": 0.8527362055933484,
-    "stage3_auroc": 0.9285563114134543,
-    "stage1_auprc": 0.19450097019023552,
-    "stage3_auprc": 0.2540930200114472,
-    "stage1_top20": 0.3380952380952381,
-    "stage3_top20": 0.43809523809523815
+    "stage1_auroc": 0.9057506962859192,
+    "stage3_auroc": 0.9707164061401816,
+    "stage3_groupkfold_auroc": 0.9724398962100256,
+    "stage3_groupkfold_auprc": 0.5748996049670464,
+    "stage1_auprc": 0.20479678953027375,
+    "stage3_auprc": 0.5597461881910065,
+    "stage1_top20": 0.38571428571428573,
+    "stage3_top20": 0.6571428571428571
   },
   "per_gene": {
+    "eis": {
+      "stage1_auroc": null,
+      "stage3_auroc": null,
+      "delta": null,
+      "status": "insufficient positives (1/402)"
+    },
     "embB": {
-      "stage1_auroc": 0.9990867579908675,
-      "stage3_auroc": 0.9990867579908675,
+      "stage1_auroc": 1.0,
+      "stage3_auroc": 1.0,
       "delta": 0.0
     },
     "gyrA": {
-      "stage1_auroc": 0.9994004796163068,
-      "stage3_auroc": 0.9994004796163068,
-      "delta": 0.0
+      "stage1_auroc": 0.9964028776978417,
+      "stage3_auroc": 1.0,
+      "delta": 0.003597122302158251
+    },
+    "gyrB": {
+      "stage1_auroc": null,
+      "stage3_auroc": null,
+      "delta": null,
+      "status": "insufficient positives (1/675)"
     },
     "inhA": {
-      "stage1_auroc": 0.6455938697318008,
-      "stage3_auroc": 0.5568326947637292,
-      "delta": -0.08876117496807157
+      "stage1_auroc": 0.6309067688378033,
+      "stage3_auroc": 0.5504469987228607,
+      "delta": -0.08045977011494254
+    },
+    "katG": {
+      "stage1_auroc": null,
+      "stage3_auroc": null,
+      "delta": null,
+      "status": "insufficient positives (1/740)"
+    },
+    "mmpL5": {
+      "stage1_auroc": null,
+      "stage3_auroc": null,
+      "delta": null,
+      "status": "insufficient positives (0/0)"
+    },
+    "mmpR5": {
+      "stage1_auroc": null,
+      "stage3_auroc": null,
+      "delta": null,
+      "status": "insufficient positives (0/165)"
     },
     "pncA": {
-      "stage1_auroc": 0.7529143897996357,
-      "stage3_auroc": 0.7678506375227686,
-      "delta": 0.014936247723132956
+      "stage1_auroc": 0.9225865209471765,
+      "stage3_auroc": 0.8647996357012749,
+      "delta": -0.05778688524590159
     },
     "rpoB": {
-      "stage1_auroc": 0.8122807017543859,
-      "stage3_auroc": 0.9457602339181287,
-      "delta": 0.13347953216374275
+      "stage1_auroc": 0.9557560137457045,
+      "stage3_auroc": 0.9945589919816724,
+      "delta": 0.0388029782359679
     },
     "rpsL": {
       "stage1_auroc": NaN,
       "stage3_auroc": NaN,
       "delta": NaN
+    },
+    "tap": {
+      "stage1_auroc": null,
+      "stage3_auroc": null,
+      "delta": null,
+      "status": "insufficient positives (0/419)"
+    },
+    "tlyA": {
+      "stage1_auroc": null,
+      "stage3_auroc": null,
+      "delta": null,
+      "status": "insufficient positives (0/268)"
     }
   }
 }

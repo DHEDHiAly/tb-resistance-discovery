@@ -1,0 +1,9 @@
+{
+  "real_tier1_count": 24,
+  "null_mean": 9.3,
+  "null_std": 0.5621387729022078,
+  "null_max": 11,
+  "n_permutations": 1000,
+  "n_null_exceeded": 0,
+  "p_value": 0.000999000999000999
+}

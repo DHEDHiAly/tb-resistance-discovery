@@ -1,0 +1,274 @@
+rank,mutation,score,category,detail
+3,inhA_I194T,0.6163,validated Tier 1,"inhA_I194T: 64 carriers, 97% R, FDR q<0.05"
+7,inhA_I21T,0.6111,validated Tier 1,"inhA_I21T: 64 carriers, 98% R, FDR q<0.05"
+9,inhA_I21V,0.6093,validated Tier 1,"inhA_I21V: 16 carriers, 87% R, FDR q<0.05"
+12,embB_G406S,0.6068,validated Tier 1,"embB_G406S: 99 carriers, 75% R, FDR q<0.05"
+50,rpoB_D435G,0.5012,validated Tier 1,"rpoB_D435G: 61 carriers, 90% R, FDR q<0.05"
+51,rpoB_H445R,0.4457,validated Tier 1,"rpoB_H445R: 33 carriers, 97% R, FDR q<0.05"
+61,rpoB_V170A,0.4024,validated Tier 1,"rpoB_V170A: 6 carriers, 100% R, FDR q<0.05"
+70,inhA_S94A,0.3862,validated Tier 1,"inhA_S94A: 46 carriers, 89% R, FDR q<0.05"
+91,embB_Q497K,0.3556,validated Tier 1,"embB_Q497K: 71 carriers, 84% R, FDR q<0.05"
+95,embB_Q497P,0.3527,validated Tier 1,"embB_Q497P: 26 carriers, 88% R, FDR q<0.05"
+156,embB_G406C,0.3104,validated Tier 1,"embB_G406C: 17 carriers, 73% R, FDR q<0.05"
+172,rpoB_I491L,0.2819,validated Tier 1,"rpoB_I491L: 20 carriers, 100% R, FDR q<0.05"
+174,gyrA_D94H,0.2723,validated Tier 1,"gyrA_D94H: 44 carriers, 77% R, FDR q<0.05"
+177,gyrA_G88C,0.2614,validated Tier 1,"gyrA_G88C: 24 carriers, 88% R, FDR q<0.05"
+181,gyrA_D94A,0.2524,validated Tier 1,"gyrA_D94A: 147 carriers, 59% R, FDR q<0.05"
+182,rpoB_L430R,0.2512,validated Tier 1,"rpoB_L430R: 11 carriers, 82% R, FDR q<0.05"
+196,rpoB_H445Q,0.1884,validated Tier 1,"rpoB_H445Q: 10 carriers, 90% R, FDR q<0.05"
+206,rpoB_H445P,0.0897,validated Tier 1,"rpoB_H445P: 4 carriers, 100% R, FDR q<0.05"
+323,rpoB_H445L,0.0007,validated Tier 1,"rpoB_H445L: 76 carriers, 82% R, FDR q<0.05"
+5,katG_S315G,0.6136,uncertain/caveat,katG_S315G: 4 carriers — low power
+8,inhA_I95V,0.6109,uncertain/caveat,inhA_I95V: 2 carriers — low power
+10,embB_M306T,0.6081,uncertain/caveat,embB_M306T: 3 carriers — low power
+11,pncA_Q10R,0.6073,uncertain/caveat,"pncA_Q10R: 155 carriers, NO PZA phenotype data (blind spot)"
+15,inhA_I16T,0.6033,uncertain/caveat,inhA_I16T: 2 carriers — low power
+20,eis_V59I,0.5997,uncertain/caveat,"eis_V59I: 1 carriers, 0% R — likely polymorphism"
+25,gyrB_Q538R,0.596,uncertain/caveat,"gyrB_Q538R: 1 carriers, 0% R — likely polymorphism"
+31,pncA_D12N,0.588,uncertain/caveat,"pncA_D12N: 5 carriers, nan% R — not FDR-sig"
+36,inhA_V203A,0.5699,uncertain/caveat,"inhA_V203A: 2 carriers, 0% R — likely polymorphism"
+42,rpoB_I491V,0.5506,uncertain/caveat,rpoB_I491V: 3 carriers — low power
+59,rpoB_P483S,0.4063,uncertain/caveat,rpoB_P483S: 1 carriers — low power
+66,rpsL_K88M,0.3898,uncertain/caveat,"rpsL_K88M: 13 carriers, nan% R — not FDR-sig"
+72,rpoB_I491T,0.3775,uncertain/caveat,rpoB_I491T: 2 carriers — low power
+76,embB_Q497E,0.368,uncertain/caveat,"embB_Q497E: 1 carriers, 0% R — likely polymorphism"
+78,pncA_D12A,0.366,uncertain/caveat,"pncA_D12A: 24 carriers, nan% R — not FDR-sig"
+79,gyrA_A90E,0.3653,uncertain/caveat,gyrA_A90E: 1 carriers — low power
+87,rpsL_K88Q,0.3576,uncertain/caveat,"rpsL_K88Q: 5 carriers, nan% R — not FDR-sig"
+89,pncA_Q10K,0.3568,uncertain/caveat,pncA_Q10K: 1 carriers — low power
+110,katG_S315R,0.3445,uncertain/caveat,katG_S315R: 2 carriers — low power
+116,pncA_L4W,0.3433,uncertain/caveat,"pncA_L4W: 13 carriers, nan% R — not FDR-sig"
+123,rpsL_K88T,0.3402,uncertain/caveat,"rpsL_K88T: 63 carriers, nan% R — not FDR-sig"
+128,rpsL_K43T,0.3386,uncertain/caveat,rpsL_K43T: 3 carriers — low power
+129,pncA_Q10H,0.3381,uncertain/caveat,pncA_Q10H: 2 carriers — low power
+131,embB_Q497H,0.3369,uncertain/caveat,"embB_Q497H: 7 carriers, 50% R — not FDR-sig"
+150,rpoB_D435E,0.3165,uncertain/caveat,rpoB_D435E: 2 carriers — low power
+162,gyrA_G88A,0.3011,uncertain/caveat,"gyrA_G88A: 8 carriers, 12% R — likely polymorphism"
+163,pncA_V125F,0.2997,uncertain/caveat,"pncA_V125F: 11 carriers, nan% R — not FDR-sig"
+164,gyrA_D94V,0.2993,uncertain/caveat,"gyrA_D94V: 1 carriers, 0% R — likely polymorphism"
+165,pncA_D12Y,0.2981,uncertain/caveat,pncA_D12Y: 1 carriers — low power
+168,embB_G406V,0.2936,uncertain/caveat,embB_G406V: 1 carriers — low power
+178,rpoB_P483L,0.2614,uncertain/caveat,rpoB_P483L: 1 carriers — low power
+180,rpoB_D435H,0.2534,uncertain/caveat,rpoB_D435H: 1 carriers — low power
+187,rpoB_L452V,0.2371,uncertain/caveat,rpoB_L452V: 1 carriers — low power
+189,rpoB_I491M,0.2275,uncertain/caveat,"rpoB_I491M: 9 carriers, 67% R — not FDR-sig"
+190,rpoB_D435A,0.2257,uncertain/caveat,"rpoB_D435A: 5 carriers, 60% R — not FDR-sig"
+194,rpoB_H445N,0.2076,uncertain/caveat,"rpoB_H445N: 56 carriers, 34% R — not FDR-sig"
+198,rpoB_S450A,0.1862,uncertain/caveat,rpoB_S450A: 1 carriers — low power
+204,rpoB_I491S,0.1069,uncertain/caveat,"rpoB_I491S: 1 carriers, 0% R — likely polymorphism"
+208,pncA_D8G,0.0737,uncertain/caveat,"pncA_D8G: 7 carriers, nan% R — not FDR-sig"
+209,pncA_D8N,0.0699,uncertain/caveat,"pncA_D8N: 20 carriers, nan% R — not FDR-sig"
+210,pncA_S67L,0.0675,uncertain/caveat,pncA_S67L: 1 carriers — low power
+211,pncA_S67P,0.067,uncertain/caveat,"pncA_S67P: 25 carriers, nan% R — not FDR-sig"
+216,pncA_F13S,0.0622,uncertain/caveat,"pncA_F13S: 5 carriers, nan% R — not FDR-sig"
+218,pncA_V21A,0.0613,uncertain/caveat,"pncA_V21A: 5 carriers, nan% R — not FDR-sig"
+237,pncA_D8A,0.0435,uncertain/caveat,pncA_D8A: 3 carriers — low power
+240,pncA_D8E,0.041,uncertain/caveat,"pncA_D8E: 6 carriers, nan% R — not FDR-sig"
+242,pncA_D8H,0.0403,uncertain/caveat,pncA_D8H: 2 carriers — low power
+243,pncA_H57Y,0.0389,uncertain/caveat,"pncA_H57Y: 7 carriers, nan% R — not FDR-sig"
+257,pncA_H57R,0.0353,uncertain/caveat,"pncA_H57R: 19 carriers, nan% R — not FDR-sig"
+258,rpoB_K446R,0.0349,uncertain/caveat,rpoB_K446R: 2 carriers — low power
+264,pncA_F13I,0.0337,uncertain/caveat,pncA_F13I: 1 carriers — low power
+273,pncA_F13V,0.0321,uncertain/caveat,pncA_F13V: 4 carriers — low power
+275,pncA_V21G,0.0314,uncertain/caveat,pncA_V21G: 1 carriers — low power
+276,pncA_F13C,0.0314,uncertain/caveat,pncA_F13C: 1 carriers — low power
+277,pncA_S67W,0.0312,uncertain/caveat,pncA_S67W: 1 carriers — low power
+288,pncA_H57L,0.0259,uncertain/caveat,"pncA_H57L: 6 carriers, nan% R — not FDR-sig"
+292,rpoB_L449M,0.0254,uncertain/caveat,"rpoB_L449M: 9 carriers, 100% R — not FDR-sig"
+299,pncA_H57P,0.0221,uncertain/caveat,"pncA_H57P: 7 carriers, nan% R — not FDR-sig"
+301,embB_S297A,0.0218,uncertain/caveat,"embB_S297A: 28 carriers, 11% R — likely polymorphism"
+302,pncA_H57D,0.0214,uncertain/caveat,"pncA_H57D: 17 carriers, nan% R — not FDR-sig"
+303,pncA_H57Q,0.0209,uncertain/caveat,pncA_H57Q: 4 carriers — low power
+305,rpoB_K446E,0.0197,uncertain/caveat,rpoB_K446E: 2 carriers — low power
+317,rpoB_K446Q,0.0141,uncertain/caveat,rpoB_K446Q: 3 carriers — low power
+326,rpoB_L452Q,0.0,uncertain/caveat,"rpoB_L452Q: 1 carriers, 0% R — likely polymorphism"
+4,inhA_I194V,0.6143,forecast-only,inhA_I194V
+6,inhA_I95T,0.6128,forecast-only,inhA_I95T
+13,inhA_V203I,0.6056,forecast-only,inhA_V203I
+16,gyrA_A90T,0.6027,forecast-only,gyrA_A90T
+17,inhA_S94L,0.6019,forecast-only,inhA_S94L
+18,inhA_I16V,0.6013,forecast-only,inhA_I16V
+21,inhA_M103T,0.5991,forecast-only,inhA_M103T
+23,inhA_S94P,0.5973,forecast-only,inhA_S94P
+24,pncA_V125I,0.5962,forecast-only,pncA_V125I
+28,inhA_P99S,0.5928,forecast-only,inhA_P99S
+32,inhA_M103V,0.5845,forecast-only,inhA_M103V
+33,gyrA_G88S,0.5837,forecast-only,gyrA_G88S
+34,inhA_M103I,0.5834,forecast-only,inhA_M103I
+35,gyrA_G88D,0.5742,forecast-only,gyrA_G88D
+38,eis_V59A,0.5644,forecast-only,eis_V59A
+39,pncA_V125A,0.5611,forecast-only,pncA_V125A
+43,rpsL_K88E,0.5437,forecast-only,rpsL_K88E
+44,rpsL_K43E,0.5414,forecast-only,rpsL_K43E
+45,rpoB_D435N,0.5384,forecast-only,rpoB_D435N
+46,inhA_P99L,0.5375,forecast-only,inhA_P99L
+47,rpoB_V170I,0.5328,forecast-only,rpoB_V170I
+48,gyrA_S91L,0.5328,forecast-only,gyrA_S91L
+53,inhA_V203D,0.437,forecast-only,inhA_V203D
+54,pncA_D12V,0.4364,forecast-only,pncA_D12V
+55,eis_V59D,0.433,forecast-only,eis_V59D
+56,pncA_V125D,0.4304,forecast-only,pncA_V125D
+58,rpoB_S450P,0.4153,forecast-only,rpoB_S450P
+60,inhA_I194N,0.4028,forecast-only,inhA_I194N
+62,inhA_I95N,0.4006,forecast-only,inhA_I95N
+63,inhA_I21N,0.3993,forecast-only,inhA_I21N
+64,inhA_I16N,0.3943,forecast-only,inhA_I16N
+65,embB_M306R,0.3927,forecast-only,embB_M306R
+67,embB_M306K,0.3895,forecast-only,embB_M306K
+68,rpsL_K43M,0.3879,forecast-only,rpsL_K43M
+69,inhA_M103R,0.387,forecast-only,inhA_M103R
+71,inhA_M103K,0.3838,forecast-only,inhA_M103K
+73,embB_G406R,0.3727,forecast-only,embB_G406R
+74,gyrA_A90S,0.3704,forecast-only,gyrA_A90S
+75,pncA_Q10E,0.3693,forecast-only,pncA_Q10E
+77,pncA_Q10L,0.3662,forecast-only,pncA_Q10L
+80,embB_Q497L,0.365,forecast-only,embB_Q497L
+81,gyrB_Q538E,0.3624,forecast-only,gyrB_Q538E
+82,inhA_P99R,0.3618,forecast-only,inhA_P99R
+83,gyrB_Q538L,0.3592,forecast-only,gyrB_Q538L
+88,inhA_I194S,0.3571,forecast-only,inhA_I194S
+90,rpsL_K43Q,0.3562,forecast-only,rpsL_K43Q
+92,inhA_I95S,0.3551,forecast-only,inhA_I95S
+93,inhA_I21S,0.354,forecast-only,inhA_I21S
+96,inhA_M103L,0.3525,forecast-only,inhA_M103L
+98,inhA_P99Q,0.3507,forecast-only,inhA_P99Q
+99,gyrB_Q538K,0.3501,forecast-only,gyrB_Q538K
+100,inhA_I194L,0.3499,forecast-only,inhA_I194L
+101,inhA_I16S,0.3495,forecast-only,inhA_I16S
+102,pncA_L4M,0.3485,forecast-only,pncA_L4M
+103,inhA_I95L,0.3479,forecast-only,inhA_I95L
+104,gyrB_Q538P,0.3472,forecast-only,gyrB_Q538P
+105,inhA_I21L,0.347,forecast-only,inhA_I21L
+106,pncA_D12E,0.3451,forecast-only,pncA_D12E
+108,rpsL_K88N,0.3446,forecast-only,rpsL_K88N
+115,inhA_P99T,0.3434,forecast-only,inhA_P99T
+117,rpsL_K43N,0.3431,forecast-only,rpsL_K43N
+119,inhA_I16L,0.3425,forecast-only,inhA_I16L
+120,inhA_I194M,0.3422,forecast-only,inhA_I194M
+121,gyrA_S91A,0.3413,forecast-only,gyrA_S91A
+122,inhA_I95M,0.3403,forecast-only,inhA_I95M
+124,pncA_D12H,0.3394,forecast-only,pncA_D12H
+125,inhA_I21M,0.3393,forecast-only,inhA_I21M
+134,inhA_S94T,0.3363,forecast-only,inhA_S94T
+135,inhA_I16M,0.335,forecast-only,inhA_I16M
+136,gyrB_Q538H,0.3317,forecast-only,gyrB_Q538H
+138,inhA_V203L,0.3305,forecast-only,inhA_V203L
+139,pncA_L4V,0.3286,forecast-only,pncA_L4V
+140,gyrA_D94E,0.3279,forecast-only,gyrA_D94E
+142,eis_V59L,0.3273,forecast-only,eis_V59L
+144,pncA_V125L,0.3254,forecast-only,pncA_V125L
+145,inhA_I194F,0.3237,forecast-only,inhA_I194F
+146,inhA_I95F,0.3219,forecast-only,inhA_I95F
+147,inhA_I21F,0.321,forecast-only,inhA_I21F
+148,gyrA_A90G,0.3181,forecast-only,gyrA_A90G
+149,inhA_I16F,0.3169,forecast-only,inhA_I16F
+152,gyrA_S91T,0.3163,forecast-only,gyrA_S91T
+153,inhA_P99A,0.3157,forecast-only,inhA_P99A
+154,pncA_L4F,0.3142,forecast-only,pncA_L4F
+157,gyrA_G88R,0.309,forecast-only,gyrA_G88R
+158,rpoB_L430M,0.3053,forecast-only,rpoB_L430M
+159,inhA_V203F,0.3043,forecast-only,inhA_V203F
+160,gyrA_A90P,0.3028,forecast-only,gyrA_A90P
+161,eis_V59F,0.3014,forecast-only,eis_V59F
+166,rpoB_L430V,0.2956,forecast-only,rpoB_L430V
+169,inhA_V203G,0.2918,forecast-only,inhA_V203G
+170,eis_V59G,0.2891,forecast-only,eis_V59G
+173,inhA_S94W,0.2778,forecast-only,inhA_S94W
+176,katG_S315C,0.2665,forecast-only,katG_S315C
+183,rpoB_S450T,0.2478,forecast-only,rpoB_S450T
+184,gyrA_G88V,0.2463,forecast-only,gyrA_G88V
+185,gyrA_S91W,0.2449,forecast-only,gyrA_S91W
+186,rpoB_V170L,0.2378,forecast-only,rpoB_V170L
+188,rpoB_L452M,0.2329,forecast-only,rpoB_L452M
+193,rpoB_L430Q,0.2076,forecast-only,rpoB_L430Q
+199,rpoB_P483T,0.1694,forecast-only,rpoB_P483T
+203,rpoB_P483A,0.1162,forecast-only,rpoB_P483A
+205,rpoB_I491N,0.0957,forecast-only,rpoB_I491N
+207,rpoB_P483H,0.0874,forecast-only,rpoB_P483H
+212,mmpR5_I16T,0.0658,forecast-only,mmpR5_I16T
+213,mmpR5_I16V,0.0656,forecast-only,mmpR5_I16V
+214,pncA_V21I,0.0652,forecast-only,pncA_V21I
+215,eis_V87M,0.0631,forecast-only,eis_V87M
+217,eis_V87A,0.0618,forecast-only,eis_V87A
+219,pncA_A20T,0.0608,forecast-only,pncA_A20T
+220,pncA_F13L,0.059,forecast-only,pncA_F13L
+221,inhA_I202T,0.0585,forecast-only,inhA_I202T
+222,inhA_I202V,0.0583,forecast-only,inhA_I202V
+223,eis_V58M,0.0581,forecast-only,eis_V58M
+224,eis_V58A,0.0569,forecast-only,eis_V58A
+225,pncA_A20V,0.0568,forecast-only,pncA_A20V
+226,rpoB_P483R,0.0548,forecast-only,rpoB_P483R
+227,pncA_D8V,0.0519,forecast-only,pncA_D8V
+228,gyrA_I36V,0.0512,forecast-only,gyrA_I36V
+229,embB_V49I,0.0505,forecast-only,embB_V49I
+230,embB_V49A,0.0476,forecast-only,embB_V49A
+231,eis_V87E,0.0473,forecast-only,eis_V87E
+232,pncA_V21E,0.0469,forecast-only,pncA_V21E
+233,inhA_I105T,0.0455,forecast-only,inhA_I105T
+234,inhA_I105V,0.0454,forecast-only,inhA_I105V
+235,pncA_F13Y,0.0443,forecast-only,pncA_F13Y
+236,eis_V58E,0.0435,forecast-only,eis_V58E
+238,pncA_S67A,0.0433,forecast-only,pncA_S67A
+239,mmpR5_I16N,0.043,forecast-only,mmpR5_I16N
+244,pncA_A20E,0.0385,forecast-only,pncA_A20E
+245,inhA_I202N,0.0382,forecast-only,inhA_I202N
+246,mmpR5_I16S,0.0381,forecast-only,mmpR5_I16S
+247,pncA_A20S,0.0378,forecast-only,pncA_A20S
+248,pncA_S67T,0.0377,forecast-only,pncA_S67T
+249,mmpR5_I16L,0.0373,forecast-only,mmpR5_I16L
+250,mmpR5_I16M,0.0365,forecast-only,mmpR5_I16M
+251,embB_V49D,0.0365,forecast-only,embB_V49D
+252,eis_V87L,0.0359,forecast-only,eis_V87L
+254,pncA_V21L,0.0356,forecast-only,pncA_V21L
+256,pncA_D8Y,0.0354,forecast-only,pncA_D8Y
+259,embB_S297P,0.0347,forecast-only,embB_S297P
+260,mmpR5_I16F,0.0345,forecast-only,mmpR5_I16F
+261,embB_S297L,0.0341,forecast-only,embB_S297L
+262,inhA_I202S,0.0339,forecast-only,inhA_I202S
+263,eis_I125T,0.0338,forecast-only,eis_I125T
+265,eis_I125V,0.0337,forecast-only,eis_I125V
+268,inhA_I202L,0.0332,forecast-only,inhA_I202L
+269,eis_V58L,0.033,forecast-only,eis_V58L
+271,inhA_I202M,0.0325,forecast-only,inhA_I202M
+272,pncA_A20G,0.0324,forecast-only,pncA_A20G
+274,eis_V87G,0.0317,forecast-only,eis_V87G
+278,pncA_A20P,0.0312,forecast-only,pncA_A20P
+279,inhA_I202F,0.0307,forecast-only,inhA_I202F
+280,inhA_I105N,0.0297,forecast-only,inhA_I105N
+281,gyrA_I36T,0.0293,forecast-only,gyrA_I36T
+282,eis_V58G,0.0292,forecast-only,eis_V58G
+283,embB_L304P,0.0289,forecast-only,embB_L304P
+284,rpoB_L449P,0.0283,forecast-only,rpoB_L449P
+285,embB_V49L,0.0276,forecast-only,embB_V49L
+286,rpoB_V170G,0.0275,forecast-only,rpoB_V170G
+287,inhA_I105S,0.0264,forecast-only,inhA_I105S
+289,inhA_I105L,0.0259,forecast-only,inhA_I105L
+290,rpoB_L449V,0.0258,forecast-only,rpoB_L449V
+291,embB_V49F,0.0254,forecast-only,embB_V49F
+293,inhA_I105M,0.0253,forecast-only,inhA_I105M
+294,gyrA_I36L,0.0252,forecast-only,gyrA_I36L
+295,embB_V49G,0.0244,forecast-only,embB_V49G
+296,inhA_I105F,0.0239,forecast-only,inhA_I105F
+297,embB_L304R,0.0236,forecast-only,embB_L304R
+298,pncA_H57N,0.0222,forecast-only,pncA_H57N
+300,eis_I125N,0.0221,forecast-only,eis_I125N
+306,embB_S297T,0.0196,forecast-only,embB_S297T
+307,eis_I125S,0.0196,forecast-only,eis_I125S
+308,embB_L304Q,0.0195,forecast-only,embB_L304Q
+309,eis_I125L,0.0192,forecast-only,eis_I125L
+310,embB_L304M,0.019,forecast-only,embB_L304M
+311,eis_I125M,0.0188,forecast-only,eis_I125M
+312,gyrA_I36M,0.0185,forecast-only,gyrA_I36M
+313,embB_L304V,0.0179,forecast-only,embB_L304V
+314,eis_I125F,0.0177,forecast-only,eis_I125F
+315,gyrA_I36F,0.0177,forecast-only,gyrA_I36F
+316,embB_S297W,0.0157,forecast-only,embB_S297W
+318,rpoB_K446N,0.012,forecast-only,rpoB_K446N
+320,rpoB_K446T,0.0058,forecast-only,rpoB_K446T
+321,gyrA_I36S,0.0028,forecast-only,gyrA_I36S
+322,rpoB_K446M,0.0016,forecast-only,rpoB_K446M
+324,rpoB_L449R,0.0,forecast-only,rpoB_L449R
+325,rpoB_L449Q,0.0,forecast-only,rpoB_L449Q
+327,rpoB_V170D,0.0,forecast-only,rpoB_V170D
+328,gyrA_I36N,0.0,forecast-only,gyrA_I36N
+329,rpoB_L452R,0.0,forecast-only,rpoB_L452R

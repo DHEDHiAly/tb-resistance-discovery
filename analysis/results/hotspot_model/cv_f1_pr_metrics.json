@@ -1,0 +1,144 @@
+{
+  "stratified_kfold": {
+    "n_folds": 5,
+    "auroc_mean": 0.9707,
+    "auroc_std": 0.028,
+    "auprc_mean": 0.5597,
+    "auprc_std": 0.1376,
+    "best_f1_mean": 0.6224,
+    "best_f1_std": 0.1048,
+    "best_f1_precision_mean": 0.825,
+    "best_f1_recall_mean": 0.5286,
+    "f1_at_05_mean": 0.5321,
+    "f1_at_05_std": 0.1814,
+    "top20_recall_mean": 0.6571,
+    "top20_recall_std": 0.1153,
+    "folds": [
+      {
+        "auroc": 0.992,
+        "auprc": 0.6794,
+        "best_f1": 0.6666666666666661,
+        "best_f1_precision": 0.625,
+        "best_f1_recall": 0.7142857142857143,
+        "best_f1_threshold": 0.23047637939453125,
+        "f1_at_05": 0.6667,
+        "precision_at_05": 0.8,
+        "recall_at_05": 0.5714,
+        "top20_recall": 0.7143
+      },
+      {
+        "auroc": 0.9776,
+        "auprc": 0.5082,
+        "best_f1": 0.4999999999999996,
+        "best_f1_precision": 1.0,
+        "best_f1_recall": 0.3333333333333333,
+        "best_f1_threshold": 0.9766289591789246,
+        "f1_at_05": 0.4444,
+        "precision_at_05": 0.6667,
+        "recall_at_05": 0.3333,
+        "top20_recall": 0.6667
+      },
+      {
+        "auroc": 0.9949,
+        "auprc": 0.7624,
+        "best_f1": 0.7999999999999995,
+        "best_f1_precision": 1.0,
+        "best_f1_recall": 0.6666666666666666,
+        "best_f1_threshold": 0.793653130531311,
+        "f1_at_05": 0.7273,
+        "precision_at_05": 0.8,
+        "recall_at_05": 0.6667,
+        "top20_recall": 0.8333
+      },
+      {
+        "auroc": 0.9174,
+        "auprc": 0.423,
+        "best_f1": 0.5999999999999994,
+        "best_f1_precision": 0.75,
+        "best_f1_recall": 0.5,
+        "best_f1_threshold": 0.6199607849121094,
+        "f1_at_05": 0.6,
+        "precision_at_05": 0.75,
+        "recall_at_05": 0.5,
+        "top20_recall": 0.5
+      },
+      {
+        "auroc": 0.9717,
+        "auprc": 0.4257,
+        "best_f1": 0.5454545454545449,
+        "best_f1_precision": 0.75,
+        "best_f1_recall": 0.42857142857142855,
+        "best_f1_threshold": 0.04590832069516182,
+        "f1_at_05": 0.2222,
+        "precision_at_05": 0.5,
+        "recall_at_05": 0.1429,
+        "top20_recall": 0.5714
+      }
+    ]
+  },
+  "groupkfold": {
+    "n_folds": 4,
+    "auroc_mean": 0.9724,
+    "auroc_std": 0.0184,
+    "auprc_mean": 0.5749,
+    "auprc_std": 0.2447,
+    "best_f1_mean": 0.683,
+    "best_f1_std": 0.1831,
+    "best_f1_precision_mean": 0.6899,
+    "best_f1_recall_mean": 0.7098,
+    "f1_at_05_mean": 0.4629,
+    "f1_at_05_std": 0.1986,
+    "top20_recall_mean": 0.7411,
+    "top20_recall_std": 0.1775,
+    "folds": [
+      {
+        "auroc": 0.9986,
+        "auprc": 0.8545,
+        "best_f1": 0.8749999999999994,
+        "best_f1_precision": 0.875,
+        "best_f1_recall": 0.875,
+        "best_f1_threshold": 0.00447459751740098,
+        "f1_at_05": 0.5455,
+        "precision_at_05": 1.0,
+        "recall_at_05": 0.375,
+        "top20_recall": 1.0
+      },
+      {
+        "auroc": 0.9766,
+        "auprc": 0.2386,
+        "best_f1": 0.4999999999999995,
+        "best_f1_precision": 0.38461538461538464,
+        "best_f1_recall": 0.7142857142857143,
+        "best_f1_threshold": 0.8979094624519348,
+        "f1_at_05": 0.2703,
+        "precision_at_05": 0.1667,
+        "recall_at_05": 0.7143,
+        "top20_recall": 0.7143
+      },
+      {
+        "auroc": 0.9474,
+        "auprc": 0.4506,
+        "best_f1": 0.49999999999999944,
+        "best_f1_precision": 0.5,
+        "best_f1_recall": 0.5,
+        "best_f1_threshold": 0.013941314071416855,
+        "f1_at_05": 0.2857,
+        "precision_at_05": 1.0,
+        "recall_at_05": 0.1667,
+        "top20_recall": 0.5
+      },
+      {
+        "auroc": 0.9671,
+        "auprc": 0.7559,
+        "best_f1": 0.8571428571428567,
+        "best_f1_precision": 1.0,
+        "best_f1_recall": 0.75,
+        "best_f1_threshold": 0.7647281885147095,
+        "f1_at_05": 0.75,
+        "precision_at_05": 0.75,
+        "recall_at_05": 0.75,
+        "top20_recall": 0.75
+      }
+    ]
+  }
+}
