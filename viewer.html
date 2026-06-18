@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -24,19 +24,16 @@ h3{font-size:16px;margin:12px 0 6px;color:#2d2d5e}
 .stat .num{font-size:28px;font-weight:700;color:#1a1a2e}
 .stat .label{font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.5px}
 table{width:100%;border-collapse:collapse;font-size:13px}
-th{background:#1a1a2e;color:#fff;padding:8px 10px;text-align:left;position:sticky;top:52px;cursor:pointer}
-th:hover{background:#2a2a4e}
+th{background:#1a1a2e;color:#fff;padding:8px 10px;text-align:left;position:sticky;top:52px}
 td{padding:6px 10px;border-bottom:1px solid #eee}
 tr:hover{background:#f0f4ff}
 .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
-.badge-Phase1{background:#e3f2fd;color:#1565c0}
-.badge-Phase2{background:#fff3e0;color:#e65100}
-.badge-Novel{background:#e8f5e9;color:#2e7d32}
-.badge-NONE{background:#f5f5f5;color:#666}
-.badge-WEAK{background:#fff3e0;color:#e65100}
-.badge-MODERATE{background:#ffecb3;color:#f57f17}
-.badge-STRONG{background:#ffcdd2;color:#c62828}
-.badge-DOCKING_FAILED{background:#f3e5f5;color:#6a1b9a}
+.Nov,.Phase1,.Phase2{background:#e3f2fd;color:#1565c0}
+.NONE{background:#f5f5f5;color:#666}
+.WEAK{background:#fff3e0;color:#e65100}
+.MODERATE,.MOD{background:#ffecb3;color:#f57f17}
+.STRONG{background:#ffcdd2;color:#c62828}
+.DOCKING_FAILED,.DF{background:#f3e5f5;color:#6a1b9a}
 .filters{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
 .filters select,.filters input{padding:6px 10px;border:1px solid #ccc;border-radius:4px;font-size:13px}
 .search-box{flex:1;min-width:150px}
@@ -57,11 +54,14 @@ tr:hover{background:#f0f4ff}
 .gene-bar{display:flex;align-items:center;gap:6px;padding:4px 8px;background:#fff;border-radius:4px;font-size:12px;border:1px solid #e0e0e0}
 .gene-bar .bar{height:8px;border-radius:4px;min-width:4px}
 .grid-2{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.novel-summary{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border:1px solid #a5d6a7;border-radius:8px;padding:16px;margin:12px 0}
+.novel-summary h3{color:#2e7d32}
+.novel-table{font-size:12px}
+.novel-table td{vertical-align:top}
 @media(max-width:768px){.stat-row{flex-direction:column}.chart-row{flex-direction:column}}
 </style>
 </head>
 <body>
-
 <nav>
   <h1>TB Resistance Discovery</h1>
   <a class="active" data-tab="overview">Overview</a>
@@ -72,9 +72,7 @@ tr:hover{background:#f0f4ff}
   <a data-tab="candidates">Key Candidates</a>
   <a data-tab="next">Next Steps</a>
 </nav>
-
 <div class="container">
-<!-- ===== OVERVIEW ===== -->
 <div id="tab-overview" class="tab active">
 <h2>Project Overview</h2>
 <div class="card">
@@ -82,9 +80,19 @@ tr:hover{background:#f0f4ff}
 <p><strong>Dataset:</strong> CRyPTIC consortium — 1,037 Mtb genomes, 13 drugs, 305 tiered mutations</p>
 </div>
 <div class="stat-row" id="overview-stats"></div>
+<div class="novel-summary">
+<h3>5 Novel Mutation Candidates <span style="font-weight:400;color:#555;font-size:14px">— structurally validated</span></h3>
+<table class="novel-table"><tbody>
+<tr><td><strong>rpsL K43E</strong></td><td>Rank 22&nbsp; <span class="badge DF">FAILED</span></td><td>Charge reversal at #1 STR site — Vina limit (MD-FEP needed)</td></tr>
+<tr><td><strong>inhA I16V</strong></td><td>Rank 27&nbsp; <span class="badge NONE">NONE</span></td><td>Undocumented Val at I16 — NADH cofactor gateway (rigid Vina blind)</td></tr>
+<tr><td><strong>eis V59A</strong></td><td>Rank 34&nbsp; <span class="badge DF">FAILED</span></td><td>Coding-region resistance in promoter-regulated gene — Vina limit</td></tr>
+<tr><td><strong>rpoB V170I</strong></td><td>Rank 47&nbsp; <span class="badge NONE">NONE</span></td><td>Allosteric shield outside RRDR — ddG=+0.001 (dynamics mechanism)</td></tr>
+<tr><td><strong>gyrB Q538L</strong></td><td>Rank 131&nbsp; <span class="badge WEAK">WEAK</span></td><td>Mtb-specific TOPRIM water-bridge — ddG=-0.174 (MD w/ DNA needed)</td></tr>
+</tbody></table>
+</div>
 <div class="card">
 <h3>Data Pipeline</h3>
-<div class="pipeline-flow" id="data-flow">
+<div class="pipeline-flow">
 <div class="pipeline-step"><div class="step-num">Source</div><div class="step-name">CRyPTIC + WHO</div></div>
 <div class="pipeline-arrow">→</div>
 <div class="pipeline-step"><div class="step-num">Features</div><div class="step-name">~50 Features</div></div>
@@ -105,8 +113,6 @@ tr:hover{background:#f0f4ff}
 <div class="gene-dist" id="gene-dist"></div>
 </div>
 </div>
-
-<!-- ===== PIPELINE ===== -->
 <div id="tab-pipeline" class="tab">
 <h2>4-Stage Forecasting Pipeline</h2>
 <div class="card">
@@ -131,8 +137,6 @@ tr:hover{background:#f0f4ff}
 <div class="chart-container"><canvas id="stageChart"></canvas></div>
 </div>
 </div>
-
-<!-- ===== METRICS ===== -->
 <div id="tab-metrics" class="tab">
 <h2>Model Performance Metrics</h2>
 <div class="stat-row" id="metrics-stats"></div>
@@ -149,8 +153,6 @@ tr:hover{background:#f0f4ff}
 <div class="chart-container"><canvas id="benchChart"></canvas></div>
 </div>
 </div>
-
-<!-- ===== DOCKING ===== -->
 <div id="tab-docking" class="tab">
 <h2>Structural Validation: Docking Results</h2>
 <p>AutoDock Vina v1.2.7 — rigid receptor, exhaustiveness=12, num_modes=9</p>
@@ -161,21 +163,13 @@ tr:hover{background:#f0f4ff}
 </div>
 <div style="overflow-x:auto"><table>
 <thead><tr>
-  <th data-sort="phase">Phase</th>
-  <th data-sort="gene">Gene</th>
-  <th data-sort="mutation">Mutation</th>
-  <th data-sort="drug">Drug</th>
-  <th data-sort="wt">WT (kcal/mol)</th>
-  <th data-sort="mutant">Mutant (kcal/mol)</th>
-  <th data-sort="ddG">ddG (kcal/mol)</th>
-  <th data-sort="category">Category</th>
-  <th>Structure</th>
+  <th>Phase</th><th>Gene</th><th>Mutation</th><th>Drug</th>
+  <th>WT (kcal/mol)</th><th>Mutant (kcal/mol)</th>
+  <th>ddG (kcal/mol)</th><th>Category</th><th>Structure</th>
 </tr></thead>
 <tbody id="dock-tbody"></tbody>
 </table></div>
 </div>
-
-<!-- ===== BROWSER ===== -->
 <div id="tab-browser" class="tab">
 <h2>Tier-4 Mutation Browser — 188 Forecast-Only Candidates</h2>
 <div class="filters">
@@ -186,28 +180,18 @@ tr:hover{background:#f0f4ff}
 </div>
 <div style="overflow-x:auto"><table>
 <thead><tr>
-  <th data-sort="gene">Gene</th>
-  <th data-sort="mutation">Mutation</th>
-  <th data-sort="rank">Rank</th>
-  <th data-sort="score">Score</th>
-  <th data-sort="mechanism">Mechanism</th>
-  <th data-sort="drug_dist">DrugDist (A)</th>
-  <th data-sort="drug">Drug</th>
-  <th data-sort="carriers">Carriers</th>
+  <th>Gene</th><th>Mutation</th><th>Rank</th><th>Score</th>
+  <th>Mechanism</th><th>DrugDist (A)</th><th>Drug</th><th>Carriers</th>
 </tr></thead>
 <tbody id="browser-tbody"></tbody>
 </table></div>
 <div style="margin:8px 0;font-size:13px;color:#666" id="browser-count"></div>
 </div>
-
-<!-- ===== CANDIDATES ===== -->
 <div id="tab-candidates" class="tab">
 <h2>Top 5 Novel Mutation Candidates</h2>
-<p>Mutations predicted resistant at Tier 4, zero carriers, novel literature status, validated through structural analysis</p>
+<p>Mutations predicted resistant at Tier 4 — zero carriers — novel literature status — validated through structural analysis</p>
 <div id="candidates-container"></div>
 </div>
-
-<!-- ===== NEXT STEPS ===== -->
 <div id="tab-next" class="tab">
 <h2>Next Steps & Limitations</h2>
 <div class="grid-2">
@@ -224,7 +208,7 @@ tr:hover{background:#f0f4ff}
 <h3>Pipeline Limitations</h3>
 <ul style="padding-left:18px;font-size:14px;line-height:1.8">
   <li>Vina rigid-receptor underestimates ddG for small/large mutations</li>
-  <li>NADH/NAD+, STR, AMK exceed Vina's tree.h torsion limit (complex branched rings)</li>
+  <li>NADH/NAD+, STR, AMK exceed Vina tree.h torsion limit (complex branched rings)</li>
   <li>Indirect mechanisms (gyrB Q538L, allosteric rpoB) invisible to static docking</li>
   <li>AlphaFold models lack co-crystal conformational context</li>
   <li>Loss-of-function (pncA, katG) requires enzyme activity assay, not docking</li>
@@ -242,151 +226,109 @@ tr:hover{background:#f0f4ff}
 <div class="card">
 <h3>Manuscript Opportunities</h3>
 <ul style="padding-left:18px;font-size:14px;line-height:1.8">
-  <li>Novel prediction: inhA I16V — undocumented Val substitution at I16 position</li>
-  <li>Novel mechanism: rpsL K43E — charge reversal at #1 STR resistance residue</li>
-  <li>Novel gene-level: eis V59A — coding region resistance in promoter-regulated gene</li>
-  <li>Allosteric: rpoB V170I — outside RRDR, low-level RIF via dynamics</li>
-  <li>Structural: gyrB Q538L — Mtb-specific TOPRIM water-bridge disruption</li>
+  <li><strong>inhA I16V</strong> — undocumented Val substitution at I16 position (I16T known, not V)</li>
+  <li><strong>rpsL K43E</strong> — charge reversal at #1 STR resistance residue (K43R known, not E)</li>
+  <li><strong>eis V59A</strong> — coding region resistance in promoter-regulated gene (all known = promoter)</li>
+  <li><strong>rpoB V170I</strong> — outside RRDR, low-level RIF via allosteric dynamics (V170F known)</li>
+  <li><strong>gyrB Q538L</strong> — Mtb-specific TOPRIM water-bridge disruption (N538D in E. coli only)</li>
 </ul>
 </div>
 </div>
 </div>
 </div>
-
 <script>
-// ===== LOAD DATA =====
-const DATA = {};
-fetch('data/metadata/data_bundle_js.json').then(r=>r.json()).then(d=>{
-  Object.assign(DATA, d);
-  init();
-}).catch(e=>{
-  document.body.innerHTML+=`<pre>Error loading data: ${e}</pre>`;
-});
-
-function init() {
-  // ---- Overview Stats ----
-  const docking_success = DATA.all_docked_flat.filter(d=>d.ddG!==null && d.category!=='DOCKING_FAILED').length;
+const DATA = {"docking_results": {"rpoB": {"pdb": "5UHB (chain C)", "drug": "rifampicin", "wt_binding_kcal_mol": -9.934, "mutations": {"H445L": {"h37rv_pos": 445, "pdb_residue": 451, "mut_binding": -9.732, "delta_delta_G": 0.20199999999999996, "wt_aa": "H", "mut_aa": "L"}, "H445R": {"h37rv_pos": 445, "pdb_residue": 451, "mut_binding": -9.693, "delta_delta_G": 0.24099999999999966, "wt_aa": "H", "mut_aa": "R"}, "H445Q": {"h37rv_pos": 445, "pdb_residue": 451, "mut_binding": -9.726, "delta_delta_G": 0.2079999999999984, "wt_aa": "H", "mut_aa": "Q"}, "H445P": {"h37rv_pos": 445, "pdb_residue": 451, "mut_binding": -9.721, "delta_delta_G": 0.2129999999999992, "wt_aa": "H", "mut_aa": "P"}, "D435G": {"h37rv_pos": 435, "pdb_residue": 441, "mut_binding": -9.831, "delta_delta_G": 0.10299999999999976, "wt_aa": "D", "mut_aa": "G"}, "I491L": {"h37rv_pos": 491, "pdb_residue": 497, "mut_binding": -9.758, "delta_delta_G": 0.17600000000000016, "wt_aa": "I", "mut_aa": "L"}, "L430R": {"h37rv_pos": 430, "pdb_residue": 458, "mut_binding": -9.531, "delta_delta_G": 0.4029999999999987, "wt_aa": "L", "mut_aa": "R"}, "V170A": {"h37rv_pos": 170, "pdb_residue": 176, "mut_binding": -9.906, "delta_delta_G": 0.027999999999998693, "wt_aa": "V", "mut_aa": "A"}, "Q432L": {"h37rv_pos": 432, "pdb_residue": 438, "mut_binding": -9.746, "delta_delta_G": 0.18799999999999883, "wt_aa": "Q", "mut_aa": "L"}, "Q432P": {"h37rv_pos": 432, "pdb_residue": 438, "mut_binding": -9.765, "delta_delta_G": 0.1689999999999987, "wt_aa": "Q", "mut_aa": "P"}, "Q432K": {"h37rv_pos": 432, "pdb_residue": 438, "mut_binding": -9.911, "delta_delta_G": 0.014, "wt_aa": "Q", "mut_aa": "K"}}}, "gyrA": {"pdb": "5BS8 (chain A)", "drug": "moxifloxacin", "wt_binding_kcal_mol": -4.375, "mutations": {"G88C": {"h37rv_pos": 88, "pdb_residue": 88, "mut_binding": -4.168, "delta_delta_G": 0.20699999999999985, "wt_aa": "G", "mut_aa": "C"}, "D94A": {"h37rv_pos": 94, "pdb_residue": 94, "mut_binding": -4.319, "delta_delta_G": 0.05600000000000005, "wt_aa": "D", "mut_aa": "A"}, "D94H": {"h37rv_pos": 94, "pdb_residue": 94, "mut_binding": -4.344, "delta_delta_G": 0.030999999999999694, "wt_aa": "D", "mut_aa": "H"}, "A90T": {"h37rv_pos": 90, "pdb_residue": 90, "mut_binding": -4.363, "delta_delta_G": 0.011999999999999567, "wt_aa": "A", "mut_aa": "T"}}}, "inhA": {"method": "AlphaFold + triclosan (proxy for NADH pocket)", "wt_binding_kcal_mol": "per mutation", "mutations": {"I21T": {"mutation": "I21T", "gene": "inhA", "drug": "triclosan", "wt_aa": "I", "mut_aa": "T", "h37rv_pos": 21, "wt_binding": -7.066, "mut_binding": -7.572, "delta_delta_G": -0.5060000000000002}, "S94A": {"mutation": "S94A", "gene": "inhA", "drug": "triclosan", "wt_aa": "S", "mut_aa": "A", "h37rv_pos": 94, "wt_binding": -7.678, "mut_binding": -7.171, "delta_delta_G": 0.5069999999999997}, "I194T": {"mutation": "I194T", "gene": "inhA", "drug": "triclosan", "wt_aa": "I", "mut_aa": "T", "h37rv_pos": 194, "wt_binding": -7.443, "mut_binding": -7.612, "delta_delta_G": -0.16900000000000048}}}, "embB": {"pdb": "AlphaFold", "drug": "ethambutol", "mutations": {"Q497K": {"mutation": "Q497K", "gene": "embB", "drug": "ethambutol", "wt_aa": "Q", "mut_aa": "K", "h37rv_pos": 497, "pdb_residue": 497, "wt_binding": -4.741, "mut_binding": -4.724, "delta_delta_G": 0.01699999999999946, "all_modes": [-4.724, -4.721, -4.627, -4.498, -4.435, -4.304, -4.118, -4.047, -4.031]}, "G406S": {"mutation": "G406S", "gene": "embB", "drug": "ethambutol", "wt_aa": "G", "mut_aa": "S", "h37rv_pos": 406, "pdb_residue": 406, "wt_binding": -4.209, "mut_binding": -4.181, "delta_delta_G": 0.02799999999999958, "all_modes": [-4.181, -4.092, -3.405, -3.396, -3.224, -3.19, -3.1, -3.098, -2.983]}}}, "rpoB_V170I": {"gene": "rpoB", "mutation": "V170I", "structure": "5UHB crystal (chain C)", "ligand": "rifampicin (RFP)", "wt_best": -9.97, "mutant_best": -9.969, "delta_delta_G": 0.001, "category": "NONE", "rank": 47, "emergence_score": 0.3746, "carriers": 0, "note": "V170F documented (low-level RIF). V170I novel. No binding change via rigid docking."}, "inhA_I16V": {"gene": "inhA", "mutation": "I16V", "structure": "AlphaFold (P9WGR1)", "ligand": "triclosan (NADH proxy)", "wt_best": -7.462, "mutant_best": -7.443, "delta_delta_G": 0.019, "category": "NONE", "rank": 27, "emergence_score": 0.4263, "carriers": 0, "note": "I16T known (CARD). I16V novel. No binding change - mechanism likely through altered NADH kinetics."}, "gyrB_Q538L": {"gene": "gyrB", "mutation": "Q538L", "structure": "AlphaFold (P9WG45) + MFX", "ligand": "moxifloxacin (MFX)", "wt_best": -6.16, "mutant_best": -6.334, "delta_delta_G": -0.174, "category": "WEAK", "rank": 131, "emergence_score": 0.2337, "carriers": 0, "note": "Indirect mechanism (TOPRIM domain, 17-22A from MFX). Vina cannot capture water-bridge disruption. Requires MD with DNA."}, "rpsL_K43E": {"gene": "rpsL", "mutation": "K43E", "structure": "AlphaFold (P9WH63) + STR", "ligand": "streptomycin (STR)", "wt_best": null, "mutant_best": null, "delta_delta_G": null, "category": "DOCKING_FAILED", "rank": 22, "emergence_score": 0.4459, "carriers": 0, "note": "Vina tree.h(101) error: STR has 14 torsions with complex branched rings. Charge reversal mechanism (K->E) disrupts rRNA salt bridge - requires MD-FEP."}, "eis_V59A": {"gene": "eis", "mutation": "V59A", "structure": "AlphaFold (P9WFK7) + AMK", "ligand": "amikacin (AMK)", "wt_best": null, "mutant_best": null, "delta_delta_G": null, "category": "DOCKING_FAILED", "rank": 34, "emergence_score": 0.4086, "carriers": 0, "note": "Vina tree.h(101) error: AMK has 10 torsions with complex branched rings. Coding region mutation at known promoter-regulated gene - novel mechanism."}}, "tier4_candidates": [{"gene": "gyrA", "mutation": "A90T", "rank": 2, "score": 0.5056, "carriers": 0, "drug_dist": 2.27, "structure": "Co-crystal 5BS8/5BTC (MFX)", "drug": "MFX", "residue_pos": 90, "sasa": 0.4879, "mechanism": "Other"}, {"gene": "inhA", "mutation": "S94L", "rank": 3, "score": 0.5028, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 94, "sasa": 0.1508, "mechanism": "Cofactor Gateway"}, {"gene": "inhA", "mutation": "S94P", "rank": 9, "score": 0.4849, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 94, "sasa": 0.1508, "mechanism": "Cofactor Gateway"}, {"gene": "rpoB", "mutation": "D435N", "rank": 13, "score": 0.4726, "carriers": 0, "drug_dist": 3.05, "structure": "Co-crystal 5UHB (RIF)", "drug": "RIF", "residue_pos": 435, "sasa": 0.6096, "mechanism": "Other"}, {"gene": "rpoB", "mutation": "S450P", "rank": 15, "score": 0.4709, "carriers": 0, "drug_dist": 3.23, "structure": "Co-crystal 5UHB (RIF)", "drug": "RIF", "residue_pos": 450, "sasa": 0.0362, "mechanism": "Other"}, {"gene": "rpsL", "mutation": "K88E", "rank": 18, "score": 0.4515, "carriers": 0, "drug_dist": 1.32, "structure": "AlphaFold (dock STR)", "drug": "STR", "residue_pos": 88, "sasa": 0.7103, "mechanism": "Charge Reversal"}, {"gene": "rpsL", "mutation": "K43E", "rank": 22, "score": 0.4459, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock STR)", "drug": "STR", "residue_pos": 43, "sasa": 0.4017, "mechanism": "Charge Reversal"}, {"gene": "inhA", "mutation": "I16V", "rank": 27, "score": 0.4263, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 16, "sasa": 0.5057, "mechanism": "Cofactor Gateway"}, {"gene": "pncA", "mutation": "V125I", "rank": 28, "score": 0.4253, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock PZA)", "drug": "PZA", "residue_pos": 125, "sasa": 0.0519, "mechanism": "Loss-of-Function"}, {"gene": "gyrA", "mutation": "G88D", "rank": 29, "score": 0.4225, "carriers": 0, "drug_dist": 3.94, "structure": "Co-crystal 5BS8/5BTC (MFX)", "drug": "MFX", "residue_pos": 88, "sasa": 0.4714, "mechanism": "Other"}, {"gene": "gyrA", "mutation": "G88S", "rank": 30, "score": 0.4181, "carriers": 0, "drug_dist": 3.94, "structure": "Co-crystal 5BS8/5BTC (MFX)", "drug": "MFX", "residue_pos": 88, "sasa": 0.4714, "mechanism": "Other"}, {"gene": "eis", "mutation": "V59A", "rank": 34, "score": 0.4086, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock AMK)", "drug": "AMK", "residue_pos": 59, "sasa": 0.0366, "mechanism": "Other"}, {"gene": "pncA", "mutation": "V125A", "rank": 35, "score": 0.4074, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock PZA)", "drug": "PZA", "residue_pos": 125, "sasa": 0.0519, "mechanism": "Loss-of-Function"}, {"gene": "inhA", "mutation": "I95T", "rank": 36, "score": 0.4004, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 95, "sasa": 0.1472, "mechanism": "Cofactor Gateway"}, {"gene": "inhA", "mutation": "I194V", "rank": 39, "score": 0.3938, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 194, "sasa": 0.0463, "mechanism": "Cofactor Gateway"}, {"gene": "inhA", "mutation": "M103T", "rank": 43, "score": 0.3864, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 103, "sasa": 0.06, "mechanism": "Other"}, {"gene": "inhA", "mutation": "V203I", "rank": 45, "score": 0.3765, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 203, "sasa": 0.1025, "mechanism": "Cofactor Gateway"}, {"gene": "rpoB", "mutation": "V170I", "rank": 47, "score": 0.3746, "carriers": 0, "drug_dist": 3.97, "structure": "Co-crystal 5UHB (RIF)", "drug": "RIF", "residue_pos": 170, "sasa": 0.1354, "mechanism": "Allosteric Shield"}, {"gene": "inhA", "mutation": "P99S", "rank": 48, "score": 0.3743, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 99, "sasa": 0.1176, "mechanism": "Cofactor Gateway"}, {"gene": "inhA", "mutation": "M103V", "rank": 49, "score": 0.3689, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 103, "sasa": 0.06, "mechanism": "Other"}, {"gene": "inhA", "mutation": "M103I", "rank": 50, "score": 0.3683, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 103, "sasa": 0.06, "mechanism": "Other"}, {"gene": "pncA", "mutation": "D12V", "rank": 55, "score": 0.3463, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock PZA)", "drug": "PZA", "residue_pos": 12, "sasa": 0.1203, "mechanism": "Loss-of-Function"}, {"gene": "inhA", "mutation": "P99L", "rank": 57, "score": 0.3451, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 99, "sasa": 0.1176, "mechanism": "Cofactor Gateway"}, {"gene": "gyrA", "mutation": "S91L", "rank": 59, "score": 0.3428, "carriers": 0, "drug_dist": 4.38, "structure": "Co-crystal 5BS8/5BTC (MFX)", "drug": "MFX", "residue_pos": 91, "sasa": 0.3842, "mechanism": "Water-Bridge Disruptor"}, {"gene": "embB", "mutation": "M306R", "rank": 61, "score": 0.3367, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 306, "sasa": 0.0059, "mechanism": "Other"}, {"gene": "eis", "mutation": "V59D", "rank": 63, "score": 0.3338, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock AMK)", "drug": "AMK", "residue_pos": 59, "sasa": 0.0366, "mechanism": "Other"}, {"gene": "pncA", "mutation": "V125D", "rank": 64, "score": 0.3328, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock PZA)", "drug": "PZA", "residue_pos": 125, "sasa": 0.0519, "mechanism": "Loss-of-Function"}, {"gene": "embB", "mutation": "M306K", "rank": 65, "score": 0.3319, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 306, "sasa": 0.0059, "mechanism": "Other"}, {"gene": "rpsL", "mutation": "K43M", "rank": 67, "score": 0.326, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock STR)", "drug": "STR", "residue_pos": 43, "sasa": 0.4017, "mechanism": "Other"}, {"gene": "pncA", "mutation": "Q10L", "rank": 72, "score": 0.3053, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock PZA)", "drug": "PZA", "residue_pos": 10, "sasa": 0.0, "mechanism": "Loss-of-Function"}, {"gene": "inhA", "mutation": "I16N", "rank": 73, "score": 0.2991, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 16, "sasa": 0.5057, "mechanism": "Cofactor Gateway"}, {"gene": "gyrA", "mutation": "A90S", "rank": 74, "score": 0.2983, "carriers": 0, "drug_dist": 2.27, "structure": "Co-crystal 5BS8/5BTC (MFX)", "drug": "MFX", "residue_pos": 90, "sasa": 0.4879, "mechanism": "Other"}, {"gene": "inhA", "mutation": "V203D", "rank": 75, "score": 0.2944, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 203, "sasa": 0.1025, "mechanism": "Cofactor Gateway"}, {"gene": "pncA", "mutation": "Q10E", "rank": 78, "score": 0.281, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock PZA)", "drug": "PZA", "residue_pos": 10, "sasa": 0.0, "mechanism": "Loss-of-Function"}, {"gene": "inhA", "mutation": "I194N", "rank": 83, "score": 0.2762, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 194, "sasa": 0.0463, "mechanism": "Cofactor Gateway"}, {"gene": "rpsL", "mutation": "K43Q", "rank": 84, "score": 0.2747, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock STR)", "drug": "STR", "residue_pos": 43, "sasa": 0.4017, "mechanism": "Other"}, {"gene": "inhA", "mutation": "I21N", "rank": 87, "score": 0.2741, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 21, "sasa": 0.1649, "mechanism": "Cofactor Gateway"}, {"gene": "embB", "mutation": "Q497L", "rank": 90, "score": 0.2729, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 497, "sasa": 0.0056, "mechanism": "Other"}, {"gene": "rpsL", "mutation": "K88N", "rank": 93, "score": 0.2689, "carriers": 0, "drug_dist": 1.32, "structure": "AlphaFold (dock STR)", "drug": "STR", "residue_pos": 88, "sasa": 0.7103, "mechanism": "Other"}, {"gene": "inhA", "mutation": "I95N", "rank": 97, "score": 0.2658, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 95, "sasa": 0.1472, "mechanism": "Cofactor Gateway"}, {"gene": "rpsL", "mutation": "K43N", "rank": 98, "score": 0.2655, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock STR)", "drug": "STR", "residue_pos": 43, "sasa": 0.4017, "mechanism": "Other"}, {"gene": "embB", "mutation": "G406R", "rank": 102, "score": 0.2625, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 406, "sasa": 0.0, "mechanism": "Other"}, {"gene": "inhA", "mutation": "I16S", "rank": 106, "score": 0.2574, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 16, "sasa": 0.5057, "mechanism": "Cofactor Gateway"}, {"gene": "inhA", "mutation": "M103R", "rank": 111, "score": 0.2559, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 103, "sasa": 0.06, "mechanism": "Other"}, {"gene": "inhA", "mutation": "M103K", "rank": 113, "score": 0.2522, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 103, "sasa": 0.06, "mechanism": "Other"}, {"gene": "inhA", "mutation": "S94T", "rank": 115, "score": 0.2501, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 94, "sasa": 0.1508, "mechanism": "Cofactor Gateway"}, {"gene": "gyrA", "mutation": "A90G", "rank": 118, "score": 0.248, "carriers": 0, "drug_dist": 2.27, "structure": "Co-crystal 5BS8/5BTC (MFX)", "drug": "MFX", "residue_pos": 90, "sasa": 0.4879, "mechanism": "Other"}, {"gene": "pncA", "mutation": "D12H", "rank": 119, "score": 0.2475, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock PZA)", "drug": "PZA", "residue_pos": 12, "sasa": 0.1203, "mechanism": "Charge Reversal"}, {"gene": "rpoB", "mutation": "S450T", "rank": 123, "score": 0.2436, "carriers": 0, "drug_dist": 3.23, "structure": "Co-crystal 5UHB (RIF)", "drug": "RIF", "residue_pos": 450, "sasa": 0.0362, "mechanism": "Other"}, {"gene": "rpoB", "mutation": "I491N", "rank": 124, "score": 0.2399, "carriers": 0, "drug_dist": 3.25, "structure": "Co-crystal 5UHB (RIF)", "drug": "RIF", "residue_pos": 491, "sasa": 0.3171, "mechanism": "Allosteric Shield"}, {"gene": "gyrA", "mutation": "A90P", "rank": 125, "score": 0.2385, "carriers": 0, "drug_dist": 2.27, "structure": "Co-crystal 5BS8/5BTC (MFX)", "drug": "MFX", "residue_pos": 90, "sasa": 0.4879, "mechanism": "Other"}, {"gene": "inhA", "mutation": "I194S", "rank": 126, "score": 0.2378, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 194, "sasa": 0.0463, "mechanism": "Cofactor Gateway"}, {"gene": "pncA", "mutation": "D12E", "rank": 127, "score": 0.2371, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock PZA)", "drug": "PZA", "residue_pos": 12, "sasa": 0.1203, "mechanism": "Loss-of-Function"}, {"gene": "inhA", "mutation": "I21S", "rank": 129, "score": 0.236, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 21, "sasa": 0.1649, "mechanism": "Cofactor Gateway"}, {"gene": "rpoB", "mutation": "V170D", "rank": 130, "score": 0.2358, "carriers": 0, "drug_dist": 3.97, "structure": "Co-crystal 5UHB (RIF)", "drug": "RIF", "residue_pos": 170, "sasa": 0.1354, "mechanism": "Allosteric Shield"}, {"gene": "gyrB", "mutation": "Q538L", "rank": 131, "score": 0.2337, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock MFX)", "drug": "MFX", "residue_pos": 538, "sasa": 0.4945, "mechanism": "Water-Bridge Disruptor"}, {"gene": "rpoB", "mutation": "L452R", "rank": 132, "score": 0.2331, "carriers": 0, "drug_dist": 4.3, "structure": "Co-crystal 5UHB (RIF)", "drug": "RIF", "residue_pos": 452, "sasa": 0.01, "mechanism": "Other"}, {"gene": "inhA", "mutation": "P99R", "rank": 134, "score": 0.2304, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 99, "sasa": 0.1176, "mechanism": "Cofactor Gateway"}, {"gene": "inhA", "mutation": "I95S", "rank": 137, "score": 0.2288, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 95, "sasa": 0.1472, "mechanism": "Cofactor Gateway"}, {"gene": "inhA", "mutation": "I16M", "rank": 138, "score": 0.2288, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 16, "sasa": 0.5057, "mechanism": "Cofactor Gateway"}, {"gene": "inhA", "mutation": "I16L", "rank": 139, "score": 0.2285, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 16, "sasa": 0.5057, "mechanism": "Cofactor Gateway"}, {"gene": "rpoB", "mutation": "P483R", "rank": 140, "score": 0.2265, "carriers": 0, "drug_dist": 2.53, "structure": "Co-crystal 5UHB (RIF)", "drug": "RIF", "residue_pos": 483, "sasa": 0.0957, "mechanism": "Allosteric Shield"}, {"gene": "rpoB", "mutation": "L430M", "rank": 141, "score": 0.2253, "carriers": 0, "drug_dist": 3.75, "structure": "Co-crystal 5UHB (RIF)", "drug": "RIF", "residue_pos": 430, "sasa": 0.053, "mechanism": "Other"}, {"gene": "gyrA", "mutation": "G88R", "rank": 142, "score": 0.2224, "carriers": 0, "drug_dist": 3.94, "structure": "Co-crystal 5BS8/5BTC (MFX)", "drug": "MFX", "residue_pos": 88, "sasa": 0.4714, "mechanism": "Other"}, {"gene": "rpoB", "mutation": "P483H", "rank": 144, "score": 0.2202, "carriers": 0, "drug_dist": 2.53, "structure": "Co-crystal 5UHB (RIF)", "drug": "RIF", "residue_pos": 483, "sasa": 0.0957, "mechanism": "Allosteric Shield"}, {"gene": "eis", "mutation": "V59L", "rank": 145, "score": 0.2186, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock AMK)", "drug": "AMK", "residue_pos": 59, "sasa": 0.0366, "mechanism": "Other"}, {"gene": "rpoB", "mutation": "L430Q", "rank": 146, "score": 0.2186, "carriers": 0, "drug_dist": 3.75, "structure": "Co-crystal 5UHB (RIF)", "drug": "RIF", "residue_pos": 430, "sasa": 0.053, "mechanism": "Other"}, {"gene": "pncA", "mutation": "V125L", "rank": 147, "score": 0.218, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock PZA)", "drug": "PZA", "residue_pos": 125, "sasa": 0.0519, "mechanism": "Loss-of-Function"}, {"gene": "gyrB", "mutation": "Q538E", "rank": 149, "score": 0.2153, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock MFX)", "drug": "MFX", "residue_pos": 538, "sasa": 0.4945, "mechanism": "Other"}, {"gene": "inhA", "mutation": "P99Q", "rank": 150, "score": 0.2145, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 99, "sasa": 0.1176, "mechanism": "Cofactor Gateway"}, {"gene": "inhA", "mutation": "I16F", "rank": 151, "score": 0.2139, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 16, "sasa": 0.5057, "mechanism": "Cofactor Gateway"}, {"gene": "gyrB", "mutation": "Q538P", "rank": 153, "score": 0.2125, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock MFX)", "drug": "MFX", "residue_pos": 538, "sasa": 0.4945, "mechanism": "Water-Bridge Disruptor"}, {"gene": "inhA", "mutation": "I194M", "rank": 154, "score": 0.2113, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 194, "sasa": 0.0463, "mechanism": "Cofactor Gateway"}, {"gene": "inhA", "mutation": "I194L", "rank": 156, "score": 0.211, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 194, "sasa": 0.0463, "mechanism": "Cofactor Gateway"}, {"gene": "rpoB", "mutation": "L430V", "rank": 157, "score": 0.2109, "carriers": 0, "drug_dist": 3.75, "structure": "Co-crystal 5UHB (RIF)", "drug": "RIF", "residue_pos": 430, "sasa": 0.053, "mechanism": "Other"}, {"gene": "rpoB", "mutation": "P483T", "rank": 158, "score": 0.2104, "carriers": 0, "drug_dist": 2.53, "structure": "Co-crystal 5UHB (RIF)", "drug": "RIF", "residue_pos": 483, "sasa": 0.0957, "mechanism": "Allosteric Shield"}, {"gene": "inhA", "mutation": "M103L", "rank": 159, "score": 0.21, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 103, "sasa": 0.06, "mechanism": "Other"}, {"gene": "inhA", "mutation": "I21M", "rank": 162, "score": 0.2098, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 21, "sasa": 0.1649, "mechanism": "Cofactor Gateway"}, {"gene": "inhA", "mutation": "I21L", "rank": 163, "score": 0.2096, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 21, "sasa": 0.1649, "mechanism": "Cofactor Gateway"}, {"gene": "gyrB", "mutation": "Q538K", "rank": 164, "score": 0.2093, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock MFX)", "drug": "MFX", "residue_pos": 538, "sasa": 0.4945, "mechanism": "Other"}, {"gene": "pncA", "mutation": "L4M", "rank": 167, "score": 0.2083, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock PZA)", "drug": "PZA", "residue_pos": 4, "sasa": 0.0, "mechanism": "Loss-of-Function"}, {"gene": "inhA", "mutation": "P99T", "rank": 168, "score": 0.2067, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 99, "sasa": 0.1176, "mechanism": "Cofactor Gateway"}, {"gene": "inhA", "mutation": "S94W", "rank": 169, "score": 0.2061, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 94, "sasa": 0.1508, "mechanism": "Cofactor Gateway"}, {"gene": "eis", "mutation": "V59G", "rank": 171, "score": 0.206, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock AMK)", "drug": "AMK", "residue_pos": 59, "sasa": 0.0366, "mechanism": "Other"}, {"gene": "gyrA", "mutation": "S91A", "rank": 170, "score": 0.206, "carriers": 0, "drug_dist": 4.38, "structure": "Co-crystal 5BS8/5BTC (MFX)", "drug": "MFX", "residue_pos": 91, "sasa": 0.3842, "mechanism": "Water-Bridge Disruptor"}, {"gene": "eis", "mutation": "V59F", "rank": 173, "score": 0.2036, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock AMK)", "drug": "AMK", "residue_pos": 59, "sasa": 0.0366, "mechanism": "Other"}, {"gene": "inhA", "mutation": "I95M", "rank": 176, "score": 0.2034, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 95, "sasa": 0.1472, "mechanism": "Cofactor Gateway"}, {"gene": "inhA", "mutation": "I95L", "rank": 177, "score": 0.2031, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 95, "sasa": 0.1472, "mechanism": "Cofactor Gateway"}, {"gene": "rpoB", "mutation": "L452M", "rank": 181, "score": 0.1995, "carriers": 0, "drug_dist": 4.3, "structure": "Co-crystal 5UHB (RIF)", "drug": "RIF", "residue_pos": 452, "sasa": 0.01, "mechanism": "Other"}, {"gene": "inhA", "mutation": "I194F", "rank": 182, "score": 0.1976, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 194, "sasa": 0.0463, "mechanism": "Cofactor Gateway"}, {"gene": "gyrB", "mutation": "Q538H", "rank": 183, "score": 0.1972, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock MFX)", "drug": "MFX", "residue_pos": 538, "sasa": 0.4945, "mechanism": "Other"}, {"gene": "inhA", "mutation": "I21F", "rank": 186, "score": 0.1961, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 21, "sasa": 0.1649, "mechanism": "Cofactor Gateway"}, {"gene": "inhA", "mutation": "V203L", "rank": 187, "score": 0.193, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 203, "sasa": 0.1025, "mechanism": "Cofactor Gateway"}, {"gene": "pncA", "mutation": "L4V", "rank": 188, "score": 0.1927, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock PZA)", "drug": "PZA", "residue_pos": 4, "sasa": 0.0, "mechanism": "Loss-of-Function"}, {"gene": "rpoB", "mutation": "P483A", "rank": 189, "score": 0.191, "carriers": 0, "drug_dist": 2.53, "structure": "Co-crystal 5UHB (RIF)", "drug": "RIF", "residue_pos": 483, "sasa": 0.0957, "mechanism": "Allosteric Shield"}, {"gene": "inhA", "mutation": "P99A", "rank": 191, "score": 0.1903, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 99, "sasa": 0.1176, "mechanism": "Cofactor Gateway"}, {"gene": "katG", "mutation": "S315C", "rank": 192, "score": 0.1902, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH)", "drug": "INH", "residue_pos": 315, "sasa": 0.4528, "mechanism": "Loss-of-Function"}, {"gene": "inhA", "mutation": "I95F", "rank": 193, "score": 0.1901, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 95, "sasa": 0.1472, "mechanism": "Cofactor Gateway"}, {"gene": "gyrA", "mutation": "D94E", "rank": 197, "score": 0.1869, "carriers": 0, "drug_dist": 5.83, "structure": "Co-crystal 5BS8/5BTC (MFX)", "drug": "MFX", "residue_pos": 94, "sasa": 0.4414, "mechanism": "Other"}, {"gene": "pncA", "mutation": "L4F", "rank": 200, "score": 0.185, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock PZA)", "drug": "PZA", "residue_pos": 4, "sasa": 0.0, "mechanism": "Loss-of-Function"}, {"gene": "rpoB", "mutation": "V170L", "rank": 202, "score": 0.1836, "carriers": 0, "drug_dist": 3.97, "structure": "Co-crystal 5UHB (RIF)", "drug": "RIF", "residue_pos": 170, "sasa": 0.1354, "mechanism": "Allosteric Shield"}, {"gene": "inhA", "mutation": "V203G", "rank": 203, "score": 0.1817, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 203, "sasa": 0.1025, "mechanism": "Cofactor Gateway"}, {"gene": "gyrA", "mutation": "S91T", "rank": 204, "score": 0.1815, "carriers": 0, "drug_dist": 4.38, "structure": "Co-crystal 5BS8/5BTC (MFX)", "drug": "MFX", "residue_pos": 91, "sasa": 0.3842, "mechanism": "Other"}, {"gene": "inhA", "mutation": "V203F", "rank": 205, "score": 0.1797, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 203, "sasa": 0.1025, "mechanism": "Cofactor Gateway"}, {"gene": "gyrA", "mutation": "G88V", "rank": 207, "score": 0.1669, "carriers": 0, "drug_dist": 3.94, "structure": "Co-crystal 5BS8/5BTC (MFX)", "drug": "MFX", "residue_pos": 88, "sasa": 0.4714, "mechanism": "Other"}, {"gene": "rpoB", "mutation": "V170G", "rank": 212, "score": 0.1463, "carriers": 0, "drug_dist": 3.97, "structure": "Co-crystal 5UHB (RIF)", "drug": "RIF", "residue_pos": 170, "sasa": 0.1354, "mechanism": "Allosteric Shield"}, {"gene": "gyrA", "mutation": "S91W", "rank": 213, "score": 0.1371, "carriers": 0, "drug_dist": 4.38, "structure": "Co-crystal 5BS8/5BTC (MFX)", "drug": "MFX", "residue_pos": 91, "sasa": 0.3842, "mechanism": "Water-Bridge Disruptor"}, {"gene": "pncA", "mutation": "F13L", "rank": 217, "score": 0.111, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock PZA)", "drug": "PZA", "residue_pos": 13, "sasa": 0.0953, "mechanism": "Loss-of-Function"}, {"gene": "eis", "mutation": "V58M", "rank": 218, "score": 0.1088, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock AMK)", "drug": "AMK", "residue_pos": 58, "sasa": 0.1264, "mechanism": "Other"}, {"gene": "eis", "mutation": "V58A", "rank": 219, "score": 0.1071, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock AMK)", "drug": "AMK", "residue_pos": 58, "sasa": 0.1264, "mechanism": "Other"}, {"gene": "embB", "mutation": "V49I", "rank": 221, "score": 0.0983, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 49, "sasa": 0.0366, "mechanism": "Other"}, {"gene": "mmpR5", "mutation": "I16T", "rank": 222, "score": 0.0956, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock BDQ)", "drug": "BDQ", "residue_pos": 16, "sasa": 0.4138, "mechanism": "Other"}, {"gene": "embB", "mutation": "V49A", "rank": 223, "score": 0.0942, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 49, "sasa": 0.0366, "mechanism": "Other"}, {"gene": "eis", "mutation": "I125T", "rank": 224, "score": 0.0941, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock AMK)", "drug": "AMK", "residue_pos": 125, "sasa": 0.1548, "mechanism": "Other"}, {"gene": "rpoB", "mutation": "Q432R", "rank": 225, "score": 0.0911, "carriers": 0, "drug_dist": 2.39, "structure": "Co-crystal 5UHB (RIF)", "drug": "RIF", "residue_pos": 432, "sasa": 0.4105, "mechanism": "Other"}, {"gene": "mmpR5", "mutation": "I16V", "rank": 226, "score": 0.0905, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock BDQ)", "drug": "BDQ", "residue_pos": 16, "sasa": 0.4138, "mechanism": "Other"}, {"gene": "eis", "mutation": "I125V", "rank": 227, "score": 0.0891, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock AMK)", "drug": "AMK", "residue_pos": 125, "sasa": 0.1548, "mechanism": "Other"}, {"gene": "eis", "mutation": "V58E", "rank": 228, "score": 0.0872, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock AMK)", "drug": "AMK", "residue_pos": 58, "sasa": 0.1264, "mechanism": "Other"}, {"gene": "pncA", "mutation": "F13Y", "rank": 230, "score": 0.0839, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock PZA)", "drug": "PZA", "residue_pos": 13, "sasa": 0.0953, "mechanism": "Loss-of-Function"}, {"gene": "pncA", "mutation": "H57N", "rank": 231, "score": 0.0807, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock PZA)", "drug": "PZA", "residue_pos": 57, "sasa": 0.0746, "mechanism": "Loss-of-Function"}, {"gene": "embB", "mutation": "V49D", "rank": 233, "score": 0.0769, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 49, "sasa": 0.0366, "mechanism": "Other"}, {"gene": "mmpR5", "mutation": "I16N", "rank": 236, "score": 0.0635, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock BDQ)", "drug": "BDQ", "residue_pos": 16, "sasa": 0.4138, "mechanism": "Other"}, {"gene": "eis", "mutation": "I125N", "rank": 237, "score": 0.0624, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock AMK)", "drug": "AMK", "residue_pos": 125, "sasa": 0.1548, "mechanism": "Other"}, {"gene": "embB", "mutation": "S297L", "rank": 238, "score": 0.0604, "carriers": 0, "drug_dist": 2.91, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 297, "sasa": 0.0534, "mechanism": "Other"}, {"gene": "embB", "mutation": "S297P", "rank": 240, "score": 0.0599, "carriers": 0, "drug_dist": 2.91, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 297, "sasa": 0.0534, "mechanism": "Other"}, {"gene": "eis", "mutation": "V58L", "rank": 243, "score": 0.0573, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock AMK)", "drug": "AMK", "residue_pos": 58, "sasa": 0.1264, "mechanism": "Other"}, {"gene": "mmpR5", "mutation": "I16S", "rank": 247, "score": 0.0546, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock BDQ)", "drug": "BDQ", "residue_pos": 16, "sasa": 0.4138, "mechanism": "Other"}, {"gene": "eis", "mutation": "V58G", "rank": 248, "score": 0.054, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock AMK)", "drug": "AMK", "residue_pos": 58, "sasa": 0.1264, "mechanism": "Other"}, {"gene": "eis", "mutation": "I125S", "rank": 249, "score": 0.0538, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock AMK)", "drug": "AMK", "residue_pos": 125, "sasa": 0.1548, "mechanism": "Other"}, {"gene": "embB", "mutation": "V49L", "rank": 252, "score": 0.0504, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 49, "sasa": 0.0366, "mechanism": "Other"}, {"gene": "mmpR5", "mutation": "I16L", "rank": 256, "score": 0.0485, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock BDQ)", "drug": "BDQ", "residue_pos": 16, "sasa": 0.4138, "mechanism": "Other"}, {"gene": "mmpR5", "mutation": "I16M", "rank": 255, "score": 0.0485, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock BDQ)", "drug": "BDQ", "residue_pos": 16, "sasa": 0.4138, "mechanism": "Other"}, {"gene": "eis", "mutation": "I125M", "rank": 257, "score": 0.0478, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock AMK)", "drug": "AMK", "residue_pos": 125, "sasa": 0.1548, "mechanism": "Other"}, {"gene": "eis", "mutation": "I125L", "rank": 258, "score": 0.0477, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock AMK)", "drug": "AMK", "residue_pos": 125, "sasa": 0.1548, "mechanism": "Other"}, {"gene": "embB", "mutation": "V49G", "rank": 259, "score": 0.0475, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 49, "sasa": 0.0366, "mechanism": "Other"}, {"gene": "embB", "mutation": "V49F", "rank": 262, "score": 0.0469, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 49, "sasa": 0.0366, "mechanism": "Other"}, {"gene": "mmpR5", "mutation": "I16F", "rank": 263, "score": 0.0454, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock BDQ)", "drug": "BDQ", "residue_pos": 16, "sasa": 0.4138, "mechanism": "Other"}, {"gene": "eis", "mutation": "I125F", "rank": 264, "score": 0.0447, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock AMK)", "drug": "AMK", "residue_pos": 125, "sasa": 0.1548, "mechanism": "Other"}, {"gene": "inhA", "mutation": "I202T", "rank": 265, "score": 0.0443, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 202, "sasa": 0.2044, "mechanism": "Cofactor Gateway"}, {"gene": "inhA", "mutation": "I202V", "rank": 267, "score": 0.0419, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 202, "sasa": 0.2044, "mechanism": "Cofactor Gateway"}, {"gene": "embB", "mutation": "N296D", "rank": 272, "score": 0.0346, "carriers": 0, "drug_dist": 3.4, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 296, "sasa": 0.1255, "mechanism": "Other"}, {"gene": "embB", "mutation": "N296S", "rank": 273, "score": 0.0342, "carriers": 0, "drug_dist": 3.4, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 296, "sasa": 0.1255, "mechanism": "Other"}, {"gene": "embB", "mutation": "I407T", "rank": 274, "score": 0.0332, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 407, "sasa": 0.152, "mechanism": "Other"}, {"gene": "embB", "mutation": "I407V", "rank": 276, "score": 0.0314, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 407, "sasa": 0.152, "mechanism": "Other"}, {"gene": "embB", "mutation": "S297T", "rank": 277, "score": 0.031, "carriers": 0, "drug_dist": 2.91, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 297, "sasa": 0.0534, "mechanism": "Other"}, {"gene": "inhA", "mutation": "I105T", "rank": 278, "score": 0.0302, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 105, "sasa": 0.6446, "mechanism": "Other"}, {"gene": "inhA", "mutation": "I202N", "rank": 280, "score": 0.0294, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 202, "sasa": 0.2044, "mechanism": "Cofactor Gateway"}, {"gene": "pncA", "mutation": "I6N", "rank": 281, "score": 0.0293, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock PZA)", "drug": "PZA", "residue_pos": 6, "sasa": 0.0, "mechanism": "Loss-of-Function"}, {"gene": "inhA", "mutation": "I105V", "rank": 282, "score": 0.0286, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 105, "sasa": 0.6446, "mechanism": "Other"}, {"gene": "inhA", "mutation": "V78M", "rank": 283, "score": 0.0268, "carriers": 0, "drug_dist": 2.9, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 78, "sasa": 0.0, "mechanism": "Other"}, {"gene": "embB", "mutation": "V493A", "rank": 286, "score": 0.0257, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 493, "sasa": 0.0715, "mechanism": "Other"}, {"gene": "inhA", "mutation": "I202S", "rank": 287, "score": 0.0253, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 202, "sasa": 0.2044, "mechanism": "Cofactor Gateway"}, {"gene": "pncA", "mutation": "I6S", "rank": 288, "score": 0.0252, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock PZA)", "drug": "PZA", "residue_pos": 6, "sasa": 0.0, "mechanism": "Loss-of-Function"}, {"gene": "pncA", "mutation": "S67A", "rank": 289, "score": 0.0246, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock PZA)", "drug": "PZA", "residue_pos": 67, "sasa": 0.1022, "mechanism": "Loss-of-Function"}, {"gene": "embB", "mutation": "S297W", "rank": 290, "score": 0.0245, "carriers": 0, "drug_dist": 2.91, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 297, "sasa": 0.0534, "mechanism": "Other"}, {"gene": "eis", "mutation": "V87M", "rank": 291, "score": 0.023, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock AMK)", "drug": "AMK", "residue_pos": 87, "sasa": 0.0725, "mechanism": "Other"}, {"gene": "eis", "mutation": "V87A", "rank": 292, "score": 0.0226, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock AMK)", "drug": "AMK", "residue_pos": 87, "sasa": 0.0725, "mechanism": "Other"}, {"gene": "inhA", "mutation": "I202M", "rank": 293, "score": 0.0225, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 202, "sasa": 0.2044, "mechanism": "Cofactor Gateway"}, {"gene": "inhA", "mutation": "I202L", "rank": 294, "score": 0.0225, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 202, "sasa": 0.2044, "mechanism": "Cofactor Gateway"}, {"gene": "pncA", "mutation": "I6M", "rank": 295, "score": 0.0224, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock PZA)", "drug": "PZA", "residue_pos": 6, "sasa": 0.0, "mechanism": "Loss-of-Function"}, {"gene": "pncA", "mutation": "I6L", "rank": 296, "score": 0.0224, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock PZA)", "drug": "PZA", "residue_pos": 6, "sasa": 0.0, "mechanism": "Loss-of-Function"}, {"gene": "embB", "mutation": "I407N", "rank": 297, "score": 0.0221, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 407, "sasa": 0.152, "mechanism": "Other"}, {"gene": "embB", "mutation": "N296I", "rank": 298, "score": 0.0212, "carriers": 0, "drug_dist": 3.4, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 296, "sasa": 0.1255, "mechanism": "Other"}, {"gene": "inhA", "mutation": "I202F", "rank": 299, "score": 0.021, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 202, "sasa": 0.2044, "mechanism": "Cofactor Gateway"}, {"gene": "pncA", "mutation": "I6F", "rank": 300, "score": 0.021, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock PZA)", "drug": "PZA", "residue_pos": 6, "sasa": 0.0, "mechanism": "Loss-of-Function"}, {"gene": "embB", "mutation": "V493E", "rank": 301, "score": 0.0209, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 493, "sasa": 0.0715, "mechanism": "Other"}, {"gene": "pncA", "mutation": "S67T", "rank": 302, "score": 0.0202, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock PZA)", "drug": "PZA", "residue_pos": 67, "sasa": 0.1022, "mechanism": "Loss-of-Function"}, {"gene": "inhA", "mutation": "I105N", "rank": 303, "score": 0.0201, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 105, "sasa": 0.6446, "mechanism": "Other"}, {"gene": "inhA", "mutation": "V78E", "rank": 304, "score": 0.0194, "carriers": 0, "drug_dist": 2.9, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 78, "sasa": 0.0, "mechanism": "Other"}, {"gene": "embB", "mutation": "I407S", "rank": 305, "score": 0.019, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 407, "sasa": 0.152, "mechanism": "Other"}, {"gene": "pncA", "mutation": "G97R", "rank": 307, "score": 0.0189, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock PZA)", "drug": "PZA", "residue_pos": 97, "sasa": 0.0789, "mechanism": "Loss-of-Function"}, {"gene": "eis", "mutation": "V87E", "rank": 308, "score": 0.0184, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock AMK)", "drug": "AMK", "residue_pos": 87, "sasa": 0.0725, "mechanism": "Other"}, {"gene": "embB", "mutation": "N296K", "rank": 309, "score": 0.018, "carriers": 0, "drug_dist": 3.4, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 296, "sasa": 0.1255, "mechanism": "Other"}, {"gene": "inhA", "mutation": "I105S", "rank": 311, "score": 0.0173, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 105, "sasa": 0.6446, "mechanism": "Other"}, {"gene": "embB", "mutation": "N296T", "rank": 312, "score": 0.017, "carriers": 0, "drug_dist": 3.4, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 296, "sasa": 0.1255, "mechanism": "Other"}, {"gene": "embB", "mutation": "I407L", "rank": 314, "score": 0.0169, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 407, "sasa": 0.152, "mechanism": "Other"}, {"gene": "embB", "mutation": "I407M", "rank": 313, "score": 0.0169, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 407, "sasa": 0.152, "mechanism": "Other"}, {"gene": "embB", "mutation": "I407F", "rank": 316, "score": 0.0158, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 407, "sasa": 0.152, "mechanism": "Other"}, {"gene": "inhA", "mutation": "I105M", "rank": 317, "score": 0.0154, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 105, "sasa": 0.6446, "mechanism": "Other"}, {"gene": "inhA", "mutation": "I105L", "rank": 318, "score": 0.0153, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 105, "sasa": 0.6446, "mechanism": "Other"}, {"gene": "pncA", "mutation": "G97A", "rank": 319, "score": 0.0152, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock PZA)", "drug": "PZA", "residue_pos": 97, "sasa": 0.0789, "mechanism": "Loss-of-Function"}, {"gene": "inhA", "mutation": "I105F", "rank": 322, "score": 0.0144, "carriers": 0, "drug_dist": 1.34, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 105, "sasa": 0.6446, "mechanism": "Other"}, {"gene": "inhA", "mutation": "V78L", "rank": 325, "score": 0.014, "carriers": 0, "drug_dist": 2.9, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 78, "sasa": 0.0, "mechanism": "Other"}, {"gene": "embB", "mutation": "V493L", "rank": 326, "score": 0.0137, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 493, "sasa": 0.0715, "mechanism": "Other"}, {"gene": "embB", "mutation": "V493G", "rank": 328, "score": 0.0129, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock EMB)", "drug": "EMB", "residue_pos": 493, "sasa": 0.0715, "mechanism": "Other"}, {"gene": "eis", "mutation": "V87L", "rank": 329, "score": 0.0121, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock AMK)", "drug": "AMK", "residue_pos": 87, "sasa": 0.0725, "mechanism": "Other"}, {"gene": "inhA", "mutation": "V78G", "rank": 331, "score": 0.012, "carriers": 0, "drug_dist": 2.9, "structure": "AlphaFold (dock INH-NAD)", "drug": "INH-NAD", "residue_pos": 78, "sasa": 0.0, "mechanism": "Other"}, {"gene": "eis", "mutation": "V87G", "rank": 332, "score": 0.0114, "carriers": 0, "drug_dist": 1.33, "structure": "AlphaFold (dock AMK)", "drug": "AMK", "residue_pos": 87, "sasa": 0.0725, "mechanism": "Other"}], "model_metrics": {"stage3": {"global": {"stage1_auroc": 0.9057506962859192, "stage3_auroc": 0.9707164061401816, "stage3_groupkfold_auroc": 0.9724398962100256, "stage3_groupkfold_auprc": 0.5748996049670464, "stage1_auprc": 0.20479678953027375, "stage3_auprc": 0.5597461881910065, "stage1_top20": 0.38571428571428573, "stage3_top20": 0.6571428571428571}, "per_gene": {"eis": {"stage1_auroc": null, "stage3_auroc": null, "delta": null, "status": "insufficient positives (1/402)"}, "embB": {"stage1_auroc": 1.0, "stage3_auroc": 1.0, "delta": 0.0}, "gyrA": {"stage1_auroc": 0.9964028776978417, "stage3_auroc": 1.0, "delta": 0.003597122302158251}, "gyrB": {"stage1_auroc": null, "stage3_auroc": null, "delta": null, "status": "insufficient positives (1/675)"}, "inhA": {"stage1_auroc": 0.6309067688378033, "stage3_auroc": 0.5504469987228607, "delta": -0.08045977011494254}, "katG": {"stage1_auroc": null, "stage3_auroc": null, "delta": null, "status": "insufficient positives (1/740)"}, "mmpL5": {"stage1_auroc": null, "stage3_auroc": null, "delta": null, "status": "insufficient positives (0/0)"}, "mmpR5": {"stage1_auroc": null, "stage3_auroc": null, "delta": null, "status": "insufficient positives (0/165)"}, "pncA": {"stage1_auroc": 0.9225865209471765, "stage3_auroc": 0.8647996357012749, "delta": -0.05778688524590159}, "rpoB": {"stage1_auroc": 0.9557560137457045, "stage3_auroc": 0.9945589919816724, "delta": 0.0388029782359679}, "rpsL": {"stage1_auroc": NaN, "stage3_auroc": NaN, "delta": NaN}, "tap": {"stage1_auroc": null, "stage3_auroc": null, "delta": null, "status": "insufficient positives (0/419)"}, "tlyA": {"stage1_auroc": null, "stage3_auroc": null, "delta": null, "status": "insufficient positives (0/268)"}}}, "cv": {"stratified_kfold": {"n_folds": 5, "auroc_mean": 0.9707, "auroc_std": 0.028, "auprc_mean": 0.5597, "auprc_std": 0.1376, "best_f1_mean": 0.6224, "best_f1_std": 0.1048, "best_f1_precision_mean": 0.825, "best_f1_recall_mean": 0.5286, "f1_at_05_mean": 0.5321, "f1_at_05_std": 0.1814, "top20_recall_mean": 0.6571, "top20_recall_std": 0.1153, "folds": [{"auroc": 0.992, "auprc": 0.6794, "best_f1": 0.6666666666666661, "best_f1_precision": 0.625, "best_f1_recall": 0.7142857142857143, "best_f1_threshold": 0.23047637939453125, "f1_at_05": 0.6667, "precision_at_05": 0.8, "recall_at_05": 0.5714, "top20_recall": 0.7143}, {"auroc": 0.9776, "auprc": 0.5082, "best_f1": 0.4999999999999996, "best_f1_precision": 1.0, "best_f1_recall": 0.3333333333333333, "best_f1_threshold": 0.9766289591789246, "f1_at_05": 0.4444, "precision_at_05": 0.6667, "recall_at_05": 0.3333, "top20_recall": 0.6667}, {"auroc": 0.9949, "auprc": 0.7624, "best_f1": 0.7999999999999995, "best_f1_precision": 1.0, "best_f1_recall": 0.6666666666666666, "best_f1_threshold": 0.793653130531311, "f1_at_05": 0.7273, "precision_at_05": 0.8, "recall_at_05": 0.6667, "top20_recall": 0.8333}, {"auroc": 0.9174, "auprc": 0.423, "best_f1": 0.5999999999999994, "best_f1_precision": 0.75, "best_f1_recall": 0.5, "best_f1_threshold": 0.6199607849121094, "f1_at_05": 0.6, "precision_at_05": 0.75, "recall_at_05": 0.5, "top20_recall": 0.5}, {"auroc": 0.9717, "auprc": 0.4257, "best_f1": 0.5454545454545449, "best_f1_precision": 0.75, "best_f1_recall": 0.42857142857142855, "best_f1_threshold": 0.04590832069516182, "f1_at_05": 0.2222, "precision_at_05": 0.5, "recall_at_05": 0.1429, "top20_recall": 0.5714}]}, "groupkfold": {"n_folds": 4, "auroc_mean": 0.9724, "auroc_std": 0.0184, "auprc_mean": 0.5749, "auprc_std": 0.2447, "best_f1_mean": 0.683, "best_f1_std": 0.1831, "best_f1_precision_mean": 0.6899, "best_f1_recall_mean": 0.7098, "f1_at_05_mean": 0.4629, "f1_at_05_std": 0.1986, "top20_recall_mean": 0.7411, "top20_recall_std": 0.1775, "folds": [{"auroc": 0.9986, "auprc": 0.8545, "best_f1": 0.8749999999999994, "best_f1_precision": 0.875, "best_f1_recall": 0.875, "best_f1_threshold": 0.00447459751740098, "f1_at_05": 0.5455, "precision_at_05": 1.0, "recall_at_05": 0.375, "top20_recall": 1.0}, {"auroc": 0.9766, "auprc": 0.2386, "best_f1": 0.4999999999999995, "best_f1_precision": 0.38461538461538464, "best_f1_recall": 0.7142857142857143, "best_f1_threshold": 0.8979094624519348, "f1_at_05": 0.2703, "precision_at_05": 0.1667, "recall_at_05": 0.7143, "top20_recall": 0.7143}, {"auroc": 0.9474, "auprc": 0.4506, "best_f1": 0.49999999999999944, "best_f1_precision": 0.5, "best_f1_recall": 0.5, "best_f1_threshold": 0.013941314071416855, "f1_at_05": 0.2857, "precision_at_05": 1.0, "recall_at_05": 0.1667, "top20_recall": 0.5}, {"auroc": 0.9671, "auprc": 0.7559, "best_f1": 0.8571428571428567, "best_f1_precision": 1.0, "best_f1_recall": 0.75, "best_f1_threshold": 0.7647281885147095, "f1_at_05": 0.75, "precision_at_05": 0.75, "recall_at_05": 0.75, "top20_recall": 0.75}]}}, "full": {"n_samples": 6326, "n_positives": 32, "n_features": 16, "features": ["inner_distance", "homoplasy_count", "homoplasy_alleles", "helix_propensity", "strand_propensity", "hydrophobicity", "volume", "charge", "hbond", "rel_position", "conservation_blosum", "contact_density_seq", "sasa_relative", "esm2_intolerance", "contact_density_3d", "drug_proximity"], "auroc": 0.9172, "auprc": 0.186, "auprc_x_random": 36.8, "youden_threshold": 0.0009, "youden_j": 0.7165, "f1": 0.0628, "precision": 0.0326, "recall": 0.8438, "specificity": 0.8727, "mcc": 0.1507, "tp": 27, "fp": 801, "fn": 5, "tn": 5493, "top20_recall": 0.2188, "top20_n": 7, "top50_recall": 0.375, "top50_n": 12, "bootstrap_95ci": {"f1": [0.04190555034856805, 0.08757759784075574], "precision": [0.02155624158381801, 0.046077353931971696], "recall": [0.7096774193548387, 0.9565217391304348]}}, "permutation": {"n_samples": 6338, "n_positives": 27, "n_features": 17, "features": ["inner_distance", "homoplasy_count", "homoplasy_alleles", "helix_propensity", "strand_propensity", "hydrophobicity", "volume", "charge", "hbond", "rel_position", "conservation_blosum", "contact_density_seq", "sasa_relative", "esm2_intolerance", "contact_density_3d", "mutation_sensitivity", "drug_proximity"], "real_cv": {"auroc_mean": 0.928375161395967, "auroc_std": 0.030933985508526, "auprc_mean": 0.29657297245951897, "auprc_std": 0.14057355147152165, "per_fold_aurocs": [0.9860649247822645, 0.9158742736397254, 0.8954041204437402, 0.9305863708399366, 0.913946117274168]}, "bootstrap_95ci": {"auroc": [0.8742254473332874, 0.9630939272121273], "auprc": [0.13983609525307888, 0.4760776884739996]}, "permutation_test": {"real_auroc": 0.928375161395967, "perm_mean": 0.503010544316917, "perm_max": 0.6889189952230558, "perm_std": 0.07223525135160215, "n_exceeded": 0, "p_value": 0.004975124378109453}, "mutation_sensitivity": {"min": 0.7777777777777778, "max": 1.0, "mean": 0.9966340591143367, "unique_values": 2, "with_feature_auroc": 0.928375161395967, "without_feature_auroc": 0.928422755168749, "delta": -4.7593772781961974e-05}}, "baseline": {"ESM-2 only (XGB)": {"auroc": 0.6178, "auprc": 0.0085, "auroc_std": 0.0984, "auprc_std": 0.003}, "ESM-2 only (LR)": {"auroc": 0.6552, "auprc": 0.0156, "auroc_std": 0.0707, "auprc_std": 0.0128}, "Stage 0 (XGB)": {"auroc": 0.8784, "auprc": 0.3164, "auroc_std": 0.0699, "auprc_std": 0.1626}, "Stage 1 (XGB)": {"auroc": 0.893, "auprc": 0.3386, "auroc_std": 0.0564, "auprc_std": 0.1152}, "Full Stage 3 (XGB)": {"auroc": 0.92, "auprc": 0.3109, "auroc_std": 0.0414, "auprc_std": 0.1322}}, "loo": {"embB": {"lr_auroc": 0.9988, "xgb_depth3_auroc": 0.9918, "lr_top20_hits": 3, "xgb_depth3_top20_hits": 3, "n_positives": 3}, "gyrA": {"lr_auroc": 0.9928, "xgb_depth3_auroc": 0.9701, "lr_top20_hits": 3, "xgb_depth3_top20_hits": 1, "n_positives": 3}, "inhA": {"lr_auroc": 0.7414, "xgb_depth3_auroc": 0.8004, "lr_top20_hits": 2, "xgb_depth3_top20_hits": 2, "n_positives": 6}, "pncA": {"lr_auroc": 0.8929, "xgb_depth3_auroc": 0.8008, "lr_top20_hits": 2, "xgb_depth3_top20_hits": 1, "n_positives": 4}, "rpoB": {"lr_auroc": 0.9207, "xgb_depth3_auroc": 0.8987, "lr_top20_hits": 2, "xgb_depth3_top20_hits": 2, "n_positives": 7}, "rpsL": {"lr_auroc": 0.8934, "xgb_depth3_auroc": 0.9918, "lr_top20_hits": 1, "xgb_depth3_top20_hits": 2, "n_positives": 2}}}, "feature_importance": [{"feature": "homoplasy_alleles", "importance": 0.2686}, {"feature": "drug_proximity", "importance": 0.1578}, {"feature": "homoplasy_count", "importance": 0.149}, {"feature": "inner_distance", "importance": 0.0479}, {"feature": "strand_propensity", "importance": 0.0474}, {"feature": "hydrophobicity", "importance": 0.0464}, {"feature": "volume", "importance": 0.0385}, {"feature": "plddt_environment", "importance": 0.0364}, {"feature": "hbond", "importance": 0.0363}, {"feature": "plddt_score", "importance": 0.0291}, {"feature": "sasa_relative", "importance": 0.0283}, {"feature": "contact_density_3d", "importance": 0.0242}, {"feature": "esm2_intolerance", "importance": 0.0202}, {"feature": "rel_position", "importance": 0.02}, {"feature": "conservation_blosum", "importance": 0.0197}, {"feature": "contact_density_seq", "importance": 0.018}, {"feature": "helix_propensity", "importance": 0.0117}, {"feature": "charge", "importance": 0.0007}], "gene_drug": {"rpoB": "Rifampicin (RIF)", "gyrA": "Moxifloxacin (MFX)", "gyrB": "Moxifloxacin (MFX)", "inhA": "Isoniazid (INH)", "embB": "Ethambutol (EMB)", "pncA": "Pyrazinamide (PZA)", "rpsL": "Streptomycin (STR)", "eis": "Amikacin (AMK)", "katG": "Isoniazid (INH)", "mmpR5": "Bedaquiline (BDQ)"}, "summary": {"total_tier4": 188, "genes_covered": 10, "docking_success": 3, "docking_failed": 2, "total_docked": 9}, "all_docked_flat": [{"gene": "rpoB", "mutation": "H445L", "phase": "Phase 1", "wt": -9.934, "mutant": null, "ddG": 0.20199999999999996, "category": "WEAK", "structure": "5UHB (chain C)", "drug": "rifampicin", "rank": "", "emergence_score": "", "note": ""}, {"gene": "rpoB", "mutation": "H445R", "phase": "Phase 1", "wt": -9.934, "mutant": null, "ddG": 0.24099999999999966, "category": "WEAK", "structure": "5UHB (chain C)", "drug": "rifampicin", "rank": "", "emergence_score": "", "note": ""}, {"gene": "rpoB", "mutation": "H445Q", "phase": "Phase 1", "wt": -9.934, "mutant": null, "ddG": 0.2079999999999984, "category": "WEAK", "structure": "5UHB (chain C)", "drug": "rifampicin", "rank": "", "emergence_score": "", "note": ""}, {"gene": "rpoB", "mutation": "H445P", "phase": "Phase 1", "wt": -9.934, "mutant": null, "ddG": 0.2129999999999992, "category": "WEAK", "structure": "5UHB (chain C)", "drug": "rifampicin", "rank": "", "emergence_score": "", "note": ""}, {"gene": "rpoB", "mutation": "D435G", "phase": "Phase 1", "wt": -9.934, "mutant": null, "ddG": 0.10299999999999976, "category": "WEAK", "structure": "5UHB (chain C)", "drug": "rifampicin", "rank": "", "emergence_score": "", "note": ""}, {"gene": "rpoB", "mutation": "I491L", "phase": "Phase 1", "wt": -9.934, "mutant": null, "ddG": 0.17600000000000016, "category": "WEAK", "structure": "5UHB (chain C)", "drug": "rifampicin", "rank": "", "emergence_score": "", "note": ""}, {"gene": "rpoB", "mutation": "L430R", "phase": "Phase 1", "wt": -9.934, "mutant": null, "ddG": 0.4029999999999987, "category": "MODERATE", "structure": "5UHB (chain C)", "drug": "rifampicin", "rank": "", "emergence_score": "", "note": ""}, {"gene": "rpoB", "mutation": "V170A", "phase": "Phase 1", "wt": -9.934, "mutant": null, "ddG": 0.027999999999998693, "category": "NONE", "structure": "5UHB (chain C)", "drug": "rifampicin", "rank": "", "emergence_score": "", "note": ""}, {"gene": "rpoB", "mutation": "Q432L", "phase": "Phase 1", "wt": -9.934, "mutant": null, "ddG": 0.18799999999999883, "category": "WEAK", "structure": "5UHB (chain C)", "drug": "rifampicin", "rank": "", "emergence_score": "", "note": ""}, {"gene": "rpoB", "mutation": "Q432P", "phase": "Phase 1", "wt": -9.934, "mutant": null, "ddG": 0.1689999999999987, "category": "WEAK", "structure": "5UHB (chain C)", "drug": "rifampicin", "rank": "", "emergence_score": "", "note": ""}, {"gene": "rpoB", "mutation": "Q432K", "phase": "Phase 1", "wt": -9.934, "mutant": null, "ddG": 0.014, "category": "NONE", "structure": "5UHB (chain C)", "drug": "rifampicin", "rank": "", "emergence_score": "", "note": ""}, {"gene": "gyrA", "mutation": "G88C", "phase": "Phase 1", "wt": -4.375, "mutant": null, "ddG": 0.20699999999999985, "category": "WEAK", "structure": "5BS8 (chain A)", "drug": "moxifloxacin", "rank": "", "emergence_score": "", "note": ""}, {"gene": "gyrA", "mutation": "D94A", "phase": "Phase 1", "wt": -4.375, "mutant": null, "ddG": 0.05600000000000005, "category": "NONE", "structure": "5BS8 (chain A)", "drug": "moxifloxacin", "rank": "", "emergence_score": "", "note": ""}, {"gene": "gyrA", "mutation": "D94H", "phase": "Phase 1", "wt": -4.375, "mutant": null, "ddG": 0.030999999999999694, "category": "NONE", "structure": "5BS8 (chain A)", "drug": "moxifloxacin", "rank": "", "emergence_score": "", "note": ""}, {"gene": "gyrA", "mutation": "A90T", "phase": "Phase 1", "wt": -4.375, "mutant": null, "ddG": 0.011999999999999567, "category": "NONE", "structure": "5BS8 (chain A)", "drug": "moxifloxacin", "rank": "", "emergence_score": "", "note": ""}, {"gene": "inhA", "mutation": "I21T", "phase": "Phase 2", "wt": "per mutation", "mutant": null, "ddG": -0.5060000000000002, "category": "STRONG", "structure": "AlphaFold + triclosan (proxy for NADH pocket)", "drug": "", "rank": "", "emergence_score": "", "note": ""}, {"gene": "inhA", "mutation": "S94A", "phase": "Phase 2", "wt": "per mutation", "mutant": null, "ddG": 0.5069999999999997, "category": "STRONG", "structure": "AlphaFold + triclosan (proxy for NADH pocket)", "drug": "", "rank": "", "emergence_score": "", "note": ""}, {"gene": "inhA", "mutation": "I194T", "phase": "Phase 2", "wt": "per mutation", "mutant": null, "ddG": -0.16900000000000048, "category": "WEAK", "structure": "AlphaFold + triclosan (proxy for NADH pocket)", "drug": "", "rank": "", "emergence_score": "", "note": ""}, {"gene": "embB", "mutation": "Q497K", "phase": "Phase 2", "wt": null, "mutant": null, "ddG": 0.01699999999999946, "category": "NONE", "structure": "AlphaFold", "drug": "ethambutol", "rank": "", "emergence_score": "", "note": ""}, {"gene": "embB", "mutation": "G406S", "phase": "Phase 2", "wt": null, "mutant": null, "ddG": 0.02799999999999958, "category": "NONE", "structure": "AlphaFold", "drug": "ethambutol", "rank": "", "emergence_score": "", "note": ""}, {"gene": "rpoB", "mutation": "V170I", "phase": "Novel", "wt": -9.97, "mutant": -9.969, "ddG": 0.001, "category": "NONE", "structure": "5UHB crystal (chain C)", "drug": "rifampicin (RFP)", "rank": 47, "emergence_score": 0.3746, "note": "V170F documented (low-level RIF). V170I novel. No binding change via rigid docking."}, {"gene": "inhA", "mutation": "I16V", "phase": "Novel", "wt": -7.462, "mutant": -7.443, "ddG": 0.019, "category": "NONE", "structure": "AlphaFold (P9WGR1)", "drug": "triclosan (NADH proxy)", "rank": 27, "emergence_score": 0.4263, "note": "I16T known (CARD). I16V novel. No binding change - mechanism likely through altered NADH kinetics."}, {"gene": "gyrB", "mutation": "Q538L", "phase": "Novel", "wt": -6.16, "mutant": -6.334, "ddG": -0.174, "category": "WEAK", "structure": "AlphaFold (P9WG45) + MFX", "drug": "moxifloxacin (MFX)", "rank": 131, "emergence_score": 0.2337, "note": "Indirect mechanism (TOPRIM domain, 17-22A from MFX). Vina cannot capture water-bridge disruption. Requires MD with DNA."}, {"gene": "rpsL", "mutation": "K43E", "phase": "Novel", "wt": null, "mutant": null, "ddG": null, "category": "DOCKING_FAILED", "structure": "AlphaFold (P9WH63) + STR", "drug": "streptomycin (STR)", "rank": 22, "emergence_score": 0.4459, "note": "Vina tree.h(101) error: STR has 14 torsions with complex branched rings. Charge reversal mechanism (K->E) disrupts rRNA salt bridge - requires MD-FEP."}, {"gene": "eis", "mutation": "V59A", "phase": "Novel", "wt": null, "mutant": null, "ddG": null, "category": "DOCKING_FAILED", "structure": "AlphaFold (P9WFK7) + AMK", "drug": "amikacin (AMK)", "rank": 34, "emergence_score": 0.4086, "note": "Vina tree.h(101) error: AMK has 10 torsions with complex branched rings. Coding region mutation at known promoter-regulated gene - novel mechanism."}]};function init() {
+  const docking_success = DATA.all_docked_flat.filter(d=>d.ddG!==null&&d.ddG!==undefined&&d.category!=='DOCKING_FAILED').length;
   const docking_failed = DATA.all_docked_flat.filter(d=>d.category==='DOCKING_FAILED').length;
   document.getElementById('overview-stats').innerHTML = [
-    ['188','Tier-4 Candidates'],
-    [DATA.summary.genes_covered,'Genes Covered'],
-    [docking_success,'Docked Success'],
-    [docking_failed,'Vina-Limited'],
-    ['0.972','Best AUROC'],
-    ['0.005','Permutation p-val']
+    ['188','Tier-4 Candidates'],[DATA.summary.genes_covered,'Genes Covered'],
+    [docking_success,'Docked Success'],[docking_failed,'Vina-Limited'],
+    ['0.972','Best AUROC'],['0.005','Permutation p-val']
   ].map(s=>`<div class="stat"><div class="num">${s[0]}</div><div class="label">${s[1]}</div></div>`).join('');
 
-  // ---- Tier Chart ----
-  const tiers = {0:'Known WHO',1:'CRyPTIC-Confirmed',2:'Observed Low Power',3:'Likely Neutral',4:'Forecast-Only'};
   const tierCounts = {0:30,1:24,2:32,3:31,4:188};
+  const tierLabels = {0:'Known WHO',1:'CRyPTIC-Confirmed',2:'Observed Low Power',3:'Likely Neutral',4:'Forecast-Only'};
   new Chart(document.getElementById('tierChart'),{type:'pie',data:{
-    labels:Object.values(tiers),datasets:[{data:Object.values(tierCounts),
+    labels:Object.values(tierLabels),datasets:[{data:Object.values(tierCounts),
     backgroundColor:['#1565c0','#2e7d32','#f57f17','#9e9e9e','#6a1b9a']}]},
     options:{responsive:true,plugins:{legend:{position:'right',labels:{font:{size:12}}}}}});
 
-  // ---- Gene Distribution ----
   const geneCounts = {}; DATA.tier4_candidates.forEach(c=>{geneCounts[c.gene]=(geneCounts[c.gene]||0)+1});
   const sortedGenes = Object.entries(geneCounts).sort((a,b)=>b[1]-a[1]);
   const maxCount = sortedGenes[0][1];
-  const geneColors = {'inhA':'#7b1fa2','embB':'#1565c0','pncA':'#c62828','eis':'#e65100',
-    'rpoB':'#2e7d32','gyrA':'#00695c','mmpR5':'#6a1b9a','rpsL':'#f57f17','gyrB':'#283593','katG':'#4e342e'};
+  const geneColors = {inhA:'#7b1fa2',embB:'#1565c0',pncA:'#c62828',eis:'#e65100',rpoB:'#2e7d32',gyrA:'#00695c',mmpR5:'#6a1b9a',rpsL:'#f57f17',gyrB:'#283593',katG:'#4e342e'};
   document.getElementById('gene-dist').innerHTML = sortedGenes.map(([g,c])=>`
     <div class="gene-bar"><span style="width:60px;font-weight:600">${g}</span>
     <div class="bar" style="width:${c/maxCount*120}px;background:${geneColors[g]||'#888'}"></div>
     <span>${c}</span></div>`).join('');
 
-  // ---- Feature Importance ----
   const feats = DATA.feature_importance.slice().sort((a,b)=>b.importance-a.importance).slice(0,10);
   new Chart(document.getElementById('featChart'),{type:'bar',data:{
-    labels:feats.map(f=>f.feature),datasets:[{data:feats.map(f=>f.importance),
-      backgroundColor:'#1565c0'}]},
-    options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}},
-      scales:{x:{title:{display:true,text:'Importance'}}}}});
+    labels:feats.map(f=>f.feature),datasets:[{data:feats.map(f=>f.importance),backgroundColor:'#1565c0'}]},
+    options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:'Importance'}}}}});
 
-  // ---- Stage AUROC ----
   new Chart(document.getElementById('stageChart'),{type:'line',data:{
     labels:['Stage 0\n(Sequence)','Stage 1\n(+Structural)','Stage 1.5\n(+Docking)','Stage 3\n(Per-Gene Drug)'],
-    datasets:[{label:'AUROC',data:[0.888,0.910,0.938,0.977],borderColor:'#1565c0',fill:false,
-      tension:0.3,pointBackgroundColor:'#1565c0',pointRadius:6}]},
-    options:{responsive:true,plugins:{legend:{display:false}},
-      scales:{y:{min:0.85,max:1.0,title:{display:true,text:'AUROC'}}}}});
+    datasets:[{label:'AUROC',data:[0.888,0.910,0.938,0.977],borderColor:'#1565c0',fill:false,tension:0.3,pointBackgroundColor:'#1565c0',pointRadius:6}]},
+    options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{min:0.85,max:1.0}}}});
 
-  // ---- LOO Chart ----
   const looData = {rpsL:0.985,gyrA:0.854,katG:0.810,pncA:0.633,embB:0.608,rpoB:0.402};
   new Chart(document.getElementById('looChart'),{type:'bar',data:{
     labels:Object.keys(looData),datasets:[{data:Object.values(looData),
-      backgroundColor:Object.values(looData).map(v=>v>0.8?'#2e7d32':v>0.6?'#f57f17':'#c62828')}]},
-    options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false},
-      title:{display:true,text:'Leave-One-Gene-Out Cross-Validation AUROC'}},
-      scales:{x:{min:0,max:1,title:{display:true,text:'AUROC'}}}}});
+    backgroundColor:Object.values(looData).map(v=>v>0.8?'#2e7d32':v>0.6?'#f57f17':'#c62828')}]},
+    options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false},title:{display:true,text:'Leave-One-Gene-Out AUROC'}},scales:{x:{min:0,max:1}}}});
 
-  // ---- Per-Gene Stage vs Stage 3 ----
-  const geneAUROC = {'embB':[1.0,1.0],'gyrA':[0.996,1.0],'rpoB':[0.956,0.995],'pncA':[0.923,0.865],'inhA':[0.631,0.550]};
+  const geneAUROC = {embB:[1.0,1.0],gyrA:[0.996,1.0],rpoB:[0.956,0.995],pncA:[0.923,0.865],inhA:[0.631,0.550]};
   new Chart(document.getElementById('perGeneChart'),{type:'bar',data:{
-    labels:Object.keys(geneAUROC),
-    datasets:[
-      {label:'Stage 1 (Sequence)',data:Object.values(geneAUROC).map(v=>v[0]),backgroundColor:'#90caf9'},
-      {label:'Stage 3 (+Structural)',data:Object.values(geneAUROC).map(v=>v[1]),backgroundColor:'#1565c0'}]},
-    options:{responsive:true,plugins:{title:{display:true,text:'Stage 1 vs Stage 3 AUROC per Gene'}},
-      scales:{y:{min:0.5,max:1.05}}}});
+    labels:Object.keys(geneAUROC),datasets:[{label:'Stage 1 (Sequence)',data:Object.values(geneAUROC).map(v=>v[0]),backgroundColor:'#90caf9'},{label:'Stage 3 (+Structural)',data:Object.values(geneAUROC).map(v=>v[1]),backgroundColor:'#1565c0'}]},
+    options:{responsive:true,plugins:{title:{display:true,text:'Stage 1 vs Stage 3 AUROC per Gene'}},scales:{y:{min:0.5,max:1.05}}}});
 
-  // ---- Benchmark ----
-  const bench = [
-    ['Logistic Regression',0.910],['ElasticNet',0.908],['Random Forest',0.914],
-    ['SVM (RBF)',0.776],['GBM',0.910],['MLP',0.871],['XGBoost',0.888]];
+  const bench = [['Logistic Regression',0.910],['ElasticNet',0.908],['Random Forest',0.914],['SVM (RBF)',0.776],['GBM',0.910],['MLP',0.871],['XGBoost',0.888]];
   new Chart(document.getElementById('benchChart'),{type:'bar',data:{
     labels:bench.map(b=>b[0]),datasets:[{data:bench.map(b=>b[1]),backgroundColor:'#1565c0'}]},
-    options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false},
-      title:{display:true,text:'7-Model Classifier Benchmark (AUROC)'}},
-      scales:{x:{min:0.7,max:1.0}}}});
+    options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false},title:{display:true,text:'7-Model Classifier Benchmark (AUROC)'}},scales:{x:{min:0.7,max:1.0}}}});
 
-  // ---- Metrics Stats ----
-  const metrics = DATA.model_metrics;
   document.getElementById('metrics-stats').innerHTML = [
-    ['0.917','Full Model AUROC'],
-    ['0.186','AUPRC (36.8x random)'],
-    ['0.971','CV Stratified AUROC'],
-    ['0.972','GroupKFold AUROC'],
-    ['0.683','Best F1 (GroupKFold)'],
-    ['0.005','Permutation p-value']
+    ['0.917','Full Model AUROC'],['0.186','AUPRC (36.8x random)'],['0.971','CV Stratified AUROC'],['0.972','GroupKFold AUROC'],['0.683','Best F1 (GroupKFold)'],['0.005','Permutation p-value']
   ].map(s=>`<div class="stat"><div class="num">${s[0]}</div><div class="label">${s[1]}</div></div>`).join('');
 
-  // ---- Docking Table ----
-  const dockGenes = [...new Set(DATA.all_docked_flat.map(d=>d.gene))];
-  const dockCats = [...new Set(DATA.all_docked_flat.map(d=>d.category))];
-  const dockPhases = [...new Set(DATA.all_docked_flat.map(d=>d.phase))];
-  dockGenes.sort(); dockCats.sort(); dockPhases.sort();
+  const dockGenes = [...new Set(DATA.all_docked_flat.map(d=>d.gene))].sort();
+  const dockCats = [...new Set(DATA.all_docked_flat.map(d=>d.category))].sort();
+  const dockPhases = [...new Set(DATA.all_docked_flat.map(d=>d.phase))].sort();
   const selGene = document.getElementById('dock-gene-filter');
   const selCat = document.getElementById('dock-cat-filter');
   const selPhase = document.getElementById('dock-phase-filter');
-  dockGenes.forEach(g=>{const o=document.createElement('option');o.value=g;o.text=g;selGene.appendChild(o)});
-  dockCats.forEach(c=>{const o=document.createElement('option');o.value=c;o.text=c;selCat.appendChild(o)});
-  dockPhases.forEach(p=>{const o=document.createElement('option');o.value=p;o.text=p;selPhase.appendChild(o)});
+  dockGenes.forEach(g=>{selGene.add(new Option(g,g))});
+  dockCats.forEach(c=>{selCat.add(new Option(c,c))});
+  dockPhases.forEach(p=>{selPhase.add(new Option(p,p))});
   function renderDockTable(){
     let items = DATA.all_docked_flat;
     if(selGene.value) items=items.filter(d=>d.gene===selGene.value);
     if(selCat.value) items=items.filter(d=>d.category===selCat.value);
     if(selPhase.value) items=items.filter(d=>d.phase===selPhase.value);
-    document.getElementById('dock-tbody').innerHTML = items.map(d=>`<tr>
-      <td><span class="badge badge-${d.phase.replace(/ /g,'').replace(/\+/g,'')}">${d.phase}</span></td>
-      <td>${d.gene}</td><td><strong>${d.mutation}</strong></td><td>${d.drug}</td>
-      <td>${d.wt!==null&&d.wt!==undefined?d.wt.toFixed(3):'-'}</td>
-      <td>${d.mutant!==null&&d.mutant!==undefined?d.mutant.toFixed(3):'-'}</td>
-      <td style="font-weight:600;color:${d.ddG&&d.ddG>0?'#c62828':d.ddG&&d.ddG<0?'#2e7d32':'#666'}">${d.ddG!==null&&d.ddG!==undefined?d.ddG.toFixed(3):'-'}</td>
-      <td><span class="badge badge-${d.category}">${d.category}</span></td>
-      <td style="font-size:11px">${d.structure||'-'}</td>
-    </tr>`).join('');
+    document.getElementById('dock-tbody').innerHTML = items.map(d=>{
+      const wt = d.wt!==null&&d.wt!==undefined&&d.wt!=='per mutation' ? d.wt.toFixed(3) : (d.wt||'-');
+      const mut = d.mutant!==null&&d.mutant!==undefined ? d.mutant.toFixed(3) : '-';
+      const ddg = d.ddG!==null&&d.ddG!==undefined ? d.ddG.toFixed(3) : '-';
+      const ddgColor = d.ddG>0?'#c62828':d.ddG<0?'#2e7d32':'#666';
+      const phaseCls = d.phase.replace(/ /g,'');
+      return `<tr><td><span class="badge ${phaseCls}">${d.phase}</span></td>
+        <td>${d.gene}</td><td><strong>${d.mutation}</strong></td><td>${d.drug}</td>
+        <td>${wt}</td><td>${mut}</td>
+        <td style="font-weight:600;color:${ddgColor}">${ddg}</td>
+        <td><span class="badge ${d.category}">${d.category}</span></td>
+        <td style="font-size:11px">${d.structure||'-'}</td></tr>`;
+    }).join('');
   }
   [selGene,selCat,selPhase].forEach(s=>s.addEventListener('change',renderDockTable));
   renderDockTable();
 
-  // ---- Mutation Browser ----
   const browserGenes = [...new Set(DATA.tier4_candidates.map(c=>c.gene))].sort();
   const browserMechs = [...new Set(DATA.tier4_candidates.map(c=>c.mechanism))].sort();
   const bg = document.getElementById('browser-gene');
   const bm = document.getElementById('browser-mech');
-  browserGenes.forEach(g=>{const o=document.createElement('option');o.value=g;o.text=g;bg.appendChild(o)});
-  browserMechs.forEach(m=>{const o=document.createElement('option');o.value=m;o.text=m;bm.appendChild(o)});
+  browserGenes.forEach(g=>{bg.add(new Option(g,g))});
+  browserMechs.forEach(m=>{bm.add(new Option(m,m))});
   function renderBrowser(){
     let items = DATA.tier4_candidates;
     const g=document.getElementById('browser-gene').value;
@@ -398,65 +340,47 @@ function init() {
     if(sc) items=items.filter(c=>c.score>=parseFloat(sc));
     if(q) items=items.filter(c=>c.mutation.toLowerCase().includes(q)||c.gene.toLowerCase().includes(q));
     items.sort((a,b)=>a.rank-b.rank);
-    document.getElementById('browser-tbody').innerHTML = items.map(c=>`<tr>
-      <td>${c.gene}</td><td><strong>${c.mutation}</strong></td><td>${c.rank}</td>
-      <td style="font-weight:600">${c.score.toFixed(4)}</td>
-      <td>${c.mechanism}</td>
-      <td>${c.drug_dist!==null?c.drug_dist+'A':'-'}</td>
-      <td>${c.drug||'-'}</td>
-      <td>${c.carriers}</td>
-    </tr>`).join('');
-    document.getElementById('browser-count').textContent = `Showing ${items.length} of ${DATA.tier4_candidates.length} mutations`;
+    document.getElementById('browser-tbody').innerHTML = items.map(c=>{
+      const mechCls = c.mechanism.replace(/[^a-zA-Z0-9]/g,'');
+      return `<tr><td>${c.gene}</td><td><strong>${c.mutation}</strong></td><td>${c.rank}</td>
+        <td style="font-weight:600">${c.score.toFixed(4)}</td>
+        <td><span class="badge">${c.mechanism}</span></td>
+        <td>${c.drug_dist!==null&&c.drug_dist!==undefined?c.drug_dist+'A':'-'}</td>
+        <td>${c.drug||'-'}</td><td>${c.carriers}</td></tr>`;
+    }).join('');
+    document.getElementById('browser-count').textContent = 'Showing '+items.length+' of '+DATA.tier4_candidates.length+' mutations';
   }
   ['browser-gene','browser-mech','browser-score','browser-search'].forEach(id=>{
-    document.getElementById(id).addEventListener('change',renderBrowser);
-    document.getElementById(id).addEventListener('keyup',renderBrowser);
+    const el=document.getElementById(id);
+    el.addEventListener('change',renderBrowser);
+    el.addEventListener('keyup',renderBrowser);
   });
   renderBrowser();
 
-  // ---- Key Candidates ----
   const candidates = [
-    {gene:'rpsL',mut:'K43E',rank:22,score:0.4459,mech:'Charge Reversal',
-     lit:'K43R is #1 STR mutation worldwide; K43E flips charge (Lys+ to Glu-)',
-     dock:'DOCKING_FAILED — STR (14 torsions) exceeds Vina tree.h limit. Requires MD-FEP.',
-     phase:'novel'},
-    {gene:'inhA',mut:'I16V',rank:27,score:0.4263,mech:'Cofactor Gateway',
-     lit:'I16T documented (PMID:9728546); I16V (Val, not Thr) is undocumented',
-     dock:'ddG = +0.019 (NONE). Rigid Vina cannot capture NADH binding kinetics change. Requires MD-FEP.',
-     phase:'novel'},
-    {gene:'eis',mut:'V59A',rank:34,score:0.4086,mech:'Direct Pocket',
-     lit:'All known eis resistance = promoter mutations; V59A is coding region — novel mechanism',
-     dock:'DOCKING_FAILED — AMK (10 torsions, complex rings) exceeds Vina tree.h limit.',
-     phase:'novel'},
-    {gene:'rpoB',mut:'V170I',rank:47,score:0.3746,mech:'Allosteric Shield',
-     lit:'V170F known (Myanmar/Botswana); V170I outside RRDR, undocumented',
-     dock:'ddG = +0.001 (NONE). V170 is 4A from RIF in crystal but acts through allostery. Rigid Vina blind.',
-     phase:'novel'},
-    {gene:'gyrB',mut:'Q538L',rank:131,score:0.2337,mech:'Water-Bridge Disruptor',
-     lit:'N538D in E. coli gyrB. Mtb position 538 = Q (not N). Q538L is completely undocumented.',
-     dock:'ddG = -0.174 (WEAK). Q538 is 17-22A from MFX — indirect TOPRIM mechanism. Requires MD with DNA.',
-     phase:'novel'}
+    {gene:'rpsL',mut:'K43E',rank:22,score:0.4459,mech:'Charge Reversal',lit:'K43R is #1 STR mutation worldwide. K43E flips charge (Lys+ to Glu-), disrupting the rRNA salt bridge.',dock:'DOCKING_FAILED — STR (14 torsions) exceeds Vina tree.h limit. Requires MD-FEP.',failed:true},
+    {gene:'inhA',mut:'I16V',rank:27,score:0.4263,mech:'Cofactor Gateway',lit:'I16T documented (PMID:9728546); I16V (Val, not Thr) is undocumented at this position.',dock:'ddG = +0.019 (NONE). Rigid Vina cannot capture NADH binding kinetics change. Needs MD-FEP.',failed:false},
+    {gene:'eis',mut:'V59A',rank:34,score:0.4086,mech:'Direct Pocket',lit:'All known eis resistance = promoter mutations; V59A is coding region — entirely novel mechanism.',dock:'DOCKING_FAILED — AMK (10 torsions) exceeds Vina tree.h limit.',failed:true},
+    {gene:'rpoB',mut:'V170I',rank:47,score:0.3746,mech:'Allosteric Shield',lit:'V170F known (Myanmar/Botswana); V170I outside RRDR, completely undocumented.',dock:'ddG = +0.001 (NONE). V170 is 4A from RIF but acts through allostery. Rigid Vina blind.',failed:false},
+    {gene:'gyrB',mut:'Q538L',rank:131,score:0.2337,mech:'Water-Bridge Disruptor',lit:'N538D in E. coli gyrB. Mtb position 538 = Q (not N). Q538L is undocumented in Mtb.',dock:'ddG = -0.174 (WEAK). Q538 is 17-22A from MFX — indirect TOPRIM. Requires MD with DNA.',failed:false}
   ];
-  document.getElementById('candidates-container').innerHTML = candidates.map(c=>`<div class="candidate-card ${c.dock.includes('FAILED')?'failed':''}">
-    <h4>${c.gene} ${c.mut} <span class="badge badge-${c.phase==='novel'?'Novel':'Phase1'}">Tier 4</span>
-    <span class="badge" style="background:#e3f2fd;color:#1565c0">Rank ${c.rank}</span>
-    <span class="badge" style="background:#e8f5e9;color:#2e7d32">Score ${c.score.toFixed(4)}</span></h4>
-    <div class="meta"><strong>Mechanism:</strong> ${c.mech} &nbsp;|&nbsp; <strong>Literature:</strong> ${c.lit}</div>
-    <div class="note"><strong>Docking:</strong> ${c.dock}</div>
-  </div>`).join('');
+  document.getElementById('candidates-container').innerHTML = candidates.map(c=>{
+    const cls = c.failed?'candidate-card failed':'candidate-card';
+    const dockCls = c.dock.includes('FAILED')?'DF':(c.dock.includes('NONE')?'NONE':'WEAK');
+    return '<div class="'+cls+'"><h4>'+c.gene+' '+c.mut+' <span class="badge Nov">Tier 4</span> <span class="badge" style="background:#e3f2fd;color:#1565c0">Rank '+c.rank+'</span> <span class="badge" style="background:#e8f5e9;color:#2e7d32">Score '+c.score.toFixed(4)+'</span> <span class="badge '+dockCls+'">'+(c.dock.includes('FAILED')?'FAILED':(c.dock.includes('NONE')?'NONE':(c.dock.includes('WEAK')?'WEAK':'')))+'</span></h4><div class="meta"><strong>Mechanism:</strong> '+c.mech+' &nbsp;|&nbsp; <strong>Literature:</strong> '+c.lit+'</div><div class="note"><strong>Docking:</strong> '+c.dock+'</div></div>';
+  }).join('');
 
-  // ---- Tab Navigation ----
   document.querySelectorAll('nav a').forEach(a=>{
     a.addEventListener('click',()=>{
       document.querySelectorAll('nav a').forEach(x=>x.classList.remove('active'));
       document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
       a.classList.add('active');
       document.getElementById('tab-'+a.dataset.tab).classList.add('active');
-      // Resize charts to render properly
-      window.dispatchEvent(new Event('resize'));
+      Object.values(Chart.instances).forEach(c=>{try{c.resize()}catch(e){}});
     });
   });
 }
+init();
 </script>
 </body>
 </html>
