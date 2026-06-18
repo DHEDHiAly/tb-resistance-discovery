@@ -1,0 +1,889 @@
+MODEL 1
+REMARK VINA RESULT:    -9.969      0.000      0.000
+REMARK INTER + INTRA:         -17.013
+REMARK INTER:                 -15.214
+REMARK INTRA:                  -1.798
+REMARK UNBOUND:                -1.798
+REMARK  Name = data/pdb/RFP_crystal_pose.pdb
+REMARK  22 active torsions:
+REMARK  status: ('A' for Active; 'I' for Inactive)
+REMARK    1  A    between atoms: C1_1  and  O1_48
+REMARK    2  A    between atoms: C3_3  and  C43_43
+REMARK    3  A    between atoms: C4_4  and  O12_59
+REMARK    4  A    between atoms: C7_7  and  C14_14
+REMARK    5  A    between atoms: C8_8  and  O2_49
+REMARK    6  A    between atoms: C11_11  and  O4_51
+REMARK    7  A    between atoms: C12_12  and  C13_13
+REMARK    8  A    between atoms: C16_16  and  C30_30
+REMARK    9  A    between atoms: C20_20  and  C31_31
+REMARK   10  A    between atoms: C21_21  and  O10_57
+REMARK   11  A    between atoms: C22_22  and  C32_32
+REMARK   12  A    between atoms: C23_23  and  O9_56
+REMARK   13  A    between atoms: C24_24  and  C33_33
+REMARK   14  A    between atoms: C25_25  and  O7_54
+REMARK   15  A    between atoms: C26_26  and  C34_34
+REMARK   16  A    between atoms: C27_27  and  O6_53
+REMARK   17  A    between atoms: C35_35  and  C36_36
+REMARK   18  A    between atoms: C35_35  and  O7_54
+REMARK   19  A    between atoms: C37_37  and  O6_53
+REMARK   20  A    between atoms: C38_38  and  N4_47
+REMARK   21  A    between atoms: C43_43  and  N2_45
+REMARK   22  A    between atoms: N2_45  and  N3_46
+REMARK                            x       y       z     vdW  Elec       q    Type
+REMARK                         _______ _______ _______ _____ _____    ______ ____
+ROOT
+ATOM      1  C1  RFP C1201     166.325 164.656  20.823  0.00  0.00    +0.000 C 
+ATOM      2  C2  RFP C1201     165.495 164.766  19.705  0.00  0.00    +0.000 C 
+ATOM      3  C3  RFP C1201     164.181 165.231  19.790  0.00  0.00    +0.000 C 
+ATOM      4  C4  RFP C1201     163.678 165.622  21.059  0.00  0.00    +0.000 C 
+ATOM      5  C5  RFP C1201     164.042 165.911  23.571  0.00  0.00    +0.000 A 
+ATOM      6  C6  RFP C1201     164.871 165.848  24.693  0.00  0.00    +0.000 A 
+ATOM      7  C7  RFP C1201     166.221 165.350  24.557  0.00  0.00    +0.000 A 
+ATOM      8  C8  RFP C1201     166.688 164.966  23.302  0.00  0.00    +0.000 A 
+ATOM      9  C9  RFP C1201     165.825 165.061  22.120  0.00  0.00    +0.000 A 
+ATOM     10  C10 RFP C1201     164.535 165.539  22.242  0.00  0.00    +0.000 A 
+ATOM     11  C11 RFP C1201     162.814 166.576  24.046  0.00  0.00    +0.000 C 
+ATOM     12  C12 RFP C1201     162.795 166.649  25.444  0.00  0.00    +0.000 C 
+ATOM     13  C13 RFP C1201     162.585 168.042  25.886  0.00  0.00    +0.000 C 
+ATOM     14  C14 RFP C1201     167.112 165.253  25.771  0.00  0.00    +0.000 C 
+ATOM     15  C15 RFP C1201     166.830 165.049  17.450  0.00  0.00    +0.000 C 
+ATOM     16  C16 RFP C1201     167.292 164.369  16.146  0.00  0.00    +0.000 C 
+ATOM     17  C17 RFP C1201     166.462 163.191  15.574  0.00  0.00    +0.000 C 
+ATOM     18  C18 RFP C1201     165.567 162.280  16.431  0.00  0.00    +0.000 C 
+ATOM     19  C19 RFP C1201     165.912 160.958  16.725  0.00  0.00    +0.000 C 
+ATOM     20  C20 RFP C1201     164.833 159.937  17.091  0.00  0.00    +0.000 C 
+ATOM     21  C21 RFP C1201     164.575 159.843  18.616  0.00  0.00    +0.000 C 
+ATOM     22  C22 RFP C1201     163.469 158.839  19.063  0.00  0.00    +0.000 C 
+ATOM     23  C23 RFP C1201     163.161 158.921  20.587  0.00  0.00    +0.000 C 
+ATOM     24  C24 RFP C1201     162.338 160.166  21.009  0.00  0.00    +0.000 C 
+ATOM     25  C25 RFP C1201     161.957 160.333  22.511  0.00  0.00    +0.000 C 
+ATOM     26  C26 RFP C1201     161.912 161.824  22.949  0.00  0.00    +0.000 C 
+ATOM     27  C27 RFP C1201     161.789 162.138  24.451  0.00  0.00    +0.000 C 
+ATOM     28  C28 RFP C1201     162.290 163.562  24.793  0.00  0.00    +0.000 C 
+ATOM     29  C29 RFP C1201     161.889 164.322  25.915  0.00  0.00    +0.000 C 
+ATOM     30  C30 RFP C1201     167.418 165.362  15.017  0.00  0.00    +0.000 C 
+ATOM     31  C31 RFP C1201     163.597 160.274  16.304  0.00  0.00    +0.000 C 
+ATOM     32  C32 RFP C1201     163.795 157.415  18.651  0.00  0.00    +0.000 C 
+ATOM     33  C33 RFP C1201     161.065 160.185  20.215  0.00  0.00    +0.000 C 
+ATOM     34  C34 RFP C1201     163.165 162.483  22.459  0.00  0.00    +0.000 C 
+ATOM     35  N1  RFP C1201     166.021 164.310  18.417  0.00  0.00    +0.000 NA
+ATOM     36  O3  RFP C1201     164.183 166.294  25.834  0.00  0.00    +0.000 OA
+ATOM     37  O5  RFP C1201     161.806 165.760  25.907  0.00  0.00    +0.000 OA
+ATOM     38  O11 RFP C1201     167.138 166.201  17.684  0.00  0.00    +0.000 OA
+ENDROOT
+BRANCH  27  40
+ATOM     39  C37 RFP C1201     161.922 160.703  26.371  0.00  0.00    +0.000 C 
+ATOM     40  O6  RFP C1201     162.469 161.187  25.185  0.00  0.00    +0.000 OA
+ENDBRANCH  27  40
+BRANCH   1  41
+ATOM     41  O1  RFP C1201     167.611 164.177  20.660  0.00  0.00    +0.000 OA
+ATOM     42  H   RFP C1201     168.228 164.726  21.170  0.00  0.00    +0.000 HD
+ENDBRANCH   1  41
+BRANCH   8  43
+ATOM     43  O2  RFP C1201     167.969 164.492  23.166  0.00  0.00    +0.000 OA
+ATOM     44  H   RFP C1201     168.307 164.293  22.314  0.00  0.00    +0.000 HD
+ENDBRANCH   8  43
+BRANCH  11  45
+ATOM     45  O4  RFP C1201     161.650 166.688  23.273  0.00  0.00    +0.000 OA
+ATOM     46  H   RFP C1201     161.583 167.589  22.917  0.00  0.00    +0.000 HD
+ENDBRANCH  11  45
+BRANCH  23  47
+ATOM     47  O9  RFP C1201     164.322 158.840  21.317  0.00  0.00    +0.000 OA
+ATOM     48  H   RFP C1201     164.454 159.666  21.807  0.00  0.00    +0.000 HD
+ENDBRANCH  23  47
+BRANCH  21  49
+ATOM     49  O10 RFP C1201     165.768 159.543  19.234  0.00  0.00    +0.000 OA
+ATOM     50  H   RFP C1201     166.313 159.004  18.640  0.00  0.00    +0.000 HD
+ENDBRANCH  21  49
+BRANCH   4  51
+ATOM     51  O12 RFP C1201     162.387 166.095  21.148  0.00  0.00    +0.000 OA
+ATOM     52  H   RFP C1201     161.766 165.350  21.102  0.00  0.00    +0.000 HD
+ENDBRANCH   4  51
+BRANCH   3  53
+ATOM     53  C43 RFP C1201     163.559 165.867  18.503  0.00  0.00    +0.000 C 
+BRANCH  53  54
+ATOM     54  N2  RFP C1201     164.263 167.018  17.857  0.00  0.00    +0.000 NA
+ATOM     55  H   RFP C1201     163.974 167.891  18.299  0.00  0.00    +0.000 HD
+BRANCH  54  61
+ATOM     56  C38 RFP C1201     162.284 169.247  13.794  0.00  0.00    +0.000 C 
+ATOM     57  C39 RFP C1201     164.027 169.231  15.465  0.00  0.00    +0.000 C 
+ATOM     58  C40 RFP C1201     164.634 167.869  15.558  0.00  0.00    +0.000 C 
+ATOM     59  C41 RFP C1201     162.509 167.003  16.225  0.00  0.00    +0.000 C 
+ATOM     60  C42 RFP C1201     161.911 168.372  16.146  0.00  0.00    +0.000 C 
+ATOM     61  N3  RFP C1201     163.920 167.041  16.488  0.00  0.00    +0.000 NA
+ATOM     62  N4  RFP C1201     162.613 169.194  15.205  0.00  0.00    +0.000 NA
+ENDBRANCH  54  61
+ENDBRANCH  53  54
+ENDBRANCH   3  53
+BRANCH  25  63
+ATOM     63  O7  RFP C1201     160.768 159.713  22.778  0.00  0.00    +0.000 OA
+BRANCH  63  64
+ATOM     64  C35 RFP C1201     160.710 158.422  23.249  0.00  0.00    +0.000 C 
+ATOM     65  C36 RFP C1201     159.670 157.495  22.688  0.00  0.00    +0.000 C 
+ATOM     66  O8  RFP C1201     161.360 158.079  24.229  0.00  0.00    +0.000 OA
+ENDBRANCH  63  64
+ENDBRANCH  25  63
+TORSDOF 12
+ENDMDL
+MODEL 2
+REMARK VINA RESULT:    -9.405      1.448      2.097
+REMARK INTER + INTRA:         -16.151
+REMARK INTER:                 -13.644
+REMARK INTRA:                  -2.507
+REMARK UNBOUND:                -1.798
+REMARK  Name = data/pdb/RFP_crystal_pose.pdb
+REMARK  22 active torsions:
+REMARK  status: ('A' for Active; 'I' for Inactive)
+REMARK    1  A    between atoms: C1_1  and  O1_48
+REMARK    2  A    between atoms: C3_3  and  C43_43
+REMARK    3  A    between atoms: C4_4  and  O12_59
+REMARK    4  A    between atoms: C7_7  and  C14_14
+REMARK    5  A    between atoms: C8_8  and  O2_49
+REMARK    6  A    between atoms: C11_11  and  O4_51
+REMARK    7  A    between atoms: C12_12  and  C13_13
+REMARK    8  A    between atoms: C16_16  and  C30_30
+REMARK    9  A    between atoms: C20_20  and  C31_31
+REMARK   10  A    between atoms: C21_21  and  O10_57
+REMARK   11  A    between atoms: C22_22  and  C32_32
+REMARK   12  A    between atoms: C23_23  and  O9_56
+REMARK   13  A    between atoms: C24_24  and  C33_33
+REMARK   14  A    between atoms: C25_25  and  O7_54
+REMARK   15  A    between atoms: C26_26  and  C34_34
+REMARK   16  A    between atoms: C27_27  and  O6_53
+REMARK   17  A    between atoms: C35_35  and  C36_36
+REMARK   18  A    between atoms: C35_35  and  O7_54
+REMARK   19  A    between atoms: C37_37  and  O6_53
+REMARK   20  A    between atoms: C38_38  and  N4_47
+REMARK   21  A    between atoms: C43_43  and  N2_45
+REMARK   22  A    between atoms: N2_45  and  N3_46
+REMARK                            x       y       z     vdW  Elec       q    Type
+REMARK                         _______ _______ _______ _____ _____    ______ ____
+ROOT
+ATOM      1  C1  RFP C1201     166.401 164.692  20.797  0.00  0.00    +0.000 C 
+ATOM      2  C2  RFP C1201     165.586 164.812  19.669  0.00  0.00    +0.000 C 
+ATOM      3  C3  RFP C1201     164.274 165.287  19.739  0.00  0.00    +0.000 C 
+ATOM      4  C4  RFP C1201     163.759 165.678  21.004  0.00  0.00    +0.000 C 
+ATOM      5  C5  RFP C1201     164.095 165.958  23.521  0.00  0.00    +0.000 A 
+ATOM      6  C6  RFP C1201     164.909 165.885  24.653  0.00  0.00    +0.000 A 
+ATOM      7  C7  RFP C1201     166.258 165.376  24.532  0.00  0.00    +0.000 A 
+ATOM      8  C8  RFP C1201     166.736 164.991  23.282  0.00  0.00    +0.000 A 
+ATOM      9  C9  RFP C1201     165.889 165.097  22.089  0.00  0.00    +0.000 A 
+ATOM     10  C10 RFP C1201     164.601 165.585  22.197  0.00  0.00    +0.000 A 
+ATOM     11  C11 RFP C1201     162.867 166.631  23.982  0.00  0.00    +0.000 C 
+ATOM     12  C12 RFP C1201     162.831 166.700  25.380  0.00  0.00    +0.000 C 
+ATOM     13  C13 RFP C1201     162.627 168.093  25.824  0.00  0.00    +0.000 C 
+ATOM     14  C14 RFP C1201     167.133 165.269  25.756  0.00  0.00    +0.000 C 
+ATOM     15  C15 RFP C1201     166.950 165.090  17.432  0.00  0.00    +0.000 C 
+ATOM     16  C16 RFP C1201     167.423 164.410  16.131  0.00  0.00    +0.000 C 
+ATOM     17  C17 RFP C1201     166.590 163.240  15.546  0.00  0.00    +0.000 C 
+ATOM     18  C18 RFP C1201     165.678 162.335  16.389  0.00  0.00    +0.000 C 
+ATOM     19  C19 RFP C1201     166.008 161.008  16.684  0.00  0.00    +0.000 C 
+ATOM     20  C20 RFP C1201     164.917 159.996  17.033  0.00  0.00    +0.000 C 
+ATOM     21  C21 RFP C1201     164.639 159.900  18.554  0.00  0.00    +0.000 C 
+ATOM     22  C22 RFP C1201     163.520 158.903  18.985  0.00  0.00    +0.000 C 
+ATOM     23  C23 RFP C1201     163.194 158.984  20.505  0.00  0.00    +0.000 C 
+ATOM     24  C24 RFP C1201     162.376 160.234  20.921  0.00  0.00    +0.000 C 
+ATOM     25  C25 RFP C1201     161.979 160.399  22.419  0.00  0.00    +0.000 C 
+ATOM     26  C26 RFP C1201     161.939 161.889  22.861  0.00  0.00    +0.000 C 
+ATOM     27  C27 RFP C1201     161.801 162.201  24.362  0.00  0.00    +0.000 C 
+ATOM     28  C28 RFP C1201     162.309 163.619  24.714  0.00  0.00    +0.000 C 
+ATOM     29  C29 RFP C1201     161.900 164.379  25.833  0.00  0.00    +0.000 C 
+ATOM     30  C30 RFP C1201     167.571 165.406  15.007  0.00  0.00    +0.000 C 
+ATOM     31  C31 RFP C1201     163.694 160.345  16.232  0.00  0.00    +0.000 C 
+ATOM     32  C32 RFP C1201     163.839 157.478  18.573  0.00  0.00    +0.000 C 
+ATOM     33  C33 RFP C1201     161.113 160.265  20.112  0.00  0.00    +0.000 C 
+ATOM     34  C34 RFP C1201     163.204 162.540  22.388  0.00  0.00    +0.000 C 
+ATOM     35  N1  RFP C1201     166.124 164.355  18.386  0.00  0.00    +0.000 NA
+ATOM     36  O3  RFP C1201     164.211 166.333  25.787  0.00  0.00    +0.000 OA
+ATOM     37  O5  RFP C1201     161.829 165.817  25.829  0.00  0.00    +0.000 OA
+ATOM     38  O11 RFP C1201     167.265 166.240  17.672  0.00  0.00    +0.000 OA
+ENDROOT
+BRANCH  27  40
+ATOM     39  C37 RFP C1201     161.915 160.783  26.297  0.00  0.00    +0.000 C 
+ATOM     40  O6  RFP C1201     162.465 161.242  25.101  0.00  0.00    +0.000 OA
+ENDBRANCH  27  40
+BRANCH   1  41
+ATOM     41  O1  RFP C1201     167.685 164.203  20.648  0.00  0.00    +0.000 OA
+ATOM     42  H   RFP C1201     167.812 163.900  19.735  0.00  0.00    +0.000 HD
+ENDBRANCH   1  41
+BRANCH   8  43
+ATOM     43  O2  RFP C1201     168.015 164.508  23.159  0.00  0.00    +0.000 OA
+ATOM     44  H   RFP C1201     168.746 165.086  23.257  0.00  0.00    +0.000 HD
+ENDBRANCH   8  43
+BRANCH  11  45
+ATOM     45  O4  RFP C1201     161.713 166.755  23.195  0.00  0.00    +0.000 OA
+ATOM     46  H   RFP C1201     161.548 167.692  23.010  0.00  0.00    +0.000 HD
+ENDBRANCH  11  45
+BRANCH  23  47
+ATOM     47  O9  RFP C1201     164.345 158.890  21.249  0.00  0.00    +0.000 OA
+ATOM     48  H   RFP C1201     165.040 158.469  20.719  0.00  0.00    +0.000 HD
+ENDBRANCH  23  47
+BRANCH  21  49
+ATOM     49  O10 RFP C1201     165.822 159.588  19.186  0.00  0.00    +0.000 OA
+ATOM     50  H   RFP C1201     165.633 159.171  20.041  0.00  0.00    +0.000 HD
+ENDBRANCH  21  49
+BRANCH   4  51
+ATOM     51  O12 RFP C1201     162.472 166.161  21.078  0.00  0.00    +0.000 OA
+ATOM     52  H   RFP C1201     161.965 165.637  21.719  0.00  0.00    +0.000 HD
+ENDBRANCH   4  51
+BRANCH   3  53
+ATOM     53  C43 RFP C1201     163.673 165.932  18.447  0.00  0.00    +0.000 C 
+BRANCH  53  54
+ATOM     54  N2  RFP C1201     162.205 165.803  18.195  0.00  0.00    +0.000 NA
+ATOM     55  H   RFP C1201     161.689 166.377  18.863  0.00  0.00    +0.000 HD
+BRANCH  54  61
+ATOM     56  C38 RFP C1201     159.470 161.750  16.971  0.00  0.00    +0.000 C 
+ATOM     57  C39 RFP C1201     161.149 163.354  16.307  0.00  0.00    +0.000 C 
+ATOM     58  C40 RFP C1201     162.197 163.466  17.367  0.00  0.00    +0.000 C 
+ATOM     59  C41 RFP C1201     160.527 164.239  18.891  0.00  0.00    +0.000 C 
+ATOM     60  C42 RFP C1201     159.486 164.141  17.821  0.00  0.00    +0.000 C 
+ATOM     61  N3  RFP C1201     161.842 164.448  18.351  0.00  0.00    +0.000 NA
+ATOM     62  N4  RFP C1201     159.833 163.149  16.847  0.00  0.00    +0.000 NA
+ENDBRANCH  54  61
+ENDBRANCH  53  54
+ENDBRANCH   3  53
+BRANCH  25  63
+ATOM     63  O7  RFP C1201     160.781 159.788  22.670  0.00  0.00    +0.000 OA
+BRANCH  63  64
+ATOM     64  C35 RFP C1201     160.706 158.496  23.135  0.00  0.00    +0.000 C 
+ATOM     65  C36 RFP C1201     159.666 157.580  22.559  0.00  0.00    +0.000 C 
+ATOM     66  O8  RFP C1201     161.343 158.144  24.121  0.00  0.00    +0.000 OA
+ENDBRANCH  63  64
+ENDBRANCH  25  63
+TORSDOF 12
+ENDMDL
+MODEL 3
+REMARK VINA RESULT:    -7.414      3.676      6.718
+REMARK INTER + INTRA:         -13.113
+REMARK INTER:                 -11.214
+REMARK INTRA:                  -1.899
+REMARK UNBOUND:                -1.798
+REMARK  Name = data/pdb/RFP_crystal_pose.pdb
+REMARK  22 active torsions:
+REMARK  status: ('A' for Active; 'I' for Inactive)
+REMARK    1  A    between atoms: C1_1  and  O1_48
+REMARK    2  A    between atoms: C3_3  and  C43_43
+REMARK    3  A    between atoms: C4_4  and  O12_59
+REMARK    4  A    between atoms: C7_7  and  C14_14
+REMARK    5  A    between atoms: C8_8  and  O2_49
+REMARK    6  A    between atoms: C11_11  and  O4_51
+REMARK    7  A    between atoms: C12_12  and  C13_13
+REMARK    8  A    between atoms: C16_16  and  C30_30
+REMARK    9  A    between atoms: C20_20  and  C31_31
+REMARK   10  A    between atoms: C21_21  and  O10_57
+REMARK   11  A    between atoms: C22_22  and  C32_32
+REMARK   12  A    between atoms: C23_23  and  O9_56
+REMARK   13  A    between atoms: C24_24  and  C33_33
+REMARK   14  A    between atoms: C25_25  and  O7_54
+REMARK   15  A    between atoms: C26_26  and  C34_34
+REMARK   16  A    between atoms: C27_27  and  O6_53
+REMARK   17  A    between atoms: C35_35  and  C36_36
+REMARK   18  A    between atoms: C35_35  and  O7_54
+REMARK   19  A    between atoms: C37_37  and  O6_53
+REMARK   20  A    between atoms: C38_38  and  N4_47
+REMARK   21  A    between atoms: C43_43  and  N2_45
+REMARK   22  A    between atoms: N2_45  and  N3_46
+REMARK                            x       y       z     vdW  Elec       q    Type
+REMARK                         _______ _______ _______ _____ _____    ______ ____
+ROOT
+ATOM      1  C1  RFP C1201     162.668 162.071  24.935  0.00  0.00    +0.000 C 
+ATOM      2  C2  RFP C1201     162.669 163.048  23.936  0.00  0.00    +0.000 C 
+ATOM      3  C3  RFP C1201     161.496 163.494  23.323  0.00  0.00    +0.000 C 
+ATOM      4  C4  RFP C1201     160.256 162.945  23.746  0.00  0.00    +0.000 C 
+ATOM      5  C5  RFP C1201     158.968 161.332  25.251  0.00  0.00    +0.000 A 
+ATOM      6  C6  RFP C1201     158.945 160.385  26.277  0.00  0.00    +0.000 A 
+ATOM      7  C7  RFP C1201     160.186 159.947  26.874  0.00  0.00    +0.000 A 
+ATOM      8  C8  RFP C1201     161.390 160.495  26.436  0.00  0.00    +0.000 A 
+ATOM      9  C9  RFP C1201     161.409 161.512  25.379  0.00  0.00    +0.000 A 
+ATOM     10  C10 RFP C1201     160.227 161.937  24.807  0.00  0.00    +0.000 A 
+ATOM     11  C11 RFP C1201     157.550 161.632  24.981  0.00  0.00    +0.000 C 
+ATOM     12  C12 RFP C1201     156.714 160.703  25.614  0.00  0.00    +0.000 C 
+ATOM     13  C13 RFP C1201     155.718 161.394  26.456  0.00  0.00    +0.000 C 
+ATOM     14  C14 RFP C1201     160.169 158.903  27.963  0.00  0.00    +0.000 C 
+ATOM     15  C15 RFP C1201     164.762 164.646  24.053  0.00  0.00    +0.000 C 
+ATOM     16  C16 RFP C1201     166.118 165.023  23.423  0.00  0.00    +0.000 C 
+ATOM     17  C17 RFP C1201     166.362 164.717  21.922  0.00  0.00    +0.000 C 
+ATOM     18  C18 RFP C1201     165.640 163.603  21.148  0.00  0.00    +0.000 C 
+ATOM     19  C19 RFP C1201     166.284 162.425  20.758  0.00  0.00    +0.000 C 
+ATOM     20  C20 RFP C1201     165.756 161.605  19.580  0.00  0.00    +0.000 C 
+ATOM     21  C21 RFP C1201     164.753 160.504  20.005  0.00  0.00    +0.000 C 
+ATOM     22  C22 RFP C1201     164.154 159.641  18.853  0.00  0.00    +0.000 C 
+ATOM     23  C23 RFP C1201     163.040 158.670  19.344  0.00  0.00    +0.000 C 
+ATOM     24  C24 RFP C1201     161.687 159.357  19.666  0.00  0.00    +0.000 C 
+ATOM     25  C25 RFP C1201     160.498 158.470  20.146  0.00  0.00    +0.000 C 
+ATOM     26  C26 RFP C1201     159.577 159.209  21.157  0.00  0.00    +0.000 C 
+ATOM     27  C27 RFP C1201     158.506 158.391  21.901  0.00  0.00    +0.000 C 
+ATOM     28  C28 RFP C1201     158.054 159.075  23.212  0.00  0.00    +0.000 C 
+ATOM     29  C29 RFP C1201     156.811 158.873  23.853  0.00  0.00    +0.000 C 
+ATOM     30  C30 RFP C1201     166.417 166.492  23.591  0.00  0.00    +0.000 C 
+ATOM     31  C31 RFP C1201     165.187 162.563  18.572  0.00  0.00    +0.000 C 
+ATOM     32  C32 RFP C1201     165.227 158.892  18.087  0.00  0.00    +0.000 C 
+ATOM     33  C33 RFP C1201     161.231 160.103  18.447  0.00  0.00    +0.000 C 
+ATOM     34  C34 RFP C1201     160.453 159.841  22.196  0.00  0.00    +0.000 C 
+ATOM     35  N1  RFP C1201     163.964 163.562  23.485  0.00  0.00    +0.000 NA
+ATOM     36  O3  RFP C1201     157.624 159.989  26.546  0.00  0.00    +0.000 OA
+ATOM     37  O5  RFP C1201     156.138 159.893  24.615  0.00  0.00    +0.000 OA
+ATOM     38  O11 RFP C1201     164.352 165.243  25.029  0.00  0.00    +0.000 OA
+ENDROOT
+BRANCH  27  40
+ATOM     39  C37 RFP C1201     158.100 156.036  22.140  0.00  0.00    +0.000 C 
+ATOM     40  O6  RFP C1201     158.979 157.117  22.147  0.00  0.00    +0.000 OA
+ENDBRANCH  27  40
+BRANCH   1  41
+ATOM     41  O1  RFP C1201     163.872 161.674  25.486  0.00  0.00    +0.000 OA
+ATOM     42  H   RFP C1201     164.450 161.328  24.786  0.00  0.00    +0.000 HD
+ENDBRANCH   1  41
+BRANCH   8  43
+ATOM     43  O2  RFP C1201     162.572 160.084  26.998  0.00  0.00    +0.000 OA
+ATOM     44  H   RFP C1201     162.583 159.356  27.588  0.00  0.00    +0.000 HD
+ENDBRANCH   8  43
+BRANCH  11  45
+ATOM     45  O4  RFP C1201     157.119 162.414  23.900  0.00  0.00    +0.000 OA
+ATOM     46  H   RFP C1201     157.413 162.007  23.070  0.00  0.00    +0.000 HD
+ENDBRANCH  11  45
+BRANCH  23  47
+ATOM     47  O9  RFP C1201     163.479 157.940  20.422  0.00  0.00    +0.000 OA
+ATOM     48  H   RFP C1201     163.259 158.409  21.242  0.00  0.00    +0.000 HD
+ENDBRANCH  23  47
+BRANCH  21  49
+ATOM     49  O10 RFP C1201     165.373 159.695  20.931  0.00  0.00    +0.000 OA
+ATOM     50  H   RFP C1201     165.429 160.160  21.781  0.00  0.00    +0.000 HD
+ENDBRANCH  21  49
+BRANCH   4  51
+ATOM     51  O12 RFP C1201     159.095 163.391  23.156  0.00  0.00    +0.000 OA
+ATOM     52  H   RFP C1201     158.821 162.765  22.465  0.00  0.00    +0.000 HD
+ENDBRANCH   4  51
+BRANCH   3  53
+ATOM     53  C43 RFP C1201     161.512 164.929  22.699  0.00  0.00    +0.000 C 
+BRANCH  53  54
+ATOM     54  N2  RFP C1201     161.854 166.091  23.576  0.00  0.00    +0.000 NA
+ATOM     55  H   RFP C1201     162.724 165.903  24.074  0.00  0.00    +0.000 HD
+BRANCH  54  61
+ATOM     56  C38 RFP C1201     159.131 168.935  26.723  0.00  0.00    +0.000 C 
+ATOM     57  C39 RFP C1201     159.792 168.472  24.446  0.00  0.00    +0.000 C 
+ATOM     58  C40 RFP C1201     159.626 167.016  24.152  0.00  0.00    +0.000 C 
+ATOM     59  C41 RFP C1201     161.233 166.523  25.850  0.00  0.00    +0.000 C 
+ATOM     60  C42 RFP C1201     161.406 167.983  26.129  0.00  0.00    +0.000 C 
+ATOM     61  N3  RFP C1201     160.805 166.275  24.502  0.00  0.00    +0.000 NA
+ATOM     62  N4  RFP C1201     160.225 168.721  25.794  0.00  0.00    +0.000 NA
+ENDBRANCH  54  61
+ENDBRANCH  53  54
+ENDBRANCH   3  53
+BRANCH  25  63
+ATOM     63  O7  RFP C1201     159.775 158.014  19.077  0.00  0.00    +0.000 OA
+BRANCH  63  64
+ATOM     64  C35 RFP C1201     159.879 156.718  18.629  0.00  0.00    +0.000 C 
+ATOM     65  C36 RFP C1201     158.655 155.849  18.643  0.00  0.00    +0.000 C 
+ATOM     66  O8  RFP C1201     160.973 156.217  18.395  0.00  0.00    +0.000 OA
+ENDBRANCH  63  64
+ENDBRANCH  25  63
+TORSDOF 12
+ENDMDL
+MODEL 4
+REMARK VINA RESULT:    -7.310      4.459     10.393
+REMARK INTER + INTRA:         -12.955
+REMARK INTER:                 -10.471
+REMARK INTRA:                  -2.484
+REMARK UNBOUND:                -1.798
+REMARK  Name = data/pdb/RFP_crystal_pose.pdb
+REMARK  22 active torsions:
+REMARK  status: ('A' for Active; 'I' for Inactive)
+REMARK    1  A    between atoms: C1_1  and  O1_48
+REMARK    2  A    between atoms: C3_3  and  C43_43
+REMARK    3  A    between atoms: C4_4  and  O12_59
+REMARK    4  A    between atoms: C7_7  and  C14_14
+REMARK    5  A    between atoms: C8_8  and  O2_49
+REMARK    6  A    between atoms: C11_11  and  O4_51
+REMARK    7  A    between atoms: C12_12  and  C13_13
+REMARK    8  A    between atoms: C16_16  and  C30_30
+REMARK    9  A    between atoms: C20_20  and  C31_31
+REMARK   10  A    between atoms: C21_21  and  O10_57
+REMARK   11  A    between atoms: C22_22  and  C32_32
+REMARK   12  A    between atoms: C23_23  and  O9_56
+REMARK   13  A    between atoms: C24_24  and  C33_33
+REMARK   14  A    between atoms: C25_25  and  O7_54
+REMARK   15  A    between atoms: C26_26  and  C34_34
+REMARK   16  A    between atoms: C27_27  and  O6_53
+REMARK   17  A    between atoms: C35_35  and  C36_36
+REMARK   18  A    between atoms: C35_35  and  O7_54
+REMARK   19  A    between atoms: C37_37  and  O6_53
+REMARK   20  A    between atoms: C38_38  and  N4_47
+REMARK   21  A    between atoms: C43_43  and  N2_45
+REMARK   22  A    between atoms: N2_45  and  N3_46
+REMARK                            x       y       z     vdW  Elec       q    Type
+REMARK                         _______ _______ _______ _____ _____    ______ ____
+ROOT
+ATOM      1  C1  RFP C1201     163.372 159.834  15.772  0.00  0.00    +0.000 C 
+ATOM      2  C2  RFP C1201     162.782 160.483  16.860  0.00  0.00    +0.000 C 
+ATOM      3  C3  RFP C1201     161.647 161.287  16.727  0.00  0.00    +0.000 C 
+ATOM      4  C4  RFP C1201     161.064 161.434  15.441  0.00  0.00    +0.000 C 
+ATOM      5  C5  RFP C1201     161.087 160.892  12.944  0.00  0.00    +0.000 A 
+ATOM      6  C6  RFP C1201     161.638 160.218  11.853  0.00  0.00    +0.000 A 
+ATOM      7  C7  RFP C1201     162.819 159.405  12.038  0.00  0.00    +0.000 A 
+ATOM      8  C8  RFP C1201     163.377 159.284  13.308  0.00  0.00    +0.000 A 
+ATOM      9  C9  RFP C1201     162.779 159.970  14.458  0.00  0.00    +0.000 A 
+ATOM     10  C10 RFP C1201     161.648 160.745  14.290  0.00  0.00    +0.000 A 
+ATOM     11  C11 RFP C1201     159.846 161.498  12.426  0.00  0.00    +0.000 C 
+ATOM     12  C12 RFP C1201     159.803 161.430  11.028  0.00  0.00    +0.000 C 
+ATOM     13  C13 RFP C1201     158.552 160.786  10.581  0.00  0.00    +0.000 C 
+ATOM     14  C14 RFP C1201     163.435 158.697  10.857  0.00  0.00    +0.000 C 
+ATOM     15  C15 RFP C1201     163.274 159.299  19.162  0.00  0.00    +0.000 C 
+ATOM     16  C16 RFP C1201     164.071 159.352  20.481  0.00  0.00    +0.000 C 
+ATOM     17  C17 RFP C1201     164.544 160.726  21.020  0.00  0.00    +0.000 C 
+ATOM     18  C18 RFP C1201     164.791 161.955  20.131  0.00  0.00    +0.000 C 
+ATOM     19  C19 RFP C1201     166.077 162.427  19.847  0.00  0.00    +0.000 C 
+ATOM     20  C20 RFP C1201     166.297 163.885  19.441  0.00  0.00    +0.000 C 
+ATOM     21  C21 RFP C1201     166.255 164.103  17.908  0.00  0.00    +0.000 C 
+ATOM     22  C22 RFP C1201     166.449 165.571  17.420  0.00  0.00    +0.000 C 
+ATOM     23  C23 RFP C1201     166.235 165.729  15.886  0.00  0.00    +0.000 C 
+ATOM     24  C24 RFP C1201     164.752 165.672  15.436  0.00  0.00    +0.000 C 
+ATOM     25  C25 RFP C1201     164.426 165.841  13.921  0.00  0.00    +0.000 C 
+ATOM     26  C26 RFP C1201     163.190 165.006  13.483  0.00  0.00    +0.000 C 
+ATOM     27  C27 RFP C1201     162.892 164.880  11.978  0.00  0.00    +0.000 C 
+ATOM     28  C28 RFP C1201     162.023 163.640  11.657  0.00  0.00    +0.000 C 
+ATOM     29  C29 RFP C1201     161.193 163.496  10.522  0.00  0.00    +0.000 C 
+ATOM     30  C30 RFP C1201     163.309 158.711  21.615  0.00  0.00    +0.000 C 
+ATOM     31  C31 RFP C1201     165.295 164.724  20.183  0.00  0.00    +0.000 C 
+ATOM     32  C32 RFP C1201     167.792 166.138  17.841  0.00  0.00    +0.000 C 
+ATOM     33  C33 RFP C1201     163.988 166.725  16.183  0.00  0.00    +0.000 C 
+ATOM     34  C34 RFP C1201     163.363 163.617  14.019  0.00  0.00    +0.000 C 
+ATOM     35  N1  RFP C1201     163.433 160.355  18.165  0.00  0.00    +0.000 NA
+ATOM     36  O3  RFP C1201     160.900 160.488  10.688  0.00  0.00    +0.000 OA
+ATOM     37  O5  RFP C1201     159.970 162.736  10.528  0.00  0.00    +0.000 OA
+ATOM     38  O11 RFP C1201     162.514 158.376  18.941  0.00  0.00    +0.000 OA
+ENDROOT
+BRANCH  27  40
+ATOM     39  C37 RFP C1201     164.200 165.587  10.093  0.00  0.00    +0.000 C 
+ATOM     40  O6  RFP C1201     164.076 164.849  11.269  0.00  0.00    +0.000 OA
+ENDBRANCH  27  40
+BRANCH   1  41
+ATOM     41  O1  RFP C1201     164.501 159.064  15.981  0.00  0.00    +0.000 OA
+ATOM     42  H   RFP C1201     164.320 158.148  15.719  0.00  0.00    +0.000 HD
+ENDBRANCH   1  41
+BRANCH   8  43
+ATOM     43  O2  RFP C1201     164.499 158.514  13.491  0.00  0.00    +0.000 OA
+ATOM     44  H   RFP C1201     164.456 157.741  14.018  0.00  0.00    +0.000 HD
+ENDBRANCH   8  43
+BRANCH  11  45
+ATOM     45  O4  RFP C1201     159.069 162.408  13.157  0.00  0.00    +0.000 OA
+ATOM     46  H   RFP C1201     158.259 161.970  13.462  0.00  0.00    +0.000 HD
+ENDBRANCH  11  45
+BRANCH  23  47
+ATOM     47  O9  RFP C1201     166.984 164.805  15.199  0.00  0.00    +0.000 OA
+ATOM     48  H   RFP C1201     167.690 165.259  14.712  0.00  0.00    +0.000 HD
+ENDBRANCH  23  47
+BRANCH  21  49
+ATOM     49  O10 RFP C1201     167.200 163.283  17.334  0.00  0.00    +0.000 OA
+ATOM     50  H   RFP C1201     166.781 162.735  16.652  0.00  0.00    +0.000 HD
+ENDBRANCH  21  49
+BRANCH   4  51
+ATOM     51  O12 RFP C1201     159.936 162.213  15.306  0.00  0.00    +0.000 OA
+ATOM     52  H   RFP C1201     159.757 162.670  16.143  0.00  0.00    +0.000 HD
+ENDBRANCH   4  51
+BRANCH   3  53
+ATOM     53  C43 RFP C1201     160.744 161.467  17.992  0.00  0.00    +0.000 C 
+BRANCH  53  54
+ATOM     54  N2  RFP C1201     161.002 162.627  18.901  0.00  0.00    +0.000 NA
+ATOM     55  H   RFP C1201     160.266 162.684  19.605  0.00  0.00    +0.000 HD
+BRANCH  54  61
+ATOM     56  C38 RFP C1201     160.590 167.623  18.384  0.00  0.00    +0.000 C 
+ATOM     57  C39 RFP C1201     161.833 165.763  19.292  0.00  0.00    +0.000 C 
+ATOM     58  C40 RFP C1201     162.090 164.749  18.224  0.00  0.00    +0.000 C 
+ATOM     59  C41 RFP C1201     159.732 164.444  17.990  0.00  0.00    +0.000 C 
+ATOM     60  C42 RFP C1201     159.482 165.447  19.071  0.00  0.00    +0.000 C 
+ATOM     61  N3  RFP C1201     161.012 163.807  18.126  0.00  0.00    +0.000 NA
+ATOM     62  N4  RFP C1201     160.550 166.397  19.158  0.00  0.00    +0.000 NA
+ENDBRANCH  54  61
+ENDBRANCH  53  54
+ENDBRANCH   3  53
+BRANCH  25  63
+ATOM     63  O7  RFP C1201     164.254 167.162  13.610  0.00  0.00    +0.000 OA
+BRANCH  63  64
+ATOM     64  C35 RFP C1201     165.074 167.812  12.718  0.00  0.00    +0.000 C 
+ATOM     65  C36 RFP C1201     166.489 167.336  12.558  0.00  0.00    +0.000 C 
+ATOM     66  O8  RFP C1201     164.728 168.866  12.197  0.00  0.00    +0.000 OA
+ENDBRANCH  63  64
+ENDBRANCH  25  63
+TORSDOF 12
+ENDMDL
+MODEL 5
+REMARK VINA RESULT:    -7.280      2.627      4.091
+REMARK INTER + INTRA:         -12.908
+REMARK INTER:                 -10.964
+REMARK INTRA:                  -1.944
+REMARK UNBOUND:                -1.798
+REMARK  Name = data/pdb/RFP_crystal_pose.pdb
+REMARK  22 active torsions:
+REMARK  status: ('A' for Active; 'I' for Inactive)
+REMARK    1  A    between atoms: C1_1  and  O1_48
+REMARK    2  A    between atoms: C3_3  and  C43_43
+REMARK    3  A    between atoms: C4_4  and  O12_59
+REMARK    4  A    between atoms: C7_7  and  C14_14
+REMARK    5  A    between atoms: C8_8  and  O2_49
+REMARK    6  A    between atoms: C11_11  and  O4_51
+REMARK    7  A    between atoms: C12_12  and  C13_13
+REMARK    8  A    between atoms: C16_16  and  C30_30
+REMARK    9  A    between atoms: C20_20  and  C31_31
+REMARK   10  A    between atoms: C21_21  and  O10_57
+REMARK   11  A    between atoms: C22_22  and  C32_32
+REMARK   12  A    between atoms: C23_23  and  O9_56
+REMARK   13  A    between atoms: C24_24  and  C33_33
+REMARK   14  A    between atoms: C25_25  and  O7_54
+REMARK   15  A    between atoms: C26_26  and  C34_34
+REMARK   16  A    between atoms: C27_27  and  O6_53
+REMARK   17  A    between atoms: C35_35  and  C36_36
+REMARK   18  A    between atoms: C35_35  and  O7_54
+REMARK   19  A    between atoms: C37_37  and  O6_53
+REMARK   20  A    between atoms: C38_38  and  N4_47
+REMARK   21  A    between atoms: C43_43  and  N2_45
+REMARK   22  A    between atoms: N2_45  and  N3_46
+REMARK                            x       y       z     vdW  Elec       q    Type
+REMARK                         _______ _______ _______ _____ _____    ______ ____
+ROOT
+ATOM      1  C1  RFP C1201     165.490 165.343  17.672  0.00  0.00    +0.000 C 
+ATOM      2  C2  RFP C1201     164.354 165.668  16.926  0.00  0.00    +0.000 C 
+ATOM      3  C3  RFP C1201     163.083 165.760  17.499  0.00  0.00    +0.000 C 
+ATOM      4  C4  RFP C1201     162.947 165.531  18.894  0.00  0.00    +0.000 C 
+ATOM      5  C5  RFP C1201     164.018 164.948  21.139  0.00  0.00    +0.000 A 
+ATOM      6  C6  RFP C1201     165.148 164.663  21.907  0.00  0.00    +0.000 A 
+ATOM      7  C7  RFP C1201     166.442 164.568  21.268  0.00  0.00    +0.000 A 
+ATOM      8  C8  RFP C1201     166.548 164.789  19.897  0.00  0.00    +0.000 A 
+ATOM      9  C9  RFP C1201     165.363 165.117  19.097  0.00  0.00    +0.000 A 
+ATOM     10  C10 RFP C1201     164.125 165.213  19.701  0.00  0.00    +0.000 A 
+ATOM     11  C11 RFP C1201     162.924 165.097  22.117  0.00  0.00    +0.000 C 
+ATOM     12  C12 RFP C1201     163.320 164.642  23.380  0.00  0.00    +0.000 C 
+ATOM     13  C13 RFP C1201     163.098 165.688  24.399  0.00  0.00    +0.000 C 
+ATOM     14  C14 RFP C1201     167.662 164.233  22.089  0.00  0.00    +0.000 C 
+ATOM     15  C15 RFP C1201     164.905 167.054  14.754  0.00  0.00    +0.000 C 
+ATOM     16  C16 RFP C1201     165.026 167.026  13.217  0.00  0.00    +0.000 C 
+ATOM     17  C17 RFP C1201     164.199 165.988  12.416  0.00  0.00    +0.000 C 
+ATOM     18  C18 RFP C1201     163.714 164.649  12.995  0.00  0.00    +0.000 C 
+ATOM     19  C19 RFP C1201     164.278 163.425  12.623  0.00  0.00    +0.000 C 
+ATOM     20  C20 RFP C1201     163.481 162.128  12.768  0.00  0.00    +0.000 C 
+ATOM     21  C21 RFP C1201     163.708 161.423  14.129  0.00  0.00    +0.000 C 
+ATOM     22  C22 RFP C1201     162.909 160.103  14.358  0.00  0.00    +0.000 C 
+ATOM     23  C23 RFP C1201     163.068 159.546  15.803  0.00  0.00    +0.000 C 
+ATOM     24  C24 RFP C1201     162.277 160.328  16.883  0.00  0.00    +0.000 C 
+ATOM     25  C25 RFP C1201     162.351 159.839  18.361  0.00  0.00    +0.000 C 
+ATOM     26  C26 RFP C1201     162.273 161.012  19.379  0.00  0.00    +0.000 C 
+ATOM     27  C27 RFP C1201     162.575 160.714  20.859  0.00  0.00    +0.000 C 
+ATOM     28  C28 RFP C1201     162.992 161.984  21.637  0.00  0.00    +0.000 C 
+ATOM     29  C29 RFP C1201     162.866 162.166  23.033  0.00  0.00    +0.000 C 
+ATOM     30  C30 RFP C1201     164.692 168.367  12.610  0.00  0.00    +0.000 C 
+ATOM     31  C31 RFP C1201     162.036 162.444  12.502  0.00  0.00    +0.000 C 
+ATOM     32  C32 RFP C1201     163.253 159.044  13.328  0.00  0.00    +0.000 C 
+ATOM     33  C33 RFP C1201     160.830 160.352  16.487  0.00  0.00    +0.000 C 
+ATOM     34  C34 RFP C1201     163.237 162.069  18.934  0.00  0.00    +0.000 C 
+ATOM     35  N1  RFP C1201     164.515 165.849  15.482  0.00  0.00    +0.000 NA
+ATOM     36  O3  RFP C1201     164.792 164.490  23.255  0.00  0.00    +0.000 OA
+ATOM     37  O5  RFP C1201     162.623 163.447  23.645  0.00  0.00    +0.000 OA
+ATOM     38  O11 RFP C1201     165.138 168.077  15.369  0.00  0.00    +0.000 OA
+ENDROOT
+BRANCH  27  40
+ATOM     39  C37 RFP C1201     163.370 158.659  21.814  0.00  0.00    +0.000 C 
+ATOM     40  O6  RFP C1201     163.547 159.738  20.950  0.00  0.00    +0.000 OA
+ENDBRANCH  27  40
+BRANCH   1  41
+ATOM     41  O1  RFP C1201     166.713 165.260  17.032  0.00  0.00    +0.000 OA
+ATOM     42  H   RFP C1201     167.384 165.726  17.555  0.00  0.00    +0.000 HD
+ENDBRANCH   1  41
+BRANCH   8  43
+ATOM     43  O2  RFP C1201     167.773 164.700  19.283  0.00  0.00    +0.000 OA
+ATOM     44  H   RFP C1201     167.906 164.084  18.591  0.00  0.00    +0.000 HD
+ENDBRANCH   8  43
+BRANCH  11  45
+ATOM     45  O4  RFP C1201     161.576 165.221  21.752  0.00  0.00    +0.000 OA
+ATOM     46  H   RFP C1201     161.514 165.637  20.878  0.00  0.00    +0.000 HD
+ENDBRANCH  11  45
+BRANCH  23  47
+ATOM     47  O9  RFP C1201     164.397 159.464  16.143  0.00  0.00    +0.000 OA
+ATOM     48  H   RFP C1201     164.684 160.306  16.531  0.00  0.00    +0.000 HD
+ENDBRANCH  23  47
+BRANCH  21  49
+ATOM     49  O10 RFP C1201     165.058 161.192  14.271  0.00  0.00    +0.000 OA
+ATOM     50  H   RFP C1201     165.516 161.438  13.453  0.00  0.00    +0.000 HD
+ENDBRANCH  21  49
+BRANCH   4  51
+ATOM     51  O12 RFP C1201     161.699 165.635  19.467  0.00  0.00    +0.000 OA
+ATOM     52  H   RFP C1201     161.771 166.094  20.319  0.00  0.00    +0.000 HD
+ENDBRANCH   4  51
+BRANCH   3  53
+ATOM     53  C43 RFP C1201     162.035 166.669  16.776  0.00  0.00    +0.000 C 
+BRANCH  53  54
+ATOM     54  N2  RFP C1201     161.750 168.026  17.339  0.00  0.00    +0.000 NA
+ATOM     55  H   RFP C1201     162.406 168.231  18.093  0.00  0.00    +0.000 HD
+BRANCH  54  61
+ATOM     56  C38 RFP C1201     157.434 170.357  18.495  0.00  0.00    +0.000 C 
+ATOM     57  C39 RFP C1201     158.962 169.632  16.771  0.00  0.00    +0.000 C 
+ATOM     58  C40 RFP C1201     159.305 168.190  16.964  0.00  0.00    +0.000 C 
+ATOM     59  C41 RFP C1201     160.267 168.736  19.082  0.00  0.00    +0.000 C 
+ATOM     60  C42 RFP C1201     159.936 170.181  18.875  0.00  0.00    +0.000 C 
+ATOM     61  N3  RFP C1201     160.431 168.033  17.840  0.00  0.00    +0.000 NA
+ATOM     62  N4  RFP C1201     158.802 170.337  18.013  0.00  0.00    +0.000 NA
+ENDBRANCH  54  61
+ENDBRANCH  53  54
+ENDBRANCH   3  53
+BRANCH  25  63
+ATOM     63  O7  RFP C1201     161.375 158.914  18.612  0.00  0.00    +0.000 OA
+BRANCH  63  64
+ATOM     64  C35 RFP C1201     161.640 157.565  18.633  0.00  0.00    +0.000 C 
+ATOM     65  C36 RFP C1201     160.492 156.606  18.760  0.00  0.00    +0.000 C 
+ATOM     66  O8  RFP C1201     162.788 157.149  18.731  0.00  0.00    +0.000 OA
+ENDBRANCH  63  64
+ENDBRANCH  25  63
+TORSDOF 12
+ENDMDL
+MODEL 6
+REMARK VINA RESULT:    -6.983      4.902     11.050
+REMARK INTER + INTRA:         -12.455
+REMARK INTER:                 -10.427
+REMARK INTRA:                  -2.029
+REMARK UNBOUND:                -1.798
+REMARK  Name = data/pdb/RFP_crystal_pose.pdb
+REMARK  22 active torsions:
+REMARK  status: ('A' for Active; 'I' for Inactive)
+REMARK    1  A    between atoms: C1_1  and  O1_48
+REMARK    2  A    between atoms: C3_3  and  C43_43
+REMARK    3  A    between atoms: C4_4  and  O12_59
+REMARK    4  A    between atoms: C7_7  and  C14_14
+REMARK    5  A    between atoms: C8_8  and  O2_49
+REMARK    6  A    between atoms: C11_11  and  O4_51
+REMARK    7  A    between atoms: C12_12  and  C13_13
+REMARK    8  A    between atoms: C16_16  and  C30_30
+REMARK    9  A    between atoms: C20_20  and  C31_31
+REMARK   10  A    between atoms: C21_21  and  O10_57
+REMARK   11  A    between atoms: C22_22  and  C32_32
+REMARK   12  A    between atoms: C23_23  and  O9_56
+REMARK   13  A    between atoms: C24_24  and  C33_33
+REMARK   14  A    between atoms: C25_25  and  O7_54
+REMARK   15  A    between atoms: C26_26  and  C34_34
+REMARK   16  A    between atoms: C27_27  and  O6_53
+REMARK   17  A    between atoms: C35_35  and  C36_36
+REMARK   18  A    between atoms: C35_35  and  O7_54
+REMARK   19  A    between atoms: C37_37  and  O6_53
+REMARK   20  A    between atoms: C38_38  and  N4_47
+REMARK   21  A    between atoms: C43_43  and  N2_45
+REMARK   22  A    between atoms: N2_45  and  N3_46
+REMARK                            x       y       z     vdW  Elec       q    Type
+REMARK                         _______ _______ _______ _____ _____    ______ ____
+ROOT
+ATOM      1  C1  RFP C1201     163.028 159.376  16.131  0.00  0.00    +0.000 C 
+ATOM      2  C2  RFP C1201     162.476 160.101  17.190  0.00  0.00    +0.000 C 
+ATOM      3  C3  RFP C1201     161.341 160.901  17.038  0.00  0.00    +0.000 C 
+ATOM      4  C4  RFP C1201     160.718 160.964  15.763  0.00  0.00    +0.000 C 
+ATOM      5  C5  RFP C1201     160.662 160.255  13.309  0.00  0.00    +0.000 A 
+ATOM      6  C6  RFP C1201     161.175 159.504  12.250  0.00  0.00    +0.000 A 
+ATOM      7  C7  RFP C1201     162.358 158.698  12.454  0.00  0.00    +0.000 A 
+ATOM      8  C8  RFP C1201     162.955 158.659  13.712  0.00  0.00    +0.000 A 
+ATOM      9  C9  RFP C1201     162.396 159.426  14.830  0.00  0.00    +0.000 A 
+ATOM     10  C10 RFP C1201     161.264 160.195  14.644  0.00  0.00    +0.000 A 
+ATOM     11  C11 RFP C1201     159.408 160.832  12.790  0.00  0.00    +0.000 C 
+ATOM     12  C12 RFP C1201     159.321 160.669  11.402  0.00  0.00    +0.000 C 
+ATOM     13  C13 RFP C1201     158.055 160.004  11.037  0.00  0.00    +0.000 C 
+ATOM     14  C14 RFP C1201     162.935 157.907  11.306  0.00  0.00    +0.000 C 
+ATOM     15  C15 RFP C1201     163.033 159.073  19.551  0.00  0.00    +0.000 C 
+ATOM     16  C16 RFP C1201     163.870 159.210  20.839  0.00  0.00    +0.000 C 
+ATOM     17  C17 RFP C1201     164.367 160.615  21.269  0.00  0.00    +0.000 C 
+ATOM     18  C18 RFP C1201     164.591 161.779  20.290  0.00  0.00    +0.000 C 
+ATOM     19  C19 RFP C1201     165.869 162.222  19.936  0.00  0.00    +0.000 C 
+ATOM     20  C20 RFP C1201     166.083 163.647  19.425  0.00  0.00    +0.000 C 
+ATOM     21  C21 RFP C1201     165.995 163.761  17.883  0.00  0.00    +0.000 C 
+ATOM     22  C22 RFP C1201     166.181 165.192  17.290  0.00  0.00    +0.000 C 
+ATOM     23  C23 RFP C1201     165.920 165.246  15.756  0.00  0.00    +0.000 C 
+ATOM     24  C24 RFP C1201     164.423 165.168  15.356  0.00  0.00    +0.000 C 
+ATOM     25  C25 RFP C1201     164.052 165.236  13.844  0.00  0.00    +0.000 C 
+ATOM     26  C26 RFP C1201     162.798 164.382  13.502  0.00  0.00    +0.000 C 
+ATOM     27  C27 RFP C1201     162.454 164.155  12.019  0.00  0.00    +0.000 C 
+ATOM     28  C28 RFP C1201     161.570 162.902  11.810  0.00  0.00    +0.000 C 
+ATOM     29  C29 RFP C1201     160.705 162.687  10.713  0.00  0.00    +0.000 C 
+ATOM     30  C30 RFP C1201     163.141 158.653  22.036  0.00  0.00    +0.000 C 
+ATOM     31  C31 RFP C1201     165.109 164.542  20.139  0.00  0.00    +0.000 C 
+ATOM     32  C32 RFP C1201     167.538 165.776  17.630  0.00  0.00    +0.000 C 
+ATOM     33  C33 RFP C1201     163.687 166.275  16.053  0.00  0.00    +0.000 C 
+ATOM     34  C34 RFP C1201     162.982 163.031  14.126  0.00  0.00    +0.000 C 
+ATOM     35  N1  RFP C1201     163.166 160.058  18.481  0.00  0.00    +0.000 NA
+ATOM     36  O3  RFP C1201     160.403 159.699  11.093  0.00  0.00    +0.000 OA
+ATOM     37  O5  RFP C1201     159.479 161.937  10.809  0.00  0.00    +0.000 OA
+ATOM     38  O11 RFP C1201     162.263 158.142  19.417  0.00  0.00    +0.000 OA
+ENDROOT
+BRANCH  27  40
+ATOM     39  C37 RFP C1201     163.719 164.753  10.068  0.00  0.00    +0.000 C 
+ATOM     40  O6  RFP C1201     163.615 164.069  11.277  0.00  0.00    +0.000 OA
+ENDBRANCH  27  40
+BRANCH   1  41
+ATOM     41  O1  RFP C1201     164.160 158.615  16.358  0.00  0.00    +0.000 OA
+ATOM     42  H   RFP C1201     164.181 158.335  17.287  0.00  0.00    +0.000 HD
+ENDBRANCH   1  41
+BRANCH   8  43
+ATOM     43  O2  RFP C1201     164.079 157.897  13.912  0.00  0.00    +0.000 OA
+ATOM     44  H   RFP C1201     164.142 157.346  14.667  0.00  0.00    +0.000 HD
+ENDBRANCH   8  43
+BRANCH  11  45
+ATOM     45  O4  RFP C1201     158.658 161.795  13.480  0.00  0.00    +0.000 OA
+ATOM     46  H   RFP C1201     159.082 162.662  13.387  0.00  0.00    +0.000 HD
+ENDBRANCH  11  45
+BRANCH  23  47
+ATOM     47  O9  RFP C1201     166.643 164.273  15.110  0.00  0.00    +0.000 OA
+ATOM     48  H   RFP C1201     167.263 163.864  15.734  0.00  0.00    +0.000 HD
+ENDBRANCH  23  47
+BRANCH  21  49
+ATOM     49  O10 RFP C1201     166.918 162.897  17.337  0.00  0.00    +0.000 OA
+ATOM     50  H   RFP C1201     167.706 162.866  17.902  0.00  0.00    +0.000 HD
+ENDBRANCH  21  49
+BRANCH   4  51
+ATOM     51  O12 RFP C1201     159.591 161.740  15.610  0.00  0.00    +0.000 OA
+ATOM     52  H   RFP C1201     159.850 162.648  15.385  0.00  0.00    +0.000 HD
+ENDBRANCH   4  51
+BRANCH   3  53
+ATOM     53  C43 RFP C1201     160.477 161.173  18.314  0.00  0.00    +0.000 C 
+BRANCH  53  54
+ATOM     54  N2  RFP C1201     159.104 160.587  18.391  0.00  0.00    +0.000 NA
+ATOM     55  H   RFP C1201     158.591 161.011  19.165  0.00  0.00    +0.000 HD
+BRANCH  54  61
+ATOM     56  C38 RFP C1201     157.144 156.024  19.254  0.00  0.00    +0.000 C 
+ATOM     57  C39 RFP C1201     157.382 157.888  17.738  0.00  0.00    +0.000 C 
+ATOM     58  C40 RFP C1201     158.824 158.254  17.599  0.00  0.00    +0.000 C 
+ATOM     59  C41 RFP C1201     158.886 158.764  19.932  0.00  0.00    +0.000 C 
+ATOM     60  C42 RFP C1201     157.437 158.411  20.061  0.00  0.00    +0.000 C 
+ATOM     61  N3  RFP C1201     159.223 159.197  18.605  0.00  0.00    +0.000 NA
+ATOM     62  N4  RFP C1201     157.043 157.459  19.067  0.00  0.00    +0.000 NA
+ENDBRANCH  54  61
+ENDBRANCH  53  54
+ENDBRANCH   3  53
+BRANCH  25  63
+ATOM     63  O7  RFP C1201     163.875 166.534  13.449  0.00  0.00    +0.000 OA
+BRANCH  63  64
+ATOM     64  C35 RFP C1201     164.907 167.284  12.935  0.00  0.00    +0.000 C 
+ATOM     65  C36 RFP C1201     166.043 166.578  12.254  0.00  0.00    +0.000 C 
+ATOM     66  O8  RFP C1201     164.999 168.481  13.181  0.00  0.00    +0.000 OA
+ENDBRANCH  63  64
+ENDBRANCH  25  63
+TORSDOF 12
+ENDMDL
+MODEL 7
+REMARK VINA RESULT:    -6.972      2.859      4.232
+REMARK INTER + INTRA:         -12.438
+REMARK INTER:                  -9.837
+REMARK INTRA:                  -2.601
+REMARK UNBOUND:                -1.798
+REMARK  Name = data/pdb/RFP_crystal_pose.pdb
+REMARK  22 active torsions:
+REMARK  status: ('A' for Active; 'I' for Inactive)
+REMARK    1  A    between atoms: C1_1  and  O1_48
+REMARK    2  A    between atoms: C3_3  and  C43_43
+REMARK    3  A    between atoms: C4_4  and  O12_59
+REMARK    4  A    between atoms: C7_7  and  C14_14
+REMARK    5  A    between atoms: C8_8  and  O2_49
+REMARK    6  A    between atoms: C11_11  and  O4_51
+REMARK    7  A    between atoms: C12_12  and  C13_13
+REMARK    8  A    between atoms: C16_16  and  C30_30
+REMARK    9  A    between atoms: C20_20  and  C31_31
+REMARK   10  A    between atoms: C21_21  and  O10_57
+REMARK   11  A    between atoms: C22_22  and  C32_32
+REMARK   12  A    between atoms: C23_23  and  O9_56
+REMARK   13  A    between atoms: C24_24  and  C33_33
+REMARK   14  A    between atoms: C25_25  and  O7_54
+REMARK   15  A    between atoms: C26_26  and  C34_34
+REMARK   16  A    between atoms: C27_27  and  O6_53
+REMARK   17  A    between atoms: C35_35  and  C36_36
+REMARK   18  A    between atoms: C35_35  and  O7_54
+REMARK   19  A    between atoms: C37_37  and  O6_53
+REMARK   20  A    between atoms: C38_38  and  N4_47
+REMARK   21  A    between atoms: C43_43  and  N2_45
+REMARK   22  A    between atoms: N2_45  and  N3_46
+REMARK                            x       y       z     vdW  Elec       q    Type
+REMARK                         _______ _______ _______ _____ _____    ______ ____
+ROOT
+ATOM      1  C1  RFP C1201     165.413 165.301  17.647  0.00  0.00    +0.000 C 
+ATOM      2  C2  RFP C1201     164.293 165.596  16.865  0.00  0.00    +0.000 C 
+ATOM      3  C3  RFP C1201     163.009 165.702  17.405  0.00  0.00    +0.000 C 
+ATOM      4  C4  RFP C1201     162.841 165.517  18.803  0.00  0.00    +0.000 C 
+ATOM      5  C5  RFP C1201     163.863 165.010  21.090  0.00  0.00    +0.000 A 
+ATOM      6  C6  RFP C1201     164.976 164.755  21.893  0.00  0.00    +0.000 A 
+ATOM      7  C7  RFP C1201     166.284 164.645  21.287  0.00  0.00    +0.000 A 
+ATOM      8  C8  RFP C1201     166.421 164.822  19.912  0.00  0.00    +0.000 A 
+ATOM      9  C9  RFP C1201     165.254 165.120  19.075  0.00  0.00    +0.000 A 
+ATOM     10  C10 RFP C1201     164.002 165.230  19.647  0.00  0.00    +0.000 A 
+ATOM     11  C11 RFP C1201     162.746 165.185  22.037  0.00  0.00    +0.000 C 
+ATOM     12  C12 RFP C1201     163.114 164.773  23.323  0.00  0.00    +0.000 C 
+ATOM     13  C13 RFP C1201     162.865 165.850  24.302  0.00  0.00    +0.000 C 
+ATOM     14  C14 RFP C1201     167.487 164.342  22.145  0.00  0.00    +0.000 C 
+ATOM     15  C15 RFP C1201     164.889 166.916  14.663  0.00  0.00    +0.000 C 
+ATOM     16  C16 RFP C1201     165.045 166.839  13.131  0.00  0.00    +0.000 C 
+ATOM     17  C17 RFP C1201     164.241 165.772  12.344  0.00  0.00    +0.000 C 
+ATOM     18  C18 RFP C1201     163.747 164.451  12.955  0.00  0.00    +0.000 C 
+ATOM     19  C19 RFP C1201     164.324 163.218  12.635  0.00  0.00    +0.000 C 
+ATOM     20  C20 RFP C1201     163.529 161.922  12.803  0.00  0.00    +0.000 C 
+ATOM     21  C21 RFP C1201     163.726 161.262  14.191  0.00  0.00    +0.000 C 
+ATOM     22  C22 RFP C1201     162.928 159.947  14.443  0.00  0.00    +0.000 C 
+ATOM     23  C23 RFP C1201     163.055 159.437  15.909  0.00  0.00    +0.000 C 
+ATOM     24  C24 RFP C1201     162.237 160.250  16.945  0.00  0.00    +0.000 C 
+ATOM     25  C25 RFP C1201     162.279 159.808  18.440  0.00  0.00    +0.000 C 
+ATOM     26  C26 RFP C1201     162.172 161.013  19.417  0.00  0.00    +0.000 C 
+ATOM     27  C27 RFP C1201     162.441 160.763  20.912  0.00  0.00    +0.000 C 
+ATOM     28  C28 RFP C1201     162.836 162.060  21.659  0.00  0.00    +0.000 C 
+ATOM     29  C29 RFP C1201     162.677 162.285  23.045  0.00  0.00    +0.000 C 
+ATOM     30  C30 RFP C1201     164.721 168.158  12.474  0.00  0.00    +0.000 C 
+ATOM     31  C31 RFP C1201     162.089 162.223  12.494  0.00  0.00    +0.000 C 
+ATOM     32  C32 RFP C1201     163.299 158.857  13.456  0.00  0.00    +0.000 C 
+ATOM     33  C33 RFP C1201     160.799 160.254  16.516  0.00  0.00    +0.000 C 
+ATOM     34  C34 RFP C1201     163.143 162.059  18.960  0.00  0.00    +0.000 C 
+ATOM     35  N1  RFP C1201     164.487 165.733  15.420  0.00  0.00    +0.000 NA
+ATOM     36  O3  RFP C1201     164.589 164.623  23.236  0.00  0.00    +0.000 OA
+ATOM     37  O5  RFP C1201     162.416 163.584  23.610  0.00  0.00    +0.000 OA
+ATOM     38  O11 RFP C1201     165.104 167.959  15.250  0.00  0.00    +0.000 OA
+ENDROOT
+BRANCH  27  40
+ATOM     39  C37 RFP C1201     163.202 158.718  21.915  0.00  0.00    +0.000 C 
+ATOM     40  O6  RFP C1201     163.415 159.795  21.057  0.00  0.00    +0.000 OA
+ENDBRANCH  27  40
+BRANCH   1  41
+ATOM     41  O1  RFP C1201     166.650 165.202  17.038  0.00  0.00    +0.000 OA
+ATOM     42  H   RFP C1201     166.534 164.932  16.113  0.00  0.00    +0.000 HD
+ENDBRANCH   1  41
+BRANCH   8  43
+ATOM     43  O2  RFP C1201     167.660 164.720  19.330  0.00  0.00    +0.000 OA
+ATOM     44  H   RFP C1201     168.260 164.061  19.619  0.00  0.00    +0.000 HD
+ENDBRANCH   8  43
+BRANCH  11  45
+ATOM     45  O4  RFP C1201     161.406 165.292  21.638  0.00  0.00    +0.000 OA
+ATOM     46  H   RFP C1201     161.021 164.405  21.557  0.00  0.00    +0.000 HD
+ENDBRANCH  11  45
+BRANCH  23  47
+ATOM     47  O9  RFP C1201     164.376 159.372  16.282  0.00  0.00    +0.000 OA
+ATOM     48  H   RFP C1201     164.938 159.425  15.493  0.00  0.00    +0.000 HD
+ENDBRANCH  23  47
+BRANCH  21  49
+ATOM     49  O10 RFP C1201     165.074 161.042  14.371  0.00  0.00    +0.000 OA
+ATOM     50  H   RFP C1201     165.566 161.845  14.144  0.00  0.00    +0.000 HD
+ENDBRANCH  21  49
+BRANCH   4  51
+ATOM     51  O12 RFP C1201     161.580 165.634  19.344  0.00  0.00    +0.000 OA
+ATOM     52  H   RFP C1201     161.622 166.172  20.150  0.00  0.00    +0.000 HD
+ENDBRANCH   4  51
+BRANCH   3  53
+ATOM     53  C43 RFP C1201     161.974 166.583  16.630  0.00  0.00    +0.000 C 
+BRANCH  53  54
+ATOM     54  N2  RFP C1201     160.530 166.197  16.670  0.00  0.00    +0.000 NA
+ATOM     55  H   RFP C1201     160.152 166.370  17.602  0.00  0.00    +0.000 HD
+BRANCH  54  61
+ATOM     56  C38 RFP C1201     158.126 162.249  14.662  0.00  0.00    +0.000 C 
+ATOM     57  C39 RFP C1201     159.263 164.347  14.293  0.00  0.00    +0.000 C 
+ATOM     58  C40 RFP C1201     160.573 164.352  15.014  0.00  0.00    +0.000 C 
+ATOM     59  C41 RFP C1201     159.398 164.125  17.082  0.00  0.00    +0.000 C 
+ATOM     60  C42 RFP C1201     158.090 164.137  16.356  0.00  0.00    +0.000 C 
+ATOM     61  N3  RFP C1201     160.425 164.824  16.361  0.00  0.00    +0.000 NA
+ATOM     62  N4  RFP C1201     158.234 163.651  15.016  0.00  0.00    +0.000 NA
+ENDBRANCH  54  61
+ENDBRANCH  53  54
+ENDBRANCH   3  53
+BRANCH  25  63
+ATOM     63  O7  RFP C1201     161.300 158.887  18.697  0.00  0.00    +0.000 OA
+BRANCH  63  64
+ATOM     64  C35 RFP C1201     161.573 157.542  18.789  0.00  0.00    +0.000 C 
+ATOM     65  C36 RFP C1201     160.446 156.596  19.084  0.00  0.00    +0.000 C 
+ATOM     66  O8  RFP C1201     162.728 157.133  18.813  0.00  0.00    +0.000 OA
+ENDBRANCH  63  64
+ENDBRANCH  25  63
+TORSDOF 12
+ENDMDL

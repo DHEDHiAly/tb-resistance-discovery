@@ -109,7 +109,87 @@ Feature importance (XGBoost gain):
 
 GroupKFold by gene: AUROC 0.972 ± 0.018, AUPRC 0.575, Top-20 recall 0.741.
 
-### Mutation forecasting
+### Structural validation with AutoDock Vina
+
+After the model predicts Tier-4 forecast-only mutations, we structurally validate them by docking the drug to WT and mutant receptors. This provides an orthogonal biophysical signal.
+
+### Phase 1: Crystal structures (high confidence)
+
+**rpoB + Rifampicin (PDB 5UHB, 2.8A, chain C):** 11 mutations at the RRDR docked with rigid receptor, exhaustiveness=12. Results:
+
+| Mutation | WT (kcal/mol) | Mutant (kcal/mol) | ddG | Category |
+|----------|--------------|------------------|-----|----------|
+| WT | -9.934 | - | - | - |
+| L430R | -9.934 | -9.531 | +0.403 | MODERATE |
+| H445R | -9.934 | -9.693 | +0.241 | WEAK |
+| H445P | -9.934 | -9.721 | +0.213 | WEAK |
+| H445Q | -9.934 | -9.726 | +0.208 | WEAK |
+| H445L | -9.934 | -9.732 | +0.202 | WEAK |
+| Q432L | -9.934 | -9.746 | +0.188 | WEAK |
+| I491L | -9.934 | -9.758 | +0.176 | WEAK |
+| Q432P | -9.934 | -9.765 | +0.169 | WEAK |
+| D435G | -9.934 | -9.831 | +0.103 | WEAK |
+| V170A | -9.934 | -9.906 | +0.028 | NONE |
+| Q432K | -9.934 | -9.920 | +0.014 | NONE |
+
+**gyrA + Moxifloxacin (PDB 5BS8, 2.9A, chain A):** 4 mutations in the QRDR. MFX binding is weak in the apo structure (requires DNA intercalation).
+
+| Mutation | WT (kcal/mol) | Mutant (kcal/mol) | ddG | Category |
+|----------|--------------|------------------|-----|----------|
+| WT | -4.375 | - | - | - |
+| G88C | -4.375 | -4.168 | +0.207 | WEAK |
+| D94A | -4.375 | -4.319 | +0.056 | NONE |
+| D94H | -4.375 | -4.344 | +0.031 | NONE |
+| A90T | -4.375 | -4.363 | +0.012 | NONE |
+
+### Phase 2: AlphaFold models (lower confidence)
+
+**inhA + Triclosan (NADH proxy):** Vina cannot dock NADH/NAD+ (tree.h internal error at 10+ rotatable branches). Triclosan is used as a proxy for the NADH binding pocket.
+
+| Mutation | WT (kcal/mol) | Mutant (kcal/mol) | ddG | Category |
+|----------|--------------|------------------|-----|----------|
+| WT | -7.462 | - | - | - |
+| S94A | -7.462 | -6.955 | +0.507 | STRONG |
+| I21T | -7.462 | -7.968 | -0.506 | STRONG (binding gain - triclosan may not be the correct ligand) |
+| I194T | -7.462 | -7.631 | -0.169 | WEAK |
+
+**embB + Ethambutol (AlphaFold):** No co-crystal for ethambutol; AlphaFold lacks pre-organized binding pocket.
+
+| Mutation | WT (kcal/mol) | Mutant (kcal/mol) | ddG | Category |
+|----------|--------------|------------------|-----|----------|
+| Q497K | -4.741 | -4.724 | +0.017 | NONE |
+| G406S | -4.209 | -4.181 | +0.028 | NONE |
+
+### Novel candidate validation
+
+For 5 top Tier-4 novel candidates, we ran targeted docking or structural analysis:
+
+| Candidate | Rank | Score | ddG / Result | Why Vina is blind |
+|-----------|------|-------|-------------|-------------------|
+| **rpsL K43E** | 22 | 0.446 | DOCKING FAILED | STR (14 torsions, branched rings) exceeds Vina tree.h(101) limit |
+| **inhA I16V** | 27 | 0.426 | +0.019 (NONE) | Conservative Ile->Val at NADH pocket edge; rigid receptor misses kinetics |
+| **eis V59A** | 34 | 0.409 | DOCKING FAILED | AMK (10 torsions, branched rings) exceeds Vina tree.h(101) limit |
+| **rpoB V170I** | 47 | 0.375 | +0.001 (NONE) | Outside RRDR; allosteric mechanism via dynamics; rigid Vina blind |
+| **gyrB Q538L** | 131 | 0.234 | -0.174 (WEAK) | 17-22A from MFX; TOPRIM water-bridge disruptor; needs MD with DNA |
+
+### Vina limitations discovered
+
+1. **tree.h(101) error**: Ligands with >10 rotatable branches (NADH/NAD+, streptomycin, amikacin) crash Vina. These are complex branched-ring molecules common in TB drugs.
+2. **Rigid receptor blind spots**: Mutations >5A from the binding pocket show ddG ~0 even when clinically causative (allosteric rpoB, water-bridge gyrB).
+3. **Conservative substitutions**: Small->small mutations (Val->Ile, Ile->Val) produce ddG < 0.1 kcal/mol despite potential functional impact.
+4. **Indirect mechanisms**: Loss-of-function (pncA), promoter mutations (eis), and cofactor binding kinetics (inhA NADH) are invisible to static drug docking.
+
+## Interactive viewer
+
+Open `viewer.html` in a browser for an interactive dashboard showing:
+- Tier distribution across 305 mutations
+- Model performance metrics (ROC, PR, LOO, benchmarks)
+- Dockable mutation table with ddG values
+- Searchable browser of all 188 Tier-4 candidates filtered by gene, mechanism, and score
+- Deep-dive cards for the 5 top novel candidates
+- Pipeline architecture and next steps
+
+## Mutation forecasting
 `04e_mutation_forecasting.py` -- For the top hotspot-scoring residues, enumerate all SNV-accessible mutations. Score by: emergence = hotspot_score x mutation_score, where mutation_score combines resistance plausibility, fitness cost, and evolutionary accessibility.
 
 Known resistance mutations in top-20: **8/33**. Top-50: 16/33. Top-100: 24/33.

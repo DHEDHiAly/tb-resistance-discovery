@@ -1,0 +1,97 @@
+{
+  "wt": -4.375,
+  "mutations": [
+    {
+      "mutation": "G88C",
+      "gene": "gyrA",
+      "drug": "moxifloxacin",
+      "wt_aa": "G",
+      "mut_aa": "C",
+      "h37rv_pos": 88,
+      "pdb_residue": 88,
+      "wt_binding": -4.375,
+      "mut_binding": -4.168,
+      "delta_delta_G": 0.20699999999999985,
+      "all_modes": [
+        -4.168,
+        -4.025,
+        -4.016,
+        -3.995,
+        -3.819,
+        -3.777,
+        -3.772,
+        -3.698,
+        -3.681
+      ]
+    },
+    {
+      "mutation": "D94A",
+      "gene": "gyrA",
+      "drug": "moxifloxacin",
+      "wt_aa": "D",
+      "mut_aa": "A",
+      "h37rv_pos": 94,
+      "pdb_residue": 94,
+      "wt_binding": -4.375,
+      "mut_binding": -4.319,
+      "delta_delta_G": 0.05600000000000005,
+      "all_modes": [
+        -4.319,
+        -3.977,
+        -3.948,
+        -3.936,
+        -3.738,
+        -3.686,
+        -3.68,
+        -3.679,
+        -3.645
+      ]
+    },
+    {
+      "mutation": "D94H",
+      "gene": "gyrA",
+      "drug": "moxifloxacin",
+      "wt_aa": "D",
+      "mut_aa": "H",
+      "h37rv_pos": 94,
+      "pdb_residue": 94,
+      "wt_binding": -4.375,
+      "mut_binding": -4.344,
+      "delta_delta_G": 0.030999999999999694,
+      "all_modes": [
+        -4.344,
+        -3.941,
+        -3.912,
+        -3.794,
+        -3.782,
+        -3.778,
+        -3.717,
+        -3.695,
+        -3.668
+      ]
+    },
+    {
+      "mutation": "A90T",
+      "gene": "gyrA",
+      "drug": "moxifloxacin",
+      "wt_aa": "A",
+      "mut_aa": "T",
+      "h37rv_pos": 90,
+      "pdb_residue": 90,
+      "wt_binding": -4.375,
+      "mut_binding": -4.363,
+      "delta_delta_G": 0.011999999999999567,
+      "all_modes": [
+        -4.363,
+        -4.002,
+        -3.996,
+        -3.973,
+        -3.769,
+        -3.704,
+        -3.69,
+        -3.614,
+        4.808
+      ]
+    }
+  ]
+}

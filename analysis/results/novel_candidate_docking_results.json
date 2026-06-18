@@ -1,0 +1,30 @@
+{
+  "rpoB_V170I": {
+    "gene": "rpoB",
+    "mutation": "V170I",
+    "structure": "5UHB crystal (chain C)",
+    "ligand": "rifampicin (RFP)",
+    "wt_best": -9.97,
+    "mutant_best": -9.969,
+    "delta_delta_G": 0.001,
+    "category": "NONE",
+    "rank": 47,
+    "emergence_score": 0.3746,
+    "carriers": 0,
+    "note": "V170F documented (low-level RIF). V170I novel. No binding change via rigid docking."
+  },
+  "inhA_I16V": {
+    "gene": "inhA",
+    "mutation": "I16V",
+    "structure": "AlphaFold (P9WGR1)",
+    "ligand": "triclosan (NADH proxy)",
+    "wt_best": -7.462,
+    "mutant_best": -7.443,
+    "delta_delta_G": 0.019,
+    "category": "NONE",
+    "rank": 27,
+    "emergence_score": 0.4263,
+    "carriers": 0,
+    "note": "I16T known (CARD). I16V novel. No binding change - mechanism likely through altered NADH kinetics."
+  }
+}

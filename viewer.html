@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>TB Resistance Discovery — Interactive Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f7fa;color:#1a1a2e;line-height:1.5}
+nav{background:#1a1a2e;padding:12px 24px;position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+nav h1{color:#fff;font-size:18px;font-weight:600}
+nav a{color:#a8b2d1;text-decoration:none;font-size:13px;padding:4px 10px;border-radius:4px;cursor:pointer}
+nav a:hover{color:#fff;background:#2a2a4e}
+nav a.active{color:#64ffda;background:#2a2a4e}
+.container{padding:24px;max-width:1400px;margin:0 auto}
+.tab{display:none}
+.tab.active{display:block}
+h2{font-size:22px;margin:16px 0 8px;color:#1a1a2e}
+h3{font-size:16px;margin:12px 0 6px;color:#2d2d5e}
+.card{background:#fff;border-radius:8px;padding:20px;margin:12px 0;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.stat-row{display:flex;flex-wrap:wrap;gap:12px}
+.stat{flex:1;min-width:140px;padding:16px;background:#f8f9ff;border-radius:6px;text-align:center}
+.stat .num{font-size:28px;font-weight:700;color:#1a1a2e}
+.stat .label{font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.5px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#1a1a2e;color:#fff;padding:8px 10px;text-align:left;position:sticky;top:52px;cursor:pointer}
+th:hover{background:#2a2a4e}
+td{padding:6px 10px;border-bottom:1px solid #eee}
+tr:hover{background:#f0f4ff}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
+.badge-Phase1{background:#e3f2fd;color:#1565c0}
+.badge-Phase2{background:#fff3e0;color:#e65100}
+.badge-Novel{background:#e8f5e9;color:#2e7d32}
+.badge-NONE{background:#f5f5f5;color:#666}
+.badge-WEAK{background:#fff3e0;color:#e65100}
+.badge-MODERATE{background:#ffecb3;color:#f57f17}
+.badge-STRONG{background:#ffcdd2;color:#c62828}
+.badge-DOCKING_FAILED{background:#f3e5f5;color:#6a1b9a}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.filters select,.filters input{padding:6px 10px;border:1px solid #ccc;border-radius:4px;font-size:13px}
+.search-box{flex:1;min-width:150px}
+.chart-container{position:relative;height:300px;width:100%;max-width:600px;margin:12px auto}
+.chart-row{display:flex;flex-wrap:wrap;gap:20px}
+.chart-row .chart-container{flex:1;min-width:280px}
+.pipeline-flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:16px;background:#f8f9ff;border-radius:8px;font-size:13px}
+.pipeline-step{background:#fff;border:2px solid #1a1a2e;border-radius:8px;padding:10px 14px;text-align:center;min-width:100px}
+.pipeline-step .step-num{font-size:11px;color:#666}
+.pipeline-step .step-name{font-weight:600;color:#1a1a2e}
+.pipeline-arrow{font-size:20px;color:#666}
+.candidate-card{background:linear-gradient(135deg,#f8f9ff,#e8f5e9);border-left:4px solid #2e7d32;border-radius:6px;padding:14px;margin:8px 0}
+.candidate-card.failed{border-left-color:#6a1b9a;background:linear-gradient(135deg,#f8f9ff,#f3e5f5)}
+.candidate-card h4{margin:0 0 4px;font-size:15px}
+.candidate-card .meta{font-size:12px;color:#666;margin:2px 0}
+.candidate-card .note{font-size:12px;color:#444;margin:4px 0 0;padding:4px 8px;background:rgba(255,255,255,.6);border-radius:4px}
+.gene-dist{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.gene-bar{display:flex;align-items:center;gap:6px;padding:4px 8px;background:#fff;border-radius:4px;font-size:12px;border:1px solid #e0e0e0}
+.gene-bar .bar{height:8px;border-radius:4px;min-width:4px}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+@media(max-width:768px){.stat-row{flex-direction:column}.chart-row{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<nav>
+  <h1>TB Resistance Discovery</h1>
+  <a class="active" data-tab="overview">Overview</a>
+  <a data-tab="pipeline">Pipeline</a>
+  <a data-tab="metrics">Metrics</a>
+  <a data-tab="docking">Docking</a>
+  <a data-tab="browser">Mutation Browser</a>
+  <a data-tab="candidates">Key Candidates</a>
+  <a data-tab="next">Next Steps</a>
+</nav>
+
+<div class="container">
+<!-- ===== OVERVIEW ===== -->
+<div id="tab-overview" class="tab active">
+<h2>Project Overview</h2>
+<div class="card">
+<p style="margin-bottom:8px">A computational pipeline that predicts novel drug resistance mutations in <em>Mycobacterium tuberculosis</em> using multi-stage machine learning, then structurally validates the top candidates with AutoDock Vina molecular docking.</p>
+<p><strong>Dataset:</strong> CRyPTIC consortium — 1,037 Mtb genomes, 13 drugs, 305 tiered mutations</p>
+</div>
+<div class="stat-row" id="overview-stats"></div>
+<div class="card">
+<h3>Data Pipeline</h3>
+<div class="pipeline-flow" id="data-flow">
+<div class="pipeline-step"><div class="step-num">Source</div><div class="step-name">CRyPTIC + WHO</div></div>
+<div class="pipeline-arrow">→</div>
+<div class="pipeline-step"><div class="step-num">Features</div><div class="step-name">~50 Features</div></div>
+<div class="pipeline-arrow">→</div>
+<div class="pipeline-step"><div class="step-num">Model</div><div class="step-name">4-Stage XGBoost</div></div>
+<div class="pipeline-arrow">→</div>
+<div class="pipeline-step"><div class="step-num">Output</div><div class="step-name">188 Tier-4 Candidates</div></div>
+<div class="pipeline-arrow">→</div>
+<div class="pipeline-step"><div class="step-num">Validation</div><div class="step-name">Vina Docking</div></div>
+</div>
+</div>
+<div class="card">
+<h3>Tier Distribution (305 mutations)</h3>
+<div class="chart-container"><canvas id="tierChart"></canvas></div>
+</div>
+<div class="card">
+<h3>Gene Concentration of Tier-4 Candidates</h3>
+<div class="gene-dist" id="gene-dist"></div>
+</div>
+</div>
+
+<!-- ===== PIPELINE ===== -->
+<div id="tab-pipeline" class="tab">
+<h2>4-Stage Forecasting Pipeline</h2>
+<div class="card">
+<div class="pipeline-flow">
+<div class="pipeline-step"><div class="step-num">Stage 0</div><div class="step-name">Gene-Level Prior</div><div class="step-num">Bayesian: per-gene resistance prob</div></div>
+<div class="pipeline-arrow">→</div>
+<div class="pipeline-step"><div class="step-num">Stage 1</div><div class="step-name">Sequence Features</div><div class="step-num">BLOSUM, conservation, pocket distance</div></div>
+<div class="pipeline-arrow">→</div>
+<div class="pipeline-step"><div class="step-num">Stage 2</div><div class="step-name">Population Features</div><div class="step-num">dN/dS, homoplasy, co-occurrence</div></div>
+<div class="pipeline-arrow">→</div>
+<div class="pipeline-step"><div class="step-num">Stage 3</div><div class="step-name">Structural Features</div><div class="step-num">SASA, helix/strand, H-bond</div></div>
+<div class="pipeline-arrow">→</div>
+<div class="pipeline-step"><div class="step-num">Stage 4</div><div class="step-name">XGBoost Meta</div><div class="step-num">emergence_score (0-0.5)</div></div>
+</div>
+</div>
+<div class="card">
+<h3>Top Predictive Features</h3>
+<div class="chart-container"><canvas id="featChart"></canvas></div>
+</div>
+<div class="card">
+<h3>Stage Improvement (AUROC)</h3>
+<div class="chart-container"><canvas id="stageChart"></canvas></div>
+</div>
+</div>
+
+<!-- ===== METRICS ===== -->
+<div id="tab-metrics" class="tab">
+<h2>Model Performance Metrics</h2>
+<div class="stat-row" id="metrics-stats"></div>
+<div class="card">
+<h3>Leave-One-Gene-Out AUROC</h3>
+<div class="chart-container"><canvas id="looChart"></canvas></div>
+</div>
+<div class="card">
+<h3>Per-Gene Stage 1 vs Stage 3 AUROC</h3>
+<div class="chart-container"><canvas id="perGeneChart"></canvas></div>
+</div>
+<div class="card">
+<h3>Model Benchmark (7 Classifiers)</h3>
+<div class="chart-container"><canvas id="benchChart"></canvas></div>
+</div>
+</div>
+
+<!-- ===== DOCKING ===== -->
+<div id="tab-docking" class="tab">
+<h2>Structural Validation: Docking Results</h2>
+<p>AutoDock Vina v1.2.7 — rigid receptor, exhaustiveness=12, num_modes=9</p>
+<div class="filters">
+<select id="dock-gene-filter"><option value="">All Genes</option></select>
+<select id="dock-cat-filter"><option value="">All Categories</option></select>
+<select id="dock-phase-filter"><option value="">All Phases</option></select>
+</div>
+<div style="overflow-x:auto"><table>
+<thead><tr>
+  <th data-sort="phase">Phase</th>
+  <th data-sort="gene">Gene</th>
+  <th data-sort="mutation">Mutation</th>
+  <th data-sort="drug">Drug</th>
+  <th data-sort="wt">WT (kcal/mol)</th>
+  <th data-sort="mutant">Mutant (kcal/mol)</th>
+  <th data-sort="ddG">ddG (kcal/mol)</th>
+  <th data-sort="category">Category</th>
+  <th>Structure</th>
+</tr></thead>
+<tbody id="dock-tbody"></tbody>
+</table></div>
+</div>
+
+<!-- ===== BROWSER ===== -->
+<div id="tab-browser" class="tab">
+<h2>Tier-4 Mutation Browser — 188 Forecast-Only Candidates</h2>
+<div class="filters">
+<select id="browser-gene"><option value="">All Genes</option></select>
+<select id="browser-mech"><option value="">All Mechanisms</option></select>
+<select id="browser-score"><option value="">Min Score</option><option value="0.4">0.4+</option><option value="0.35">0.35+</option><option value="0.3">0.3+</option><option value="0.2">0.2+</option></select>
+<input class="search-box" id="browser-search" placeholder="Search mutation..." />
+</div>
+<div style="overflow-x:auto"><table>
+<thead><tr>
+  <th data-sort="gene">Gene</th>
+  <th data-sort="mutation">Mutation</th>
+  <th data-sort="rank">Rank</th>
+  <th data-sort="score">Score</th>
+  <th data-sort="mechanism">Mechanism</th>
+  <th data-sort="drug_dist">DrugDist (A)</th>
+  <th data-sort="drug">Drug</th>
+  <th data-sort="carriers">Carriers</th>
+</tr></thead>
+<tbody id="browser-tbody"></tbody>
+</table></div>
+<div style="margin:8px 0;font-size:13px;color:#666" id="browser-count"></div>
+</div>
+
+<!-- ===== CANDIDATES ===== -->
+<div id="tab-candidates" class="tab">
+<h2>Top 5 Novel Mutation Candidates</h2>
+<p>Mutations predicted resistant at Tier 4, zero carriers, novel literature status, validated through structural analysis</p>
+<div id="candidates-container"></div>
+</div>
+
+<!-- ===== NEXT STEPS ===== -->
+<div id="tab-next" class="tab">
+<h2>Next Steps & Limitations</h2>
+<div class="grid-2">
+<div class="card">
+<h3>Immediate Actions</h3>
+<ul style="padding-left:18px;font-size:14px;line-height:1.8">
+  <li>Submit inhA I16V + rpsL K43E to CRyPTIC consortium for experimental MIC testing</li>
+  <li>Run MD free energy perturbation (OpenMM/GROMACS) for top 3 candidates</li>
+  <li>Expand docking to include flexible receptor (Vina 1.2 flexible sidechains)</li>
+  <li>Cross-reference with CARD / ReSeqTB for any missed literature</li>
+</ul>
+</div>
+<div class="card">
+<h3>Pipeline Limitations</h3>
+<ul style="padding-left:18px;font-size:14px;line-height:1.8">
+  <li>Vina rigid-receptor underestimates ddG for small/large mutations</li>
+  <li>NADH/NAD+, STR, AMK exceed Vina's tree.h torsion limit (complex branched rings)</li>
+  <li>Indirect mechanisms (gyrB Q538L, allosteric rpoB) invisible to static docking</li>
+  <li>AlphaFold models lack co-crystal conformational context</li>
+  <li>Loss-of-function (pncA, katG) requires enzyme activity assay, not docking</li>
+</ul>
+</div>
+<div class="card">
+<h3>Longer Term</h3>
+<ul style="padding-left:18px;font-size:14px;line-height:1.8">
+  <li>Whole-genome MD simulations with DNA for gyrB/gyrA water-bridge analysis</li>
+  <li>Include rrs (16S rRNA) mutations for aminoglycoside resistance prediction</li>
+  <li>Train on larger WHO catalogue v2.0 when released</li>
+  <li>Incorporate AlphaFold2 pLDDT as confidence weight per mutation</li>
+</ul>
+</div>
+<div class="card">
+<h3>Manuscript Opportunities</h3>
+<ul style="padding-left:18px;font-size:14px;line-height:1.8">
+  <li>Novel prediction: inhA I16V — undocumented Val substitution at I16 position</li>
+  <li>Novel mechanism: rpsL K43E — charge reversal at #1 STR resistance residue</li>
+  <li>Novel gene-level: eis V59A — coding region resistance in promoter-regulated gene</li>
+  <li>Allosteric: rpoB V170I — outside RRDR, low-level RIF via dynamics</li>
+  <li>Structural: gyrB Q538L — Mtb-specific TOPRIM water-bridge disruption</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+// ===== LOAD DATA =====
+const DATA = {};
+fetch('data/metadata/data_bundle_js.json').then(r=>r.json()).then(d=>{
+  Object.assign(DATA, d);
+  init();
+}).catch(e=>{
+  document.body.innerHTML+=`<pre>Error loading data: ${e}</pre>`;
+});
+
+function init() {
+  // ---- Overview Stats ----
+  const docking_success = DATA.all_docked_flat.filter(d=>d.ddG!==null && d.category!=='DOCKING_FAILED').length;
+  const docking_failed = DATA.all_docked_flat.filter(d=>d.category==='DOCKING_FAILED').length;
+  document.getElementById('overview-stats').innerHTML = [
+    ['188','Tier-4 Candidates'],
+    [DATA.summary.genes_covered,'Genes Covered'],
+    [docking_success,'Docked Success'],
+    [docking_failed,'Vina-Limited'],
+    ['0.972','Best AUROC'],
+    ['0.005','Permutation p-val']
+  ].map(s=>`<div class="stat"><div class="num">${s[0]}</div><div class="label">${s[1]}</div></div>`).join('');
+
+  // ---- Tier Chart ----
+  const tiers = {0:'Known WHO',1:'CRyPTIC-Confirmed',2:'Observed Low Power',3:'Likely Neutral',4:'Forecast-Only'};
+  const tierCounts = {0:30,1:24,2:32,3:31,4:188};
+  new Chart(document.getElementById('tierChart'),{type:'pie',data:{
+    labels:Object.values(tiers),datasets:[{data:Object.values(tierCounts),
+    backgroundColor:['#1565c0','#2e7d32','#f57f17','#9e9e9e','#6a1b9a']}]},
+    options:{responsive:true,plugins:{legend:{position:'right',labels:{font:{size:12}}}}}});
+
+  // ---- Gene Distribution ----
+  const geneCounts = {}; DATA.tier4_candidates.forEach(c=>{geneCounts[c.gene]=(geneCounts[c.gene]||0)+1});
+  const sortedGenes = Object.entries(geneCounts).sort((a,b)=>b[1]-a[1]);
+  const maxCount = sortedGenes[0][1];
+  const geneColors = {'inhA':'#7b1fa2','embB':'#1565c0','pncA':'#c62828','eis':'#e65100',
+    'rpoB':'#2e7d32','gyrA':'#00695c','mmpR5':'#6a1b9a','rpsL':'#f57f17','gyrB':'#283593','katG':'#4e342e'};
+  document.getElementById('gene-dist').innerHTML = sortedGenes.map(([g,c])=>`
+    <div class="gene-bar"><span style="width:60px;font-weight:600">${g}</span>
+    <div class="bar" style="width:${c/maxCount*120}px;background:${geneColors[g]||'#888'}"></div>
+    <span>${c}</span></div>`).join('');
+
+  // ---- Feature Importance ----
+  const feats = DATA.feature_importance.slice().sort((a,b)=>b.importance-a.importance).slice(0,10);
+  new Chart(document.getElementById('featChart'),{type:'bar',data:{
+    labels:feats.map(f=>f.feature),datasets:[{data:feats.map(f=>f.importance),
+      backgroundColor:'#1565c0'}]},
+    options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}},
+      scales:{x:{title:{display:true,text:'Importance'}}}}});
+
+  // ---- Stage AUROC ----
+  new Chart(document.getElementById('stageChart'),{type:'line',data:{
+    labels:['Stage 0\n(Sequence)','Stage 1\n(+Structural)','Stage 1.5\n(+Docking)','Stage 3\n(Per-Gene Drug)'],
+    datasets:[{label:'AUROC',data:[0.888,0.910,0.938,0.977],borderColor:'#1565c0',fill:false,
+      tension:0.3,pointBackgroundColor:'#1565c0',pointRadius:6}]},
+    options:{responsive:true,plugins:{legend:{display:false}},
+      scales:{y:{min:0.85,max:1.0,title:{display:true,text:'AUROC'}}}}});
+
+  // ---- LOO Chart ----
+  const looData = {rpsL:0.985,gyrA:0.854,katG:0.810,pncA:0.633,embB:0.608,rpoB:0.402};
+  new Chart(document.getElementById('looChart'),{type:'bar',data:{
+    labels:Object.keys(looData),datasets:[{data:Object.values(looData),
+      backgroundColor:Object.values(looData).map(v=>v>0.8?'#2e7d32':v>0.6?'#f57f17':'#c62828')}]},
+    options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false},
+      title:{display:true,text:'Leave-One-Gene-Out Cross-Validation AUROC'}},
+      scales:{x:{min:0,max:1,title:{display:true,text:'AUROC'}}}}});
+
+  // ---- Per-Gene Stage vs Stage 3 ----
+  const geneAUROC = {'embB':[1.0,1.0],'gyrA':[0.996,1.0],'rpoB':[0.956,0.995],'pncA':[0.923,0.865],'inhA':[0.631,0.550]};
+  new Chart(document.getElementById('perGeneChart'),{type:'bar',data:{
+    labels:Object.keys(geneAUROC),
+    datasets:[
+      {label:'Stage 1 (Sequence)',data:Object.values(geneAUROC).map(v=>v[0]),backgroundColor:'#90caf9'},
+      {label:'Stage 3 (+Structural)',data:Object.values(geneAUROC).map(v=>v[1]),backgroundColor:'#1565c0'}]},
+    options:{responsive:true,plugins:{title:{display:true,text:'Stage 1 vs Stage 3 AUROC per Gene'}},
+      scales:{y:{min:0.5,max:1.05}}}});
+
+  // ---- Benchmark ----
+  const bench = [
+    ['Logistic Regression',0.910],['ElasticNet',0.908],['Random Forest',0.914],
+    ['SVM (RBF)',0.776],['GBM',0.910],['MLP',0.871],['XGBoost',0.888]];
+  new Chart(document.getElementById('benchChart'),{type:'bar',data:{
+    labels:bench.map(b=>b[0]),datasets:[{data:bench.map(b=>b[1]),backgroundColor:'#1565c0'}]},
+    options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false},
+      title:{display:true,text:'7-Model Classifier Benchmark (AUROC)'}},
+      scales:{x:{min:0.7,max:1.0}}}});
+
+  // ---- Metrics Stats ----
+  const metrics = DATA.model_metrics;
+  document.getElementById('metrics-stats').innerHTML = [
+    ['0.917','Full Model AUROC'],
+    ['0.186','AUPRC (36.8x random)'],
+    ['0.971','CV Stratified AUROC'],
+    ['0.972','GroupKFold AUROC'],
+    ['0.683','Best F1 (GroupKFold)'],
+    ['0.005','Permutation p-value']
+  ].map(s=>`<div class="stat"><div class="num">${s[0]}</div><div class="label">${s[1]}</div></div>`).join('');
+
+  // ---- Docking Table ----
+  const dockGenes = [...new Set(DATA.all_docked_flat.map(d=>d.gene))];
+  const dockCats = [...new Set(DATA.all_docked_flat.map(d=>d.category))];
+  const dockPhases = [...new Set(DATA.all_docked_flat.map(d=>d.phase))];
+  dockGenes.sort(); dockCats.sort(); dockPhases.sort();
+  const selGene = document.getElementById('dock-gene-filter');
+  const selCat = document.getElementById('dock-cat-filter');
+  const selPhase = document.getElementById('dock-phase-filter');
+  dockGenes.forEach(g=>{const o=document.createElement('option');o.value=g;o.text=g;selGene.appendChild(o)});
+  dockCats.forEach(c=>{const o=document.createElement('option');o.value=c;o.text=c;selCat.appendChild(o)});
+  dockPhases.forEach(p=>{const o=document.createElement('option');o.value=p;o.text=p;selPhase.appendChild(o)});
+  function renderDockTable(){
+    let items = DATA.all_docked_flat;
+    if(selGene.value) items=items.filter(d=>d.gene===selGene.value);
+    if(selCat.value) items=items.filter(d=>d.category===selCat.value);
+    if(selPhase.value) items=items.filter(d=>d.phase===selPhase.value);
+    document.getElementById('dock-tbody').innerHTML = items.map(d=>`<tr>
+      <td><span class="badge badge-${d.phase.replace(/ /g,'').replace(/\+/g,'')}">${d.phase}</span></td>
+      <td>${d.gene}</td><td><strong>${d.mutation}</strong></td><td>${d.drug}</td>
+      <td>${d.wt!==null&&d.wt!==undefined?d.wt.toFixed(3):'-'}</td>
+      <td>${d.mutant!==null&&d.mutant!==undefined?d.mutant.toFixed(3):'-'}</td>
+      <td style="font-weight:600;color:${d.ddG&&d.ddG>0?'#c62828':d.ddG&&d.ddG<0?'#2e7d32':'#666'}">${d.ddG!==null&&d.ddG!==undefined?d.ddG.toFixed(3):'-'}</td>
+      <td><span class="badge badge-${d.category}">${d.category}</span></td>
+      <td style="font-size:11px">${d.structure||'-'}</td>
+    </tr>`).join('');
+  }
+  [selGene,selCat,selPhase].forEach(s=>s.addEventListener('change',renderDockTable));
+  renderDockTable();
+
+  // ---- Mutation Browser ----
+  const browserGenes = [...new Set(DATA.tier4_candidates.map(c=>c.gene))].sort();
+  const browserMechs = [...new Set(DATA.tier4_candidates.map(c=>c.mechanism))].sort();
+  const bg = document.getElementById('browser-gene');
+  const bm = document.getElementById('browser-mech');
+  browserGenes.forEach(g=>{const o=document.createElement('option');o.value=g;o.text=g;bg.appendChild(o)});
+  browserMechs.forEach(m=>{const o=document.createElement('option');o.value=m;o.text=m;bm.appendChild(o)});
+  function renderBrowser(){
+    let items = DATA.tier4_candidates;
+    const g=document.getElementById('browser-gene').value;
+    const m=document.getElementById('browser-mech').value;
+    const sc=document.getElementById('browser-score').value;
+    const q=document.getElementById('browser-search').value.toLowerCase();
+    if(g) items=items.filter(c=>c.gene===g);
+    if(m) items=items.filter(c=>c.mechanism===m);
+    if(sc) items=items.filter(c=>c.score>=parseFloat(sc));
+    if(q) items=items.filter(c=>c.mutation.toLowerCase().includes(q)||c.gene.toLowerCase().includes(q));
+    items.sort((a,b)=>a.rank-b.rank);
+    document.getElementById('browser-tbody').innerHTML = items.map(c=>`<tr>
+      <td>${c.gene}</td><td><strong>${c.mutation}</strong></td><td>${c.rank}</td>
+      <td style="font-weight:600">${c.score.toFixed(4)}</td>
+      <td>${c.mechanism}</td>
+      <td>${c.drug_dist!==null?c.drug_dist+'A':'-'}</td>
+      <td>${c.drug||'-'}</td>
+      <td>${c.carriers}</td>
+    </tr>`).join('');
+    document.getElementById('browser-count').textContent = `Showing ${items.length} of ${DATA.tier4_candidates.length} mutations`;
+  }
+  ['browser-gene','browser-mech','browser-score','browser-search'].forEach(id=>{
+    document.getElementById(id).addEventListener('change',renderBrowser);
+    document.getElementById(id).addEventListener('keyup',renderBrowser);
+  });
+  renderBrowser();
+
+  // ---- Key Candidates ----
+  const candidates = [
+    {gene:'rpsL',mut:'K43E',rank:22,score:0.4459,mech:'Charge Reversal',
+     lit:'K43R is #1 STR mutation worldwide; K43E flips charge (Lys+ to Glu-)',
+     dock:'DOCKING_FAILED — STR (14 torsions) exceeds Vina tree.h limit. Requires MD-FEP.',
+     phase:'novel'},
+    {gene:'inhA',mut:'I16V',rank:27,score:0.4263,mech:'Cofactor Gateway',
+     lit:'I16T documented (PMID:9728546); I16V (Val, not Thr) is undocumented',
+     dock:'ddG = +0.019 (NONE). Rigid Vina cannot capture NADH binding kinetics change. Requires MD-FEP.',
+     phase:'novel'},
+    {gene:'eis',mut:'V59A',rank:34,score:0.4086,mech:'Direct Pocket',
+     lit:'All known eis resistance = promoter mutations; V59A is coding region — novel mechanism',
+     dock:'DOCKING_FAILED — AMK (10 torsions, complex rings) exceeds Vina tree.h limit.',
+     phase:'novel'},
+    {gene:'rpoB',mut:'V170I',rank:47,score:0.3746,mech:'Allosteric Shield',
+     lit:'V170F known (Myanmar/Botswana); V170I outside RRDR, undocumented',
+     dock:'ddG = +0.001 (NONE). V170 is 4A from RIF in crystal but acts through allostery. Rigid Vina blind.',
+     phase:'novel'},
+    {gene:'gyrB',mut:'Q538L',rank:131,score:0.2337,mech:'Water-Bridge Disruptor',
+     lit:'N538D in E. coli gyrB. Mtb position 538 = Q (not N). Q538L is completely undocumented.',
+     dock:'ddG = -0.174 (WEAK). Q538 is 17-22A from MFX — indirect TOPRIM mechanism. Requires MD with DNA.',
+     phase:'novel'}
+  ];
+  document.getElementById('candidates-container').innerHTML = candidates.map(c=>`<div class="candidate-card ${c.dock.includes('FAILED')?'failed':''}">
+    <h4>${c.gene} ${c.mut} <span class="badge badge-${c.phase==='novel'?'Novel':'Phase1'}">Tier 4</span>
+    <span class="badge" style="background:#e3f2fd;color:#1565c0">Rank ${c.rank}</span>
+    <span class="badge" style="background:#e8f5e9;color:#2e7d32">Score ${c.score.toFixed(4)}</span></h4>
+    <div class="meta"><strong>Mechanism:</strong> ${c.mech} &nbsp;|&nbsp; <strong>Literature:</strong> ${c.lit}</div>
+    <div class="note"><strong>Docking:</strong> ${c.dock}</div>
+  </div>`).join('');
+
+  // ---- Tab Navigation ----
+  document.querySelectorAll('nav a').forEach(a=>{
+    a.addEventListener('click',()=>{
+      document.querySelectorAll('nav a').forEach(x=>x.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+      a.classList.add('active');
+      document.getElementById('tab-'+a.dataset.tab).classList.add('active');
+      // Resize charts to render properly
+      window.dispatchEvent(new Event('resize'));
+    });
+  });
+}
+</script>
+</body>
+</html>

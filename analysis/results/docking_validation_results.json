@@ -1,0 +1,227 @@
+{
+  "rpoB": {
+    "pdb": "5UHB (chain C)",
+    "drug": "rifampicin",
+    "wt_binding_kcal_mol": -9.934,
+    "mutations": {
+      "H445L": {
+        "h37rv_pos": 445,
+        "pdb_residue": 451,
+        "mut_binding": -9.732,
+        "delta_delta_G": 0.20199999999999996,
+        "wt_aa": "H",
+        "mut_aa": "L"
+      },
+      "H445R": {
+        "h37rv_pos": 445,
+        "pdb_residue": 451,
+        "mut_binding": -9.693,
+        "delta_delta_G": 0.24099999999999966,
+        "wt_aa": "H",
+        "mut_aa": "R"
+      },
+      "H445Q": {
+        "h37rv_pos": 445,
+        "pdb_residue": 451,
+        "mut_binding": -9.726,
+        "delta_delta_G": 0.2079999999999984,
+        "wt_aa": "H",
+        "mut_aa": "Q"
+      },
+      "H445P": {
+        "h37rv_pos": 445,
+        "pdb_residue": 451,
+        "mut_binding": -9.721,
+        "delta_delta_G": 0.2129999999999992,
+        "wt_aa": "H",
+        "mut_aa": "P"
+      },
+      "D435G": {
+        "h37rv_pos": 435,
+        "pdb_residue": 441,
+        "mut_binding": -9.831,
+        "delta_delta_G": 0.10299999999999976,
+        "wt_aa": "D",
+        "mut_aa": "G"
+      },
+      "I491L": {
+        "h37rv_pos": 491,
+        "pdb_residue": 497,
+        "mut_binding": -9.758,
+        "delta_delta_G": 0.17600000000000016,
+        "wt_aa": "I",
+        "mut_aa": "L"
+      },
+      "L430R": {
+        "h37rv_pos": 430,
+        "pdb_residue": 458,
+        "mut_binding": -9.531,
+        "delta_delta_G": 0.4029999999999987,
+        "wt_aa": "L",
+        "mut_aa": "R"
+      },
+      "V170A": {
+        "h37rv_pos": 170,
+        "pdb_residue": 176,
+        "mut_binding": -9.906,
+        "delta_delta_G": 0.027999999999998693,
+        "wt_aa": "V",
+        "mut_aa": "A"
+      },
+      "Q432L": {
+        "h37rv_pos": 432,
+        "pdb_residue": 438,
+        "mut_binding": -9.746,
+        "delta_delta_G": 0.18799999999999883,
+        "wt_aa": "Q",
+        "mut_aa": "L"
+      },
+      "Q432P": {
+        "h37rv_pos": 432,
+        "pdb_residue": 438,
+        "mut_binding": -9.765,
+        "delta_delta_G": 0.1689999999999987,
+        "wt_aa": "Q",
+        "mut_aa": "P"
+      },
+      "Q432K": {
+        "h37rv_pos": 432,
+        "pdb_residue": 438,
+        "mut_binding": -9.911,
+        "delta_delta_G": 0.014,
+        "wt_aa": "Q",
+        "mut_aa": "K"
+      }
+    }
+  },
+  "gyrA": {
+    "pdb": "5BS8 (chain A)",
+    "drug": "moxifloxacin",
+    "wt_binding_kcal_mol": -4.375,
+    "mutations": {
+      "G88C": {
+        "h37rv_pos": 88,
+        "pdb_residue": 88,
+        "mut_binding": -4.168,
+        "delta_delta_G": 0.20699999999999985,
+        "wt_aa": "G",
+        "mut_aa": "C"
+      },
+      "D94A": {
+        "h37rv_pos": 94,
+        "pdb_residue": 94,
+        "mut_binding": -4.319,
+        "delta_delta_G": 0.05600000000000005,
+        "wt_aa": "D",
+        "mut_aa": "A"
+      },
+      "D94H": {
+        "h37rv_pos": 94,
+        "pdb_residue": 94,
+        "mut_binding": -4.344,
+        "delta_delta_G": 0.030999999999999694,
+        "wt_aa": "D",
+        "mut_aa": "H"
+      },
+      "A90T": {
+        "h37rv_pos": 90,
+        "pdb_residue": 90,
+        "mut_binding": -4.363,
+        "delta_delta_G": 0.011999999999999567,
+        "wt_aa": "A",
+        "mut_aa": "T"
+      }
+    }
+  },
+  "inhA": {
+    "method": "AlphaFold + triclosan (proxy for NADH pocket)",
+    "wt_binding_kcal_mol": "per mutation",
+    "mutations": {
+      "I21T": {
+        "mutation": "I21T",
+        "gene": "inhA",
+        "drug": "triclosan",
+        "wt_aa": "I",
+        "mut_aa": "T",
+        "h37rv_pos": 21,
+        "wt_binding": -7.066,
+        "mut_binding": -7.572,
+        "delta_delta_G": -0.5060000000000002
+      },
+      "S94A": {
+        "mutation": "S94A",
+        "gene": "inhA",
+        "drug": "triclosan",
+        "wt_aa": "S",
+        "mut_aa": "A",
+        "h37rv_pos": 94,
+        "wt_binding": -7.678,
+        "mut_binding": -7.171,
+        "delta_delta_G": 0.5069999999999997
+      },
+      "I194T": {
+        "mutation": "I194T",
+        "gene": "inhA",
+        "drug": "triclosan",
+        "wt_aa": "I",
+        "mut_aa": "T",
+        "h37rv_pos": 194,
+        "wt_binding": -7.443,
+        "mut_binding": -7.612,
+        "delta_delta_G": -0.16900000000000048
+      }
+    }
+  },
+  "embB": {
+    "pdb": "AlphaFold",
+    "drug": "ethambutol",
+    "mutations": {
+      "Q497K": {
+        "mutation": "Q497K",
+        "gene": "embB",
+        "drug": "ethambutol",
+        "wt_aa": "Q",
+        "mut_aa": "K",
+        "h37rv_pos": 497,
+        "pdb_residue": 497,
+        "wt_binding": -4.741,
+        "mut_binding": -4.724,
+        "delta_delta_G": 0.01699999999999946,
+        "all_modes": [
+          -4.724,
+          -4.721,
+          -4.627,
+          -4.498,
+          -4.435,
+          -4.304,
+          -4.118,
+          -4.047,
+          -4.031
+        ]
+      },
+      "G406S": {
+        "mutation": "G406S",
+        "gene": "embB",
+        "drug": "ethambutol",
+        "wt_aa": "G",
+        "mut_aa": "S",
+        "h37rv_pos": 406,
+        "pdb_residue": 406,
+        "wt_binding": -4.209,
+        "mut_binding": -4.181,
+        "delta_delta_G": 0.02799999999999958,
+        "all_modes": [
+          -4.181,
+          -4.092,
+          -3.405,
+          -3.396,
+          -3.224,
+          -3.19,
+          -3.1,
+          -3.098,
+          -2.983
+        ]
+      }
+    }
+  }
+}
