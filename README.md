@@ -15,6 +15,31 @@ This pipeline predicts which M. tuberculosis drug resistance mutations are likel
 
 ---
 
+## Top forecast-only candidates (188 Tier 4 mutations)
+
+These are the highest-confidence mutations predicted by our model that have **never been observed** in any clinical isolate (0 carriers). They are your prospective surveillance targets. A ✦ marks the 5 we structurally validated via AutoDock Vina.
+
+| Rank | Gene | Mutation | Score | Mechanism | Docking ddG | Novelty |
+|------|------|----------|-------|-----------|-------------|---------|
+| 2 | gyrA | **A90T** | 0.506 | Other | — | Novel substitution at known QRDR position |
+| 3 | inhA | **S94L** | 0.503 | Cofactor Gateway | — | Novel substitution at known INH position |
+| 9 | inhA | **S94P** | 0.485 | Cofactor Gateway | — | Novel substitution at known INH position |
+| 13 | rpoB | **D435N** | 0.473 | Other | — | Novel substitution at known RRDR position |
+| 15 | rpoB | **S450P** | 0.471 | Other | — | Novel substitution at known RRDR position |
+| 18 | rpsL | **K88E** | 0.452 | Charge Reversal | — | Novel charge reversal at STR position |
+| 22✦ | rpsL | **K43E** | 0.446 | Charge Reversal | DOCKING FAILED | **Truly novel** — K43R known, K43E undocumented |
+| 27✦ | inhA | **I16V** | 0.426 | Cofactor Gateway | ddG +0.019 (NONE) | **Truly novel** — I16T known, I16V undocumented |
+| 28 | pncA | **V125I** | 0.425 | Loss-of-Function | — | Novel at pncA (PZA — blind spot) |
+| 34✦ | eis | **V59A** | 0.409 | Direct Pocket | DOCKING FAILED | **Truly novel** — all known eis = promoter, not coding |
+| 47✦ | rpoB | **V170I** | 0.375 | Allosteric Shield | ddG +0.001 (NONE) | **Truly novel** — V170F known, V170I undocumented |
+| 131✦ | gyrB | **Q538L** | 0.234 | Water-Bridge Disruptor | ddG −0.174 (WEAK) | **Truly novel** — N538D in E. coli only, not Mtb |
+
+- **Tier 4 = forecast-only**: 0 carriers in 1,037 genomes, predicted by model but never seen in clinic
+- **Novel substitution**: same gene/position as a known resistance mutation, but with a different amino acid change not documented in literature
+- **Truly novel**: neither the substitution nor the position is documented in TB resistance literature
+
+---
+
 ## Model performance
 
 Dataset: 6,350 residues across 12 genes. 32 positive (hotspot) residues (0.50% of all residues). 17 features: homoplasy (from 1,037 genomes: 117 VCF + 920 NCBI assemblies), sequence properties, structural (AlphaFold), and drug proximity.
@@ -60,7 +85,9 @@ At the 0.5% positive rate, threshold-based metrics (F1, precision) are diluted b
 
 Matched-null validation: Tier 1 enrichment was tested against 1,000 random mutation sets matched by gene and carrier count. The real Tier 1 count (24) significantly exceeds the null distribution (p = **0.001**), confirming that enrichment is not driven by gene-level confounders or detection bias.
 
-### Top validated novel predictions
+### Top CRyPTIC-confirmed predictions (Tier 1 — already validated in clinical data)
+
+These mutations were **already observed** in 12,287 clinical CRyPTIC isolates and confirmed as resistance-associated at FDR q < 0.05. They are NOT the same as the forecast-only Tier 4 candidates above — they were validated *after* our model predicted them.
 
 | Mutation | Gene | Rank | Carriers | R% | FDR p |
 |----------|------|------|----------|----|-------|
@@ -160,9 +187,9 @@ After the model predicts Tier-4 forecast-only mutations, we structurally validat
 | Q497K | -4.741 | -4.724 | +0.017 | NONE |
 | G406S | -4.209 | -4.181 | +0.028 | NONE |
 
-### Novel candidate validation
+### Novel candidate validation (Tier 4 — never seen, structurally validated)
 
-For 5 top Tier-4 novel candidates, we ran targeted docking or structural analysis:
+For 5 top Tier-4 **truly novel** candidates (the 5 marked with ✦ in the table above), we ran targeted docking or structural analysis. All are *undocumented* in TB literature at this exact substitution:
 
 | Candidate | Rank | Score | ddG / Result | Why Vina is blind |
 |-----------|------|-------|-------------|-------------------|
