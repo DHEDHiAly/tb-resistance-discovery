@@ -1,0 +1,522 @@
+MODEL 1
+REMARK VINA RESULT:    -4.344      0.000      0.000
+REMARK INTER + INTRA:          -5.639
+REMARK INTER:                  -5.359
+REMARK INTRA:                  -0.279
+REMARK UNBOUND:                -0.279
+REMARK  Name = data/pdb/MFX_raw.pdb
+REMARK  5 active torsions:
+REMARK  status: ('A' for Active; 'I' for Inactive)
+REMARK    1  A    between atoms: O01_2  and  C13_21
+REMARK    2  A    between atoms: O01_2  and  C_29
+REMARK    3  A    between atoms: N01_6  and  C11_19
+REMARK    4  A    between atoms: N_8  and  C06_14
+REMARK    5  A    between atoms: C18_26  and  C20_28
+REMARK                            x       y       z     vdW  Elec       q    Type
+REMARK                         _______ _______ _______ _____ _____    ______ ____
+ROOT
+ATOM      1  F   MFX G 101      34.699  13.877  28.831  0.00  0.00    +0.000 F 
+ATOM      2  O02 MFX G 101      30.524  12.043  26.739  0.00  0.00    +0.000 OA
+ATOM      3  N   MFX G 101      33.541   9.614  25.240  0.00  0.00    +0.000 N 
+ATOM      4  C11 MFX G 101      35.561  12.054  27.483  0.00  0.00    +0.000 A 
+ATOM      5  C12 MFX G 101      33.896  10.746  26.200  0.00  0.00    +0.000 A 
+ATOM      6  C13 MFX G 101      35.232  11.001  26.601  0.00  0.00    +0.000 A 
+ATOM      7  C14 MFX G 101      32.861  11.566  26.705  0.00  0.00    +0.000 A 
+ATOM      8  C15 MFX G 101      34.497  12.856  27.985  0.00  0.00    +0.000 A 
+ATOM      9  C16 MFX G 101      32.160   9.398  24.858  0.00  0.00    +0.000 A 
+ATOM     10  C17 MFX G 101      33.171  12.610  27.590  0.00  0.00    +0.000 A 
+ATOM     11  C18 MFX G 101      31.085  10.258  25.387  0.00  0.00    +0.000 A 
+ATOM     12  C19 MFX G 101      31.415  11.335  26.303  0.00  0.00    +0.000 A 
+ENDROOT
+BRANCH   4  13
+ATOM     13  N01 MFX G 101      36.988  12.212  27.853  0.00  0.00    +0.000 N 
+ATOM     14  N02 MFX G 101      39.605  11.371  28.679  0.00  0.00    +0.000 NA
+ATOM     15  C01 MFX G 101      38.918  13.698  28.478  0.00  0.00    +0.000 C 
+ATOM     16  C02 MFX G 101      38.875  12.569  29.255  0.00  0.00    +0.000 C 
+ATOM     17  C03 MFX G 101      37.649  13.621  27.535  0.00  0.00    +0.000 C 
+ATOM     18  C04 MFX G 101      37.339  12.000  29.145  0.00  0.00    +0.000 C 
+ATOM     19  C05 MFX G 101      40.263  13.985  27.820  0.00  0.00    +0.000 C 
+ATOM     20  C07 MFX G 101      40.941  12.809  27.306  0.00  0.00    +0.000 C 
+ATOM     21  C10 MFX G 101      40.929  11.706  28.209  0.00  0.00    +0.000 C 
+ATOM     22 HN02 MFX G 101      39.119  11.021  27.992  0.00  0.00    +0.000 HD
+ENDBRANCH   4  13
+BRANCH  11  25
+ATOM     23  O03 MFX G 101      29.041   9.005  25.481  0.00  0.00    +0.000 OA
+ATOM     24  O   MFX G 101      29.073  10.724  24.121  0.00  0.00    +0.000 OA
+ATOM     25  C20 MFX G 101      29.651   9.982  24.963  0.00  0.00    +0.000 C 
+ENDBRANCH  11  25
+BRANCH   3  26
+ATOM     26  C06 MFX G 101      34.511   8.730  24.642  0.00  0.00    +0.000 C 
+ATOM     27  C08 MFX G 101      34.440   7.467  23.793  0.00  0.00    +0.000 C 
+ATOM     28  C09 MFX G 101      34.820   7.366  25.252  0.00  0.00    +0.000 C 
+ENDBRANCH   3  26
+BRANCH   6  29
+ATOM     29  O01 MFX G 101      36.294  10.192  26.127  0.00  0.00    +0.000 OA
+ATOM     30  C   MFX G 101      37.020  10.806  25.058  0.00  0.00    +0.000 C 
+ENDBRANCH   6  29
+TORSDOF 4
+ENDMDL
+MODEL 2
+REMARK VINA RESULT:    -3.941      2.901      7.311
+REMARK INTER + INTRA:          -5.141
+REMARK INTER:                  -4.845
+REMARK INTRA:                  -0.297
+REMARK UNBOUND:                -0.279
+REMARK  Name = data/pdb/MFX_raw.pdb
+REMARK  5 active torsions:
+REMARK  status: ('A' for Active; 'I' for Inactive)
+REMARK    1  A    between atoms: O01_2  and  C13_21
+REMARK    2  A    between atoms: O01_2  and  C_29
+REMARK    3  A    between atoms: N01_6  and  C11_19
+REMARK    4  A    between atoms: N_8  and  C06_14
+REMARK    5  A    between atoms: C18_26  and  C20_28
+REMARK                            x       y       z     vdW  Elec       q    Type
+REMARK                         _______ _______ _______ _____ _____    ______ ____
+ROOT
+ATOM      1  F   MFX G 101      35.178  13.666  29.480  0.00  0.00    +0.000 F 
+ATOM      2  O02 MFX G 101      39.539  11.353  30.382  0.00  0.00    +0.000 OA
+ATOM      3  N   MFX G 101      38.208   9.630  26.845  0.00  0.00    +0.000 N 
+ATOM      4  C11 MFX G 101      35.345  12.138  27.604  0.00  0.00    +0.000 A 
+ATOM      5  C12 MFX G 101      37.364  10.708  27.519  0.00  0.00    +0.000 A 
+ATOM      6  C13 MFX G 101      36.129  11.146  26.976  0.00  0.00    +0.000 A 
+ATOM      7  C14 MFX G 101      37.827  11.289  28.722  0.00  0.00    +0.000 A 
+ATOM      8  C15 MFX G 101      35.842  12.714  28.807  0.00  0.00    +0.000 A 
+ATOM      9  C16 MFX G 101      39.460   9.215  27.444  0.00  0.00    +0.000 A 
+ATOM     10  C17 MFX G 101      37.063  12.284  29.352  0.00  0.00    +0.000 A 
+ATOM     11  C18 MFX G 101      39.937   9.823  28.701  0.00  0.00    +0.000 A 
+ATOM     12  C19 MFX G 101      39.142  10.852  29.345  0.00  0.00    +0.000 A 
+ENDROOT
+BRANCH   4  13
+ATOM     13  N01 MFX G 101      34.084  12.536  26.933  0.00  0.00    +0.000 N 
+ATOM     14  N02 MFX G 101      32.362  13.183  24.729  0.00  0.00    +0.000 NA
+ATOM     15  C01 MFX G 101      31.745  13.449  27.069  0.00  0.00    +0.000 C 
+ATOM     16  C02 MFX G 101      32.438  13.985  26.015  0.00  0.00    +0.000 C 
+ATOM     17  C03 MFX G 101      32.769  12.506  27.823  0.00  0.00    +0.000 C 
+ATOM     18  C04 MFX G 101      34.028  13.761  26.354  0.00  0.00    +0.000 C 
+ATOM     19  C05 MFX G 101      30.380  12.864  26.722  0.00  0.00    +0.000 C 
+ATOM     20  C07 MFX G 101      30.345  12.128  25.472  0.00  0.00    +0.000 C 
+ATOM     21  C10 MFX G 101      31.011  12.793  24.401  0.00  0.00    +0.000 C 
+ATOM     22 HN02 MFX G 101      32.884  12.440  24.804  0.00  0.00    +0.000 HD
+ENDBRANCH   4  13
+BRANCH  11  25
+ATOM     23  O03 MFX G 101      41.280   8.327  30.011  0.00  0.00    +0.000 OA
+ATOM     24  O   MFX G 101      42.332   9.983  29.031  0.00  0.00    +0.000 OA
+ATOM     25  C20 MFX G 101      41.264   9.359  29.282  0.00  0.00    +0.000 C 
+ENDBRANCH  11  25
+BRANCH   3  26
+ATOM     26  C06 MFX G 101      37.828   8.949  25.632  0.00  0.00    +0.000 C 
+ATOM     27  C08 MFX G 101      38.472   7.897  24.739  0.00  0.00    +0.000 C 
+ATOM     28  C09 MFX G 101      38.432   9.337  24.286  0.00  0.00    +0.000 C 
+ENDBRANCH   3  26
+BRANCH   6  29
+ATOM     29  O01 MFX G 101      35.640  10.598  25.765  0.00  0.00    +0.000 OA
+ATOM     30  C   MFX G 101      34.616   9.621  25.976  0.00  0.00    +0.000 C 
+ENDBRANCH   6  29
+TORSDOF 4
+ENDMDL
+MODEL 3
+REMARK VINA RESULT:    -3.912      1.343      1.732
+REMARK INTER + INTRA:          -5.106
+REMARK INTER:                  -4.965
+REMARK INTRA:                  -0.141
+REMARK UNBOUND:                -0.279
+REMARK  Name = data/pdb/MFX_raw.pdb
+REMARK  5 active torsions:
+REMARK  status: ('A' for Active; 'I' for Inactive)
+REMARK    1  A    between atoms: O01_2  and  C13_21
+REMARK    2  A    between atoms: O01_2  and  C_29
+REMARK    3  A    between atoms: N01_6  and  C11_19
+REMARK    4  A    between atoms: N_8  and  C06_14
+REMARK    5  A    between atoms: C18_26  and  C20_28
+REMARK                            x       y       z     vdW  Elec       q    Type
+REMARK                         _______ _______ _______ _____ _____    ______ ____
+ROOT
+ATOM      1  F   MFX G 101      36.747  13.985  29.336  0.00  0.00    +0.000 F 
+ATOM      2  O02 MFX G 101      32.016  12.793  28.162  0.00  0.00    +0.000 OA
+ATOM      3  N   MFX G 101      34.301  10.392  25.659  0.00  0.00    +0.000 N 
+ATOM      4  C11 MFX G 101      37.055  12.321  27.599  0.00  0.00    +0.000 A 
+ATOM      5  C12 MFX G 101      34.998  11.341  26.629  0.00  0.00    +0.000 A 
+ATOM      6  C13 MFX G 101      36.411  11.436  26.706  0.00  0.00    +0.000 A 
+ATOM      7  C14 MFX G 101      34.210  12.154  27.478  0.00  0.00    +0.000 A 
+ATOM      8  C15 MFX G 101      36.237  13.117  28.449  0.00  0.00    +0.000 A 
+ATOM      9  C16 MFX G 101      32.854  10.337  25.616  0.00  0.00    +0.000 A 
+ATOM     10  C17 MFX G 101      34.837  13.031  28.377  0.00  0.00    +0.000 A 
+ATOM     11  C18 MFX G 101      32.039  11.188  26.503  0.00  0.00    +0.000 A 
+ATOM     12  C19 MFX G 101      32.694  12.092  27.431  0.00  0.00    +0.000 A 
+ENDROOT
+BRANCH   4  13
+ATOM     13  N01 MFX G 101      38.538  12.316  27.611  0.00  0.00    +0.000 N 
+ATOM     14  N02 MFX G 101      41.169  11.175  27.740  0.00  0.00    +0.000 NA
+ATOM     15  C01 MFX G 101      40.712  13.566  27.790  0.00  0.00    +0.000 C 
+ATOM     16  C02 MFX G 101      40.735  12.404  28.517  0.00  0.00    +0.000 C 
+ATOM     17  C03 MFX G 101      39.252  13.669  27.187  0.00  0.00    +0.000 C 
+ATOM     18  C04 MFX G 101      39.165  11.996  28.770  0.00  0.00    +0.000 C 
+ATOM     19  C05 MFX G 101      41.882  13.758  26.831  0.00  0.00    +0.000 C 
+ATOM     20  C07 MFX G 101      42.283  12.553  26.128  0.00  0.00    +0.000 C 
+ATOM     21  C10 MFX G 101      42.369  11.405  26.970  0.00  0.00    +0.000 C 
+ATOM     22 HN02 MFX G 101      40.496  10.915  27.183  0.00  0.00    +0.000 HD
+ENDBRANCH   4  13
+BRANCH  11  25
+ATOM     23  O03 MFX G 101      29.969  10.002  26.768  0.00  0.00    +0.000 OA
+ATOM     24  O   MFX G 101      29.828  12.066  26.042  0.00  0.00    +0.000 OA
+ATOM     25  C20 MFX G 101      30.523  11.085  26.426  0.00  0.00    +0.000 C 
+ENDBRANCH  11  25
+BRANCH   3  26
+ATOM     26  C06 MFX G 101      34.997   9.535  24.730  0.00  0.00    +0.000 C 
+ATOM     27  C08 MFX G 101      34.581   8.641  23.569  0.00  0.00    +0.000 C 
+ATOM     28  C09 MFX G 101      34.977   8.018  24.887  0.00  0.00    +0.000 C 
+ENDBRANCH   3  26
+BRANCH   6  29
+ATOM     29  O01 MFX G 101      37.233  10.628  25.883  0.00  0.00    +0.000 OA
+ATOM     30  C   MFX G 101      37.761   9.492  26.576  0.00  0.00    +0.000 C 
+ENDBRANCH   6  29
+TORSDOF 4
+ENDMDL
+MODEL 4
+REMARK VINA RESULT:    -3.794      2.443      7.512
+REMARK INTER + INTRA:          -4.961
+REMARK INTER:                  -5.015
+REMARK INTRA:                   0.055
+REMARK UNBOUND:                -0.279
+REMARK  Name = data/pdb/MFX_raw.pdb
+REMARK  5 active torsions:
+REMARK  status: ('A' for Active; 'I' for Inactive)
+REMARK    1  A    between atoms: O01_2  and  C13_21
+REMARK    2  A    between atoms: O01_2  and  C_29
+REMARK    3  A    between atoms: N01_6  and  C11_19
+REMARK    4  A    between atoms: N_8  and  C06_14
+REMARK    5  A    between atoms: C18_26  and  C20_28
+REMARK                            x       y       z     vdW  Elec       q    Type
+REMARK                         _______ _______ _______ _____ _____    ______ ____
+ROOT
+ATOM      1  F   MFX G 101      32.977  13.411  28.377  0.00  0.00    +0.000 F 
+ATOM      2  O02 MFX G 101      37.905  13.270  29.313  0.00  0.00    +0.000 OA
+ATOM      3  N   MFX G 101      37.379  10.451  26.309  0.00  0.00    +0.000 N 
+ATOM      4  C11 MFX G 101      33.745  11.714  26.823  0.00  0.00    +0.000 A 
+ATOM      5  C12 MFX G 101      36.171  11.221  26.835  0.00  0.00    +0.000 A 
+ATOM      6  C13 MFX G 101      34.863  11.006  26.331  0.00  0.00    +0.000 A 
+ATOM      7  C14 MFX G 101      36.362  12.180  27.857  0.00  0.00    +0.000 A 
+ATOM      8  C15 MFX G 101      33.968  12.681  27.843  0.00  0.00    +0.000 A 
+ATOM      9  C16 MFX G 101      38.693  10.705  26.862  0.00  0.00    +0.000 A 
+ATOM     10  C17 MFX G 101      35.261  12.898  28.349  0.00  0.00    +0.000 A 
+ATOM     11  C18 MFX G 101      38.885  11.705  27.929  0.00  0.00    +0.000 A 
+ATOM     12  C19 MFX G 101      37.742  12.444  28.432  0.00  0.00    +0.000 A 
+ENDROOT
+BRANCH   4  13
+ATOM     13  N01 MFX G 101      32.429  11.425  26.204  0.00  0.00    +0.000 N 
+ATOM     14  N02 MFX G 101      30.350  11.596  24.231  0.00  0.00    +0.000 NA
+ATOM     15  C01 MFX G 101      30.108  10.474  26.379  0.00  0.00    +0.000 C 
+ATOM     16  C02 MFX G 101      30.113  11.681  25.728  0.00  0.00    +0.000 C 
+ATOM     17  C03 MFX G 101      31.605  10.218  26.825  0.00  0.00    +0.000 C 
+ATOM     18  C04 MFX G 101      31.512  12.423  26.158  0.00  0.00    +0.000 C 
+ATOM     19  C05 MFX G 101      29.390   9.343  25.649  0.00  0.00    +0.000 C 
+ATOM     20  C07 MFX G 101      29.622   9.314  24.217  0.00  0.00    +0.000 C 
+ATOM     21  C10 MFX G 101      29.524  10.595  23.598  0.00  0.00    +0.000 C 
+ATOM     22 HN02 MFX G 101      31.228  11.409  24.073  0.00  0.00    +0.000 HD
+ENDBRANCH   4  13
+BRANCH  11  25
+ATOM     23  O03 MFX G 101      40.927  12.957  28.073  0.00  0.00    +0.000 OA
+ATOM     24  O   MFX G 101      40.800  11.148  29.305  0.00  0.00    +0.000 OA
+ATOM     25  C20 MFX G 101      40.288  11.941  28.468  0.00  0.00    +0.000 C 
+ENDBRANCH  11  25
+BRANCH   3  26
+ATOM     26  C06 MFX G 101      37.304   9.434  25.289  0.00  0.00    +0.000 C 
+ATOM     27  C08 MFX G 101      38.284   8.431  24.692  0.00  0.00    +0.000 C 
+ATOM     28  C09 MFX G 101      37.899   9.660  23.903  0.00  0.00    +0.000 C 
+ENDBRANCH   3  26
+BRANCH   6  29
+ATOM     29  O01 MFX G 101      34.635  10.065  25.297  0.00  0.00    +0.000 OA
+ATOM     30  C   MFX G 101      34.415  10.685  24.026  0.00  0.00    +0.000 C 
+ENDBRANCH   6  29
+TORSDOF 4
+ENDMDL
+MODEL 5
+REMARK VINA RESULT:    -3.782      1.754      2.716
+REMARK INTER + INTRA:          -4.946
+REMARK INTER:                  -4.666
+REMARK INTRA:                  -0.280
+REMARK UNBOUND:                -0.279
+REMARK  Name = data/pdb/MFX_raw.pdb
+REMARK  5 active torsions:
+REMARK  status: ('A' for Active; 'I' for Inactive)
+REMARK    1  A    between atoms: O01_2  and  C13_21
+REMARK    2  A    between atoms: O01_2  and  C_29
+REMARK    3  A    between atoms: N01_6  and  C11_19
+REMARK    4  A    between atoms: N_8  and  C06_14
+REMARK    5  A    between atoms: C18_26  and  C20_28
+REMARK                            x       y       z     vdW  Elec       q    Type
+REMARK                         _______ _______ _______ _____ _____    ______ ____
+ROOT
+ATOM      1  F   MFX G 101      37.839  13.599  29.461  0.00  0.00    +0.000 F 
+ATOM      2  O02 MFX G 101      33.132  13.984  27.766  0.00  0.00    +0.000 OA
+ATOM      3  N   MFX G 101      34.508  10.439  26.095  0.00  0.00    +0.000 N 
+ATOM      4  C11 MFX G 101      37.622  11.604  28.098  0.00  0.00    +0.000 A 
+ATOM      5  C12 MFX G 101      35.435  11.255  26.991  0.00  0.00    +0.000 A 
+ATOM      6  C13 MFX G 101      36.762  10.844  27.275  0.00  0.00    +0.000 A 
+ATOM      7  C14 MFX G 101      34.956  12.460  27.555  0.00  0.00    +0.000 A 
+ATOM      8  C15 MFX G 101      37.109  12.806  28.662  0.00  0.00    +0.000 A 
+ATOM      9  C16 MFX G 101      33.163  10.906  25.832  0.00  0.00    +0.000 A 
+ATOM     10  C17 MFX G 101      35.796  13.221  28.384  0.00  0.00    +0.000 A 
+ATOM     11  C18 MFX G 101      32.669  12.164  26.423  0.00  0.00    +0.000 A 
+ATOM     12  C19 MFX G 101      33.544  12.945  27.279  0.00  0.00    +0.000 A 
+ENDROOT
+BRANCH   4  13
+ATOM     13  N01 MFX G 101      38.980  11.065  28.347  0.00  0.00    +0.000 N 
+ATOM     14  N02 MFX G 101      40.946   9.088  29.032  0.00  0.00    +0.000 NA
+ATOM     15  C01 MFX G 101      41.438  11.451  28.714  0.00  0.00    +0.000 C 
+ATOM     16  C02 MFX G 101      40.940  10.506  29.573  0.00  0.00    +0.000 C 
+ATOM     17  C03 MFX G 101      40.198  11.970  27.877  0.00  0.00    +0.000 C 
+ATOM     18  C04 MFX G 101      39.317  10.745  29.621  0.00  0.00    +0.000 C 
+ATOM     19  C05 MFX G 101      42.682  11.035  27.937  0.00  0.00    +0.000 C 
+ATOM     20  C07 MFX G 101      42.659   9.664  27.461  0.00  0.00    +0.000 C 
+ATOM     21  C10 MFX G 101      42.214   8.729  28.441  0.00  0.00    +0.000 C 
+ATOM     22 HN02 MFX G 101      40.285   8.997  28.412  0.00  0.00    +0.000 HD
+ENDBRANCH   4  13
+BRANCH  11  25
+ATOM     23  O03 MFX G 101      31.057  13.516  25.268  0.00  0.00    +0.000 OA
+ATOM     24  O   MFX G 101      30.265  12.062  26.706  0.00  0.00    +0.000 OA
+ATOM     25  C20 MFX G 101      31.244  12.605  26.124  0.00  0.00    +0.000 C 
+ENDBRANCH  11  25
+BRANCH   3  26
+ATOM     26  C06 MFX G 101      34.892   9.210  25.445  0.00  0.00    +0.000 C 
+ATOM     27  C08 MFX G 101      34.163   8.142  24.639  0.00  0.00    +0.000 C 
+ATOM     28  C09 MFX G 101      34.571   7.854  26.064  0.00  0.00    +0.000 C 
+ENDBRANCH   3  26
+BRANCH   6  29
+ATOM     29  O01 MFX G 101      37.273   9.636  26.740  0.00  0.00    +0.000 OA
+ATOM     30  C   MFX G 101      38.089   9.847  25.583  0.00  0.00    +0.000 C 
+ENDBRANCH   6  29
+TORSDOF 4
+ENDMDL
+MODEL 6
+REMARK VINA RESULT:    -3.778      4.601      6.096
+REMARK INTER + INTRA:          -4.941
+REMARK INTER:                  -4.707
+REMARK INTRA:                  -0.234
+REMARK UNBOUND:                -0.279
+REMARK  Name = data/pdb/MFX_raw.pdb
+REMARK  5 active torsions:
+REMARK  status: ('A' for Active; 'I' for Inactive)
+REMARK    1  A    between atoms: O01_2  and  C13_21
+REMARK    2  A    between atoms: O01_2  and  C_29
+REMARK    3  A    between atoms: N01_6  and  C11_19
+REMARK    4  A    between atoms: N_8  and  C06_14
+REMARK    5  A    between atoms: C18_26  and  C20_28
+REMARK                            x       y       z     vdW  Elec       q    Type
+REMARK                         _______ _______ _______ _____ _____    ______ ____
+ROOT
+ATOM      1  F   MFX G 101      39.051  10.273  31.866  0.00  0.00    +0.000 F 
+ATOM      2  O02 MFX G 101      36.421   6.142  32.959  0.00  0.00    +0.000 OA
+ATOM      3  N   MFX G 101      36.373   6.287  28.809  0.00  0.00    +0.000 N 
+ATOM      4  C11 MFX G 101      38.438   9.460  29.665  0.00  0.00    +0.000 A 
+ATOM      5  C12 MFX G 101      37.103   7.377  29.589  0.00  0.00    +0.000 A 
+ATOM      6  C13 MFX G 101      37.770   8.448  28.942  0.00  0.00    +0.000 A 
+ATOM      7  C14 MFX G 101      37.113   7.317  31.002  0.00  0.00    +0.000 A 
+ATOM      8  C15 MFX G 101      38.443   9.368  31.085  0.00  0.00    +0.000 A 
+ATOM      9  C16 MFX G 101      35.703   5.217  29.519  0.00  0.00    +0.000 A 
+ATOM     10  C17 MFX G 101      37.782   8.311  31.734  0.00  0.00    +0.000 A 
+ATOM     11  C18 MFX G 101      35.717   5.161  30.993  0.00  0.00    +0.000 A 
+ATOM     12  C19 MFX G 101      36.411   6.192  31.742  0.00  0.00    +0.000 A 
+ENDROOT
+BRANCH   4  13
+ATOM     13  N01 MFX G 101      39.123  10.517  28.883  0.00  0.00    +0.000 N 
+ATOM     14  N02 MFX G 101      40.825  11.599  26.841  0.00  0.00    +0.000 NA
+ATOM     15  C01 MFX G 101      39.814  12.920  28.619  0.00  0.00    +0.000 C 
+ATOM     16  C02 MFX G 101      40.830  12.061  28.286  0.00  0.00    +0.000 C 
+ATOM     17  C03 MFX G 101      38.621  12.006  29.116  0.00  0.00    +0.000 C 
+ATOM     18  C04 MFX G 101      40.468  10.631  29.004  0.00  0.00    +0.000 C 
+ATOM     19  C05 MFX G 101      39.493  13.985  27.576  0.00  0.00    +0.000 C 
+ATOM     20  C07 MFX G 101      39.526  13.508  26.205  0.00  0.00    +0.000 C 
+ATOM     21  C10 MFX G 101      40.659  12.694  25.913  0.00  0.00    +0.000 C 
+ATOM     22 HN02 MFX G 101      40.156  10.993  26.718  0.00  0.00    +0.000 HD
+ENDBRANCH   4  13
+BRANCH  11  25
+ATOM     23  O03 MFX G 101      33.936   4.248  32.317  0.00  0.00    +0.000 OA
+ATOM     24  O   MFX G 101      35.467   2.837  31.630  0.00  0.00    +0.000 OA
+ATOM     25  C20 MFX G 101      35.006   4.010  31.689  0.00  0.00    +0.000 C 
+ENDBRANCH  11  25
+BRANCH   3  26
+ATOM     26  C06 MFX G 101      36.273   6.255  27.371  0.00  0.00    +0.000 C 
+ATOM     27  C08 MFX G 101      35.802   5.232  26.344  0.00  0.00    +0.000 C 
+ATOM     28  C09 MFX G 101      37.280   5.483  26.524  0.00  0.00    +0.000 C 
+ENDBRANCH   3  26
+BRANCH   6  29
+ATOM     29  O01 MFX G 101      37.793   8.533  27.528  0.00  0.00    +0.000 OA
+ATOM     30  C   MFX G 101      36.837   9.467  27.017  0.00  0.00    +0.000 C 
+ENDBRANCH   6  29
+TORSDOF 4
+ENDMDL
+MODEL 7
+REMARK VINA RESULT:    -3.717      3.170      6.978
+REMARK INTER + INTRA:          -4.866
+REMARK INTER:                  -4.702
+REMARK INTRA:                  -0.164
+REMARK UNBOUND:                -0.279
+REMARK  Name = data/pdb/MFX_raw.pdb
+REMARK  5 active torsions:
+REMARK  status: ('A' for Active; 'I' for Inactive)
+REMARK    1  A    between atoms: O01_2  and  C13_21
+REMARK    2  A    between atoms: O01_2  and  C_29
+REMARK    3  A    between atoms: N01_6  and  C11_19
+REMARK    4  A    between atoms: N_8  and  C06_14
+REMARK    5  A    between atoms: C18_26  and  C20_28
+REMARK                            x       y       z     vdW  Elec       q    Type
+REMARK                         _______ _______ _______ _____ _____    ______ ____
+ROOT
+ATOM      1  F   MFX G 101      36.235  12.941  29.178  0.00  0.00    +0.000 F 
+ATOM      2  O02 MFX G 101      39.681   9.343  29.772  0.00  0.00    +0.000 OA
+ATOM      3  N   MFX G 101      37.433   8.046  26.529  0.00  0.00    +0.000 N 
+ATOM      4  C11 MFX G 101      35.660  11.386  27.409  0.00  0.00    +0.000 A 
+ATOM      5  C12 MFX G 101      37.076   9.365  27.210  0.00  0.00    +0.000 A 
+ATOM      6  C13 MFX G 101      35.994  10.170  26.772  0.00  0.00    +0.000 A 
+ATOM      7  C14 MFX G 101      37.849   9.797  28.313  0.00  0.00    +0.000 A 
+ATOM      8  C15 MFX G 101      36.463  11.802  28.508  0.00  0.00    +0.000 A 
+ATOM      9  C16 MFX G 101      38.545   7.259  27.018  0.00  0.00    +0.000 A 
+ATOM     10  C17 MFX G 101      37.535  11.009  28.948  0.00  0.00    +0.000 A 
+ATOM     11  C18 MFX G 101      39.347   7.715  28.170  0.00  0.00    +0.000 A 
+ATOM     12  C19 MFX G 101      39.016   8.969  28.821  0.00  0.00    +0.000 A 
+ENDROOT
+BRANCH   4  13
+ATOM     13  N01 MFX G 101      34.524  12.157  26.849  0.00  0.00    +0.000 N 
+ATOM     14  N02 MFX G 101      32.707  13.082  24.829  0.00  0.00    +0.000 NA
+ATOM     15  C01 MFX G 101      32.812  13.983  27.088  0.00  0.00    +0.000 C 
+ATOM     16  C02 MFX G 101      33.384  13.985  25.842  0.00  0.00    +0.000 C 
+ATOM     17  C03 MFX G 101      33.549  12.842  27.900  0.00  0.00    +0.000 C 
+ATOM     18  C04 MFX G 101      34.801  13.171  25.992  0.00  0.00    +0.000 C 
+ATOM     19  C05 MFX G 101      31.287  13.982  27.105  0.00  0.00    +0.000 C 
+ATOM     20  C07 MFX G 101      30.679  13.126  26.102  0.00  0.00    +0.000 C 
+ATOM     21  C10 MFX G 101      31.273  13.251  24.812  0.00  0.00    +0.000 C 
+ATOM     22 HN02 MFX G 101      32.908  12.213  25.014  0.00  0.00    +0.000 HD
+ENDBRANCH   4  13
+BRANCH  11  25
+ATOM     23  O03 MFX G 101      41.631   6.988  28.068  0.00  0.00    +0.000 OA
+ATOM     24  O   MFX G 101      40.369   6.036  29.587  0.00  0.00    +0.000 OA
+ATOM     25  C20 MFX G 101      40.512   6.856  28.638  0.00  0.00    +0.000 C 
+ENDBRANCH  11  25
+BRANCH   3  26
+ATOM     26  C06 MFX G 101      36.704   7.492  25.415  0.00  0.00    +0.000 C 
+ATOM     27  C08 MFX G 101      36.817   6.227  24.574  0.00  0.00    +0.000 C 
+ATOM     28  C09 MFX G 101      37.263   7.549  23.997  0.00  0.00    +0.000 C 
+ENDBRANCH   3  26
+BRANCH   6  29
+ATOM     29  O01 MFX G 101      35.206   9.777  25.663  0.00  0.00    +0.000 OA
+ATOM     30  C   MFX G 101      33.949   9.213  26.051  0.00  0.00    +0.000 C 
+ENDBRANCH   6  29
+TORSDOF 4
+ENDMDL
+MODEL 8
+REMARK VINA RESULT:    -3.695      5.627      9.171
+REMARK INTER + INTRA:          -4.838
+REMARK INTER:                  -4.533
+REMARK INTRA:                  -0.305
+REMARK UNBOUND:                -0.279
+REMARK  Name = data/pdb/MFX_raw.pdb
+REMARK  5 active torsions:
+REMARK  status: ('A' for Active; 'I' for Inactive)
+REMARK    1  A    between atoms: O01_2  and  C13_21
+REMARK    2  A    between atoms: O01_2  and  C_29
+REMARK    3  A    between atoms: N01_6  and  C11_19
+REMARK    4  A    between atoms: N_8  and  C06_14
+REMARK    5  A    between atoms: C18_26  and  C20_28
+REMARK                            x       y       z     vdW  Elec       q    Type
+REMARK                         _______ _______ _______ _____ _____    ______ ____
+ROOT
+ATOM      1  F   MFX G 101      36.020   6.471  27.772  0.00  0.00    +0.000 F 
+ATOM      2  O02 MFX G 101      38.030  11.027  27.156  0.00  0.00    +0.000 OA
+ATOM      3  N   MFX G 101      39.370   9.844  30.905  0.00  0.00    +0.000 N 
+ATOM      4  C11 MFX G 101      37.239   6.777  29.846  0.00  0.00    +0.000 A 
+ATOM      5  C12 MFX G 101      38.473   8.908  30.099  0.00  0.00    +0.000 A 
+ATOM      6  C13 MFX G 101      38.075   7.638  30.590  0.00  0.00    +0.000 A 
+ATOM      7  C14 MFX G 101      38.023   9.321  28.823  0.00  0.00    +0.000 A 
+ATOM      8  C15 MFX G 101      36.812   7.213  28.561  0.00  0.00    +0.000 A 
+ATOM      9  C16 MFX G 101      39.743  11.133  30.360  0.00  0.00    +0.000 A 
+ATOM     10  C17 MFX G 101      37.199   8.471  28.069  0.00  0.00    +0.000 A 
+ATOM     11  C18 MFX G 101      39.269  11.558  29.029  0.00  0.00    +0.000 A 
+ATOM     12  C19 MFX G 101      38.418  10.673  28.255  0.00  0.00    +0.000 A 
+ENDROOT
+BRANCH   4  13
+ATOM     13  N01 MFX G 101      36.908   5.463  30.448  0.00  0.00    +0.000 N 
+ATOM     14  N02 MFX G 101      37.419   2.967  31.771  0.00  0.00    +0.000 NA
+ATOM     15  C01 MFX G 101      35.272   3.588  30.805  0.00  0.00    +0.000 C 
+ATOM     16  C02 MFX G 101      36.533   3.116  30.548  0.00  0.00    +0.000 C 
+ATOM     17  C03 MFX G 101      35.368   5.163  30.691  0.00  0.00    +0.000 C 
+ATOM     18  C04 MFX G 101      37.335   4.344  29.811  0.00  0.00    +0.000 C 
+ATOM     19  C05 MFX G 101      34.604   3.015  32.051  0.00  0.00    +0.000 C 
+ATOM     20  C07 MFX G 101      35.492   2.863  33.189  0.00  0.00    +0.000 C 
+ATOM     21  C10 MFX G 101      36.751   2.285  32.855  0.00  0.00    +0.000 C 
+ATOM     22 HN02 MFX G 101      37.691   3.790  32.052  0.00  0.00    +0.000 HD
+ENDBRANCH   4  13
+BRANCH  11  25
+ATOM     23  O03 MFX G 101      38.927  13.904  28.662  0.00  0.00    +0.000 OA
+ATOM     24  O   MFX G 101      40.811  13.063  27.920  0.00  0.00    +0.000 OA
+ATOM     25  C20 MFX G 101      39.699  12.918  28.499  0.00  0.00    +0.000 C 
+ENDBRANCH  11  25
+BRANCH   3  26
+ATOM     26  C06 MFX G 101      39.869   9.543  32.224  0.00  0.00    +0.000 C 
+ATOM     27  C08 MFX G 101      40.811  10.232  33.204  0.00  0.00    +0.000 C 
+ATOM     28  C09 MFX G 101      41.288   9.024  32.434  0.00  0.00    +0.000 C 
+ENDBRANCH   3  26
+BRANCH   6  29
+ATOM     29  O01 MFX G 101      38.518   7.185  31.856  0.00  0.00    +0.000 OA
+ATOM     30  C   MFX G 101      37.515   7.316  32.870  0.00  0.00    +0.000 C 
+ENDBRANCH   6  29
+TORSDOF 4
+ENDMDL
+MODEL 9
+REMARK VINA RESULT:    -3.668      5.776      8.408
+REMARK INTER + INTRA:          -4.805
+REMARK INTER:                  -4.541
+REMARK INTRA:                  -0.264
+REMARK UNBOUND:                -0.279
+REMARK  Name = data/pdb/MFX_raw.pdb
+REMARK  5 active torsions:
+REMARK  status: ('A' for Active; 'I' for Inactive)
+REMARK    1  A    between atoms: O01_2  and  C13_21
+REMARK    2  A    between atoms: O01_2  and  C_29
+REMARK    3  A    between atoms: N01_6  and  C11_19
+REMARK    4  A    between atoms: N_8  and  C06_14
+REMARK    5  A    between atoms: C18_26  and  C20_28
+REMARK                            x       y       z     vdW  Elec       q    Type
+REMARK                         _______ _______ _______ _____ _____    ______ ____
+ROOT
+ATOM      1  F   MFX G 101      38.047   7.820  33.271  0.00  0.00    +0.000 F 
+ATOM      2  O02 MFX G 101      39.521  11.360  30.036  0.00  0.00    +0.000 OA
+ATOM      3  N   MFX G 101      37.316   8.727  27.699  0.00  0.00    +0.000 N 
+ATOM      4  C11 MFX G 101      37.083   7.041  31.187  0.00  0.00    +0.000 A 
+ATOM      5  C12 MFX G 101      37.488   8.445  29.189  0.00  0.00    +0.000 A 
+ATOM      6  C13 MFX G 101      36.917   7.305  29.810  0.00  0.00    +0.000 A 
+ATOM      7  C14 MFX G 101      38.240   9.349  29.975  0.00  0.00    +0.000 A 
+ATOM      8  C15 MFX G 101      37.834   7.974  31.956  0.00  0.00    +0.000 A 
+ATOM      9  C16 MFX G 101      37.924   9.904  27.113  0.00  0.00    +0.000 A 
+ATOM     10  C17 MFX G 101      38.404   9.104  31.348  0.00  0.00    +0.000 A 
+ATOM     11  C18 MFX G 101      38.709  10.842  27.938  0.00  0.00    +0.000 A 
+ATOM     12  C19 MFX G 101      38.873  10.582  29.357  0.00  0.00    +0.000 A 
+ENDROOT
+BRANCH   4  13
+ATOM     13  N01 MFX G 101      36.420   5.832  31.733  0.00  0.00    +0.000 N 
+ATOM     14  N02 MFX G 101      34.353   3.860  32.015  0.00  0.00    +0.000 NA
+ATOM     15  C01 MFX G 101      36.293   4.025  33.477  0.00  0.00    +0.000 C 
+ATOM     16  C02 MFX G 101      35.054   4.531  33.181  0.00  0.00    +0.000 C 
+ATOM     17  C03 MFX G 101      37.321   4.872  32.622  0.00  0.00    +0.000 C 
+ATOM     18  C04 MFX G 101      35.315   6.002  32.500  0.00  0.00    +0.000 C 
+ATOM     19  C05 MFX G 101      36.409   2.506  33.410  0.00  0.00    +0.000 C 
+ATOM     20  C07 MFX G 101      35.703   1.901  32.296  0.00  0.00    +0.000 C 
+ATOM     21  C10 MFX G 101      34.388   2.419  32.107  0.00  0.00    +0.000 C 
+ATOM     22 HN02 MFX G 101      34.742   4.124  31.235  0.00  0.00    +0.000 HD
+ENDBRANCH   4  13
+BRANCH  11  25
+ATOM     23  O03 MFX G 101      40.547  12.055  26.987  0.00  0.00    +0.000 OA
+ATOM     24  O   MFX G 101      38.606  13.075  27.004  0.00  0.00    +0.000 OA
+ATOM     25  C20 MFX G 101      39.317  12.069  27.276  0.00  0.00    +0.000 C 
+ENDBRANCH  11  25
+BRANCH   3  26
+ATOM     26  C06 MFX G 101      36.595   7.867  26.794  0.00  0.00    +0.000 C 
+ATOM     27  C08 MFX G 101      36.251   7.909  25.310  0.00  0.00    +0.000 C 
+ATOM     28  C09 MFX G 101      35.182   8.213  26.332  0.00  0.00    +0.000 C 
+ENDBRANCH   3  26
+BRANCH   6  29
+ATOM     29  O01 MFX G 101      36.146   6.385  29.058  0.00  0.00    +0.000 OA
+ATOM     30  C   MFX G 101      36.878   5.205  28.711  0.00  0.00    +0.000 C 
+ENDBRANCH   6  29
+TORSDOF 4
+ENDMDL

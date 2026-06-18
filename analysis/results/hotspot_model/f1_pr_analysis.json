@@ -1,0 +1,19 @@
+{
+  "n_total": 6350,
+  "n_positives": 32,
+  "positive_rate_pct": 0.504,
+  "auroc": 1.0,
+  "auprc": 1.0,
+  "auprc_vs_random": 198.4,
+  "best_f1": 1.0,
+  "best_f1_threshold": 0.649961,
+  "best_f1_precision": 1.0,
+  "best_f1_recall": 1.0,
+  "default_f1": 1.0,
+  "default_precision": 1.0,
+  "default_recall": 1.0,
+  "top_20_recall": 0.625,
+  "top_50_recall": 1.0,
+  "perfect_rank_max": 32,
+  "all_positives_in_top_n": 32
+}

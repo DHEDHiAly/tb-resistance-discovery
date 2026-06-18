@@ -1,0 +1,201 @@
+<?xml version="1.0" ?>
+<ForceField>
+  <Info>
+    <DateGenerated>2025</DateGenerated>
+  </Info>
+  <AtomTypes>
+    <Type name="MFX-c3" class="c3" element="C" mass="12.011"/>
+    <Type name="MFX-n3" class="n3" element="N" mass="14.007"/>
+    <Type name="MFX-ca" class="ca" element="C" mass="12.011"/>
+    <Type name="MFX-o" class="o" element="O" mass="15.999"/>
+    <Type name="MFX-f" class="f" element="F" mass="18.998"/>
+    <Type name="MFX-oh" class="oh" element="O" mass="15.999"/>
+    <Type name="MFX-hc" class="hc" element="H" mass="1.008"/>
+  </AtomTypes>
+  <Residues>
+    <Residue name="MFX">
+      <Atom name="C0" type="MFX-c3" charge="0.000000"/>
+      <Atom name="C1" type="MFX-c3" charge="0.369100"/>
+      <Atom name="C2" type="MFX-c3" charge="0.270000"/>
+      <Atom name="N3" type="MFX-n3" charge="-0.810000"/>
+      <Atom name="C4" type="MFX-c3" charge="0.270000"/>
+      <Atom name="C5" type="MFX-c3" charge="0.369100"/>
+      <Atom name="N6" type="MFX-n3" charge="-0.838200"/>
+      <Atom name="C7" type="MFX-ca" charge="0.100000"/>
+      <Atom name="C8" type="MFX-ca" charge="0.190000"/>
+      <Atom name="C9" type="MFX-ca" charge="-0.150000"/>
+      <Atom name="C10" type="MFX-ca" charge="0.028400"/>
+      <Atom name="C11" type="MFX-ca" charge="0.117000"/>
+      <Atom name="C12" type="MFX-ca" charge="0.082500"/>
+      <Atom name="O13" type="MFX-o" charge="-0.362500"/>
+      <Atom name="C14" type="MFX-c3" charge="0.280000"/>
+      <Atom name="N15" type="MFX-n3" charge="-0.477100"/>
+      <Atom name="C16" type="MFX-c3" charge="0.615600"/>
+      <Atom name="O17" type="MFX-o" charge="-0.570000"/>
+      <Atom name="C18" type="MFX-c3" charge="0.028800"/>
+      <Atom name="C19" type="MFX-c3" charge="0.121100"/>
+      <Atom name="F20" type="MFX-f" charge="-0.149500"/>
+      <Atom name="C21" type="MFX-c3" charge="0.705600"/>
+      <Atom name="O22" type="MFX-o" charge="-0.570000"/>
+      <Atom name="O23" type="MFX-oh" charge="-0.650000"/>
+      <Atom name="C24" type="MFX-c3" charge="0.395100"/>
+      <Atom name="C25" type="MFX-c3" charge="-0.195000"/>
+      <Atom name="C26" type="MFX-c3" charge="-0.200000"/>
+      <Atom name="C27" type="MFX-c3" charge="-0.200000"/>
+      <Atom name="F28" type="MFX-f" charge="-0.190000"/>
+      <Atom name="C29" type="MFX-c3" charge="0.270000"/>
+      <Atom name="H30" type="MFX-hc" charge="0.000000"/>
+      <Atom name="H31" type="MFX-hc" charge="0.000000"/>
+      <Atom name="H32" type="MFX-hc" charge="0.000000"/>
+      <Atom name="H33" type="MFX-hc" charge="0.000000"/>
+      <Atom name="H34" type="MFX-hc" charge="0.000000"/>
+      <Atom name="H35" type="MFX-hc" charge="0.000000"/>
+      <Atom name="H36" type="MFX-hc" charge="0.000000"/>
+      <Atom name="H37" type="MFX-hc" charge="0.000000"/>
+      <Atom name="H38" type="MFX-hc" charge="0.000000"/>
+      <Atom name="H39" type="MFX-hc" charge="0.000000"/>
+      <Atom name="H40" type="MFX-hc" charge="0.150000"/>
+      <Atom name="H41" type="MFX-hc" charge="0.000000"/>
+      <Atom name="H42" type="MFX-hc" charge="0.000000"/>
+      <Atom name="H43" type="MFX-hc" charge="0.000000"/>
+      <Atom name="H44" type="MFX-hc" charge="0.500000"/>
+      <Atom name="H45" type="MFX-hc" charge="0.000000"/>
+      <Atom name="H46" type="MFX-hc" charge="0.000000"/>
+      <Atom name="H47" type="MFX-hc" charge="0.100000"/>
+      <Atom name="H48" type="MFX-hc" charge="0.100000"/>
+      <Atom name="H49" type="MFX-hc" charge="0.100000"/>
+      <Atom name="H50" type="MFX-hc" charge="0.100000"/>
+      <Atom name="H51" type="MFX-hc" charge="0.100000"/>
+      <Atom name="H52" type="MFX-hc" charge="0.000000"/>
+      <Atom name="H53" type="MFX-hc" charge="0.000000"/>
+      <Atom name="H54" type="MFX-hc" charge="0.000000"/>
+      <Bond from="0" to="1"/>
+      <Bond from="1" to="2"/>
+      <Bond from="2" to="3"/>
+      <Bond from="3" to="4"/>
+      <Bond from="4" to="5"/>
+      <Bond from="5" to="6"/>
+      <Bond from="6" to="7"/>
+      <Bond from="7" to="8"/>
+      <Bond from="8" to="9"/>
+      <Bond from="9" to="10"/>
+      <Bond from="10" to="11"/>
+      <Bond from="11" to="12"/>
+      <Bond from="12" to="13"/>
+      <Bond from="13" to="14"/>
+      <Bond from="11" to="15"/>
+      <Bond from="15" to="16"/>
+      <Bond from="16" to="17"/>
+      <Bond from="16" to="18"/>
+      <Bond from="18" to="19"/>
+      <Bond from="19" to="20"/>
+      <Bond from="18" to="21"/>
+      <Bond from="21" to="22"/>
+      <Bond from="21" to="23"/>
+      <Bond from="15" to="24"/>
+      <Bond from="24" to="25"/>
+      <Bond from="25" to="26"/>
+      <Bond from="26" to="27"/>
+      <Bond from="8" to="28"/>
+      <Bond from="3" to="29"/>
+      <Bond from="6" to="1"/>
+      <Bond from="12" to="7"/>
+      <Bond from="19" to="10"/>
+      <Bond from="27" to="25"/>
+      <Bond from="0" to="30"/>
+      <Bond from="0" to="31"/>
+      <Bond from="0" to="32"/>
+      <Bond from="1" to="33"/>
+      <Bond from="2" to="34"/>
+      <Bond from="2" to="35"/>
+      <Bond from="4" to="36"/>
+      <Bond from="4" to="37"/>
+      <Bond from="5" to="38"/>
+      <Bond from="5" to="39"/>
+      <Bond from="9" to="40"/>
+      <Bond from="14" to="41"/>
+      <Bond from="14" to="42"/>
+      <Bond from="14" to="43"/>
+      <Bond from="23" to="44"/>
+      <Bond from="24" to="45"/>
+      <Bond from="24" to="46"/>
+      <Bond from="25" to="47"/>
+      <Bond from="26" to="48"/>
+      <Bond from="26" to="49"/>
+      <Bond from="27" to="50"/>
+      <Bond from="27" to="51"/>
+      <Bond from="29" to="52"/>
+      <Bond from="29" to="53"/>
+      <Bond from="29" to="54"/>
+    </Residue>
+  </Residues>
+  <Bonds>
+    <Bond type1="MFX-c3" type2="MFX-c3" length="0.1508" k="256329.0"/>
+    <Bond type1="MFX-c3" type2="MFX-n3" length="0.1451" k="306053.7"/>
+    <Bond type1="MFX-n3" type2="MFX-ca" length="0.1398" k="371309.8"/>
+    <Bond type1="MFX-ca" type2="MFX-ca" length="0.1374" k="335491.2"/>
+    <Bond type1="MFX-ca" type2="MFX-o" length="0.1376" k="337959.4"/>
+    <Bond type1="MFX-o" type2="MFX-c3" length="0.1418" k="303826.3"/>
+    <Bond type1="MFX-c3" type2="MFX-f" length="0.1350" k="378232.8"/>
+    <Bond type1="MFX-c3" type2="MFX-oh" length="0.1355" k="349216.7"/>
+    <Bond type1="MFX-ca" type2="MFX-f" length="0.1342" k="391958.2"/>
+    <Bond type1="MFX-c3" type2="MFX-ca" length="0.1449" k="301418.4"/>
+    <Bond type1="MFX-c3" type2="MFX-hc" length="0.1093" k="286910.3"/>
+    <Bond type1="MFX-ca" type2="MFX-hc" length="0.1084" k="319418.0"/>
+    <Bond type1="MFX-oh" type2="MFX-hc" length="0.0981" k="445656.1"/>
+  </Bonds>
+  <Angles>
+    <Angle type1="MFX-c3" type2="MFX-c3" type3="MFX-c3" angle="1.9111" k="251.0"/>
+    <Angle type1="MFX-c3" type2="MFX-c3" type3="MFX-hc" angle="1.9111" k="251.0"/>
+    <Angle type1="MFX-hc" type2="MFX-c3" type3="MFX-hc" angle="1.9111" k="251.0"/>
+    <Angle type1="MFX-c3" type2="MFX-c3" type3="MFX-o" angle="1.9111" k="251.0"/>
+    <Angle type1="MFX-c3" type2="MFX-c3" type3="MFX-n3" angle="1.9111" k="251.0"/>
+    <Angle type1="MFX-c3" type2="MFX-c3" type3="MFX-ca" angle="1.9111" k="251.0"/>
+    <Angle type1="MFX-c3" type2="MFX-ca" type3="MFX-ca" angle="1.9111" k="251.0"/>
+    <Angle type1="MFX-ca" type2="MFX-ca" type3="MFX-ca" angle="1.9111" k="251.0"/>
+    <Angle type1="MFX-ca" type2="MFX-ca" type3="MFX-hc" angle="1.9111" k="251.0"/>
+    <Angle type1="MFX-ca" type2="MFX-ca" type3="MFX-n3" angle="1.9111" k="251.0"/>
+    <Angle type1="MFX-c3" type2="MFX-n3" type3="MFX-c3" angle="1.9111" k="251.0"/>
+    <Angle type1="MFX-c3" type2="MFX-n3" type3="MFX-hc" angle="1.9111" k="251.0"/>
+    <Angle type1="MFX-c3" type2="MFX-o" type3="MFX-hc" angle="1.9111" k="251.0"/>
+    <Angle type1="MFX-c3" type2="MFX-c3" type3="MFX-f" angle="1.9111" k="251.0"/>
+    <Angle type1="MFX-c3" type2="MFX-c3" type3="MFX-na" angle="1.9111" k="251.0"/>
+    <Angle type1="MFX-ca" type2="MFX-ca" type3="MFX-na" angle="1.9111" k="251.0"/>
+    <Angle type1="MFX-ca" type2="MFX-ca" type3="MFX-o" angle="1.9111" k="251.0"/>
+    <Angle type1="MFX-c3" type2="MFX-n3" type3="MFX-n3" angle="1.9111" k="251.0"/>
+    <Angle type1="MFX-c3" type2="MFX-c2" type3="MFX-o" angle="1.9111" k="251.0"/>
+    <Angle type1="MFX-c2" type2="MFX-c2" type3="MFX-o" angle="1.9111" k="251.0"/>
+    <Angle type1="MFX-c2" type2="MFX-c3" type3="MFX-n3" angle="1.9111" k="251.0"/>
+  </Angles>
+  <Torsions>
+    <Torsion type1="MFX-c3" type2="MFX-c3" type3="MFX-c3" type4="MFX-c3" periodicity="3" phase="0.0" k="0.6276"/>
+    <Torsion type1="MFX-c3" type2="MFX-c3" type3="MFX-c3" type4="MFX-hc" periodicity="3" phase="0.0" k="0.6276"/>
+    <Torsion type1="MFX-hc" type2="MFX-c3" type3="MFX-c3" type4="MFX-hc" periodicity="3" phase="0.0" k="0.6276"/>
+    <Torsion type1="MFX-c3" type2="MFX-c3" type3="MFX-c3" type4="MFX-o" periodicity="3" phase="0.0" k="0.6276"/>
+    <Torsion type1="MFX-c3" type2="MFX-c3" type3="MFX-c3" type4="MFX-n3" periodicity="3" phase="0.0" k="0.6276"/>
+    <Torsion type1="MFX-c3" type2="MFX-c3" type3="MFX-c3" type4="MFX-ca" periodicity="3" phase="0.0" k="0.6276"/>
+    <Torsion type1="MFX-c3" type2="MFX-ca" type3="MFX-ca" type4="MFX-ca" periodicity="2" phase="0.0" k="14.644"/>
+    <Torsion type1="MFX-c3" type2="MFX-ca" type3="MFX-ca" type4="MFX-hc" periodicity="2" phase="0.0" k="14.644"/>
+    <Torsion type1="MFX-hc" type2="MFX-ca" type3="MFX-ca" type4="MFX-hc" periodicity="2" phase="0.0" k="14.644"/>
+    <Torsion type1="MFX-ca" type2="MFX-ca" type3="MFX-ca" type4="MFX-ca" periodicity="2" phase="0.0" k="14.644"/>
+    <Torsion type1="MFX-ca" type2="MFX-ca" type3="MFX-ca" type4="MFX-hc" periodicity="2" phase="0.0" k="14.644"/>
+    <Torsion type1="MFX-ca" type2="MFX-ca" type3="MFX-n3" type4="MFX-c3" periodicity="2" phase="0.0" k="14.644"/>
+    <Torsion type1="MFX-c3" type2="MFX-n3" type3="MFX-c3" type4="MFX-c3" periodicity="1" phase="0.0" k="2.092"/>
+    <Torsion type1="MFX-c3" type2="MFX-n3" type3="MFX-c3" type4="MFX-hc" periodicity="1" phase="0.0" k="2.092"/>
+    <Torsion type1="MFX-c3" type2="MFX-c3" type3="MFX-n3" type4="MFX-c3" periodicity="1" phase="0.0" k="2.092"/>
+    <Torsion type1="MFX-c3" type2="MFX-c3" type3="MFX-ca" type4="MFX-ca" periodicity="2" phase="0.0" k="4.184"/>
+    <Torsion type1="MFX-c3" type2="MFX-c3" type3="MFX-ca" type4="MFX-o" periodicity="2" phase="0.0" k="2.092"/>
+    <Torsion type1="MFX-ca" type2="MFX-ca" type3="MFX-c3" type4="MFX-o" periodicity="2" phase="0.0" k="2.092"/>
+    <Torsion type1="MFX-ca" type2="MFX-ca" type3="MFX-c3" type4="MFX-hc" periodicity="2" phase="0.0" k="2.092"/>
+  </Torsions>
+  <NonbondedForce coulomb14scale="0.833333" lj14scale="0.5">
+    <UseAttributeFromResidue name="charge"/>
+    <Atom type="MFX-c3" sigma="3.3997" epsilon="0.109400"/>
+    <Atom type="MFX-n3" sigma="3.2500" epsilon="0.170000"/>
+    <Atom type="MFX-ca" sigma="3.3997" epsilon="0.109400"/>
+    <Atom type="MFX-o" sigma="2.9599" epsilon="0.210000"/>
+    <Atom type="MFX-f" sigma="3.1181" epsilon="0.066500"/>
+    <Atom type="MFX-oh" sigma="3.0664" epsilon="0.210400"/>
+    <Atom type="MFX-hc" sigma="2.5997" epsilon="0.015700"/>
+  </NonbondedForce>
+</ForceField>
