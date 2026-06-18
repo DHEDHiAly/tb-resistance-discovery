@@ -32,7 +32,7 @@ These are the highest-confidence mutations predicted by our model that have **ne
 | 28 | pncA | **V125I** | 0.425 | Loss-of-Function | — | Novel at pncA (PZA — blind spot) |
 | 34✦ | eis | **V59A** | 0.409 | Direct Pocket | DOCKING FAILED | **Truly novel** — all known eis = promoter, not coding |
 | 47✦ | rpoB | **V170I** | 0.375 | Allosteric Shield | ddG +0.001 (NONE) | **Truly novel** — V170F known, V170I undocumented |
-| 131✦ | gyrB | **Q538L** | 0.234 | Water-Bridge Disruptor | ddG −0.174 (WEAK) | **Truly novel** — N538D in E. coli only, not Mtb |
+| 131✦ | gyrB | **Q538L** | 0.234 | Pocket-direct (QRDR-B) | ddG **+0.737 (STRONG)** | **Literature-novel** — codon 538 known as N538D/K/S/T only; Q538L never reported in Mtb |
 
 - **Tier 4 = forecast-only**: 0 carriers in 1,037 genomes, predicted by model but never seen in clinic
 - **Novel substitution**: same gene/position as a known resistance mutation, but with a different amino acid change not documented in literature
@@ -140,6 +140,33 @@ GroupKFold by gene: AUROC 0.972 ± 0.018, AUPRC 0.575, Top-20 recall 0.741.
 
 After the model predicts Tier-4 forecast-only mutations, we structurally validate them by docking the drug to WT and mutant receptors. This provides an orthogonal biophysical signal.
 
+### Tier-4 pocket-direct batch (authoritative docking scores)
+
+`scripts/06_filter_pocket_candidates.py` filters Tier-4 mutations in gyrA, rpoB, and gyrB with drug_distance ≤ 4.5 Å (32 candidates).
+
+`scripts/07_tier4_pocket_vina_batch.py` builds mutant receptors, **redocks WT under identical grid conditions** (fixes stale-baseline bug), runs AutoDock Vina, and computes ΔΔG.
+
+**10 structurally validated** (Tier 4, 0 carriers, ΔΔG ≥ +0.15):
+
+| Mutation | Rank | ΔΔG | Category | Literature novel? |
+|----------|------|-----|----------|-------------------|
+| **gyrB Q538L** | 131 | **+0.737** | STRONG | **Yes** — de novo discovery |
+| rpoB L452M | 181 | +2.137 | STRONG | No (CARD WHO-R) |
+| rpoB P483R | 140 | +1.254 | STRONG | Maybe (P483L known) |
+| rpoB L452R | 132 | +1.045 | STRONG | No (CARD) |
+| rpoB Q432R | 225 | +0.399 | MODERATE | No (CARD) |
+| gyrA S91A | 170 | +0.203 | MODERATE | No |
+| gyrA G88S | 30 | +0.179 | MODERATE | No |
+| gyrA G88V | 207 | +0.178 | MODERATE | No |
+| gyrA G88D | 29 | +0.170 | MODERATE | No (rare clinical) |
+| rpoB I491N | 124 | +0.156 | MODERATE | No (codon 491 hotspot) |
+
+Outputs: `analysis/results/forecasting/tier4_pocket_vina_scores.csv`, `analysis/results/tier4_pocket_vina_results.json`.
+
+Score audit: `analysis/audit_novelty_and_scores.py` re-parses all PDBQT REMARK lines (all 32 match CSV within 0.02 kcal/mol) and cross-checks CARD/PubMed.
+
+**Q538L score note:** an earlier run used WT baseline −6.16 (`gyrB_WT_docked.pdbqt`) and reported ΔΔG −0.17. The tier-4 batch redocks WT fresh (−7.07) — **+0.737 is authoritative**. Mutant score unchanged at −6.334.
+
 ### Phase 1: Crystal structures (high confidence)
 
 **rpoB + Rifampicin (PDB 5UHB, 2.8A, chain C):** 11 mutations at the RRDR docked with rigid receptor, exhaustiveness=12. Results:
@@ -197,7 +224,7 @@ For 5 top Tier-4 **truly novel** candidates (the 5 marked with ✦ in the table 
 | **inhA I16V** | 27 | 0.426 | +0.019 (NONE) | Conservative Ile->Val at NADH pocket edge; rigid receptor misses kinetics |
 | **eis V59A** | 34 | 0.409 | DOCKING FAILED | AMK (10 torsions, branched rings) exceeds Vina tree.h(101) limit |
 | **rpoB V170I** | 47 | 0.375 | +0.001 (NONE) | Outside RRDR; allosteric mechanism via dynamics; rigid Vina blind |
-| **gyrB Q538L** | 131 | 0.234 | -0.174 (WEAK) | 17-22A from MFX; TOPRIM water-bridge disruptor; needs MD with DNA |
+| **gyrB Q538L** | 131 | 0.234 | **+0.737 (STRONG)** | Pocket-direct (1.34 Å); tier-4 batch with fresh WT redock; PyMOL validated |
 
 ### Vina limitations discovered
 
@@ -208,13 +235,13 @@ For 5 top Tier-4 **truly novel** candidates (the 5 marked with ✦ in the table 
 
 ## Interactive viewer
 
-Open `viewer.html` in a browser for an interactive dashboard showing:
-- Tier distribution across 305 mutations
-- Model performance metrics (ROC, PR, LOO, benchmarks)
-- Dockable mutation table with ddG values
-- Searchable browser of all 188 Tier-4 candidates filtered by gene, mechanism, and score
-- Deep-dive cards for the 5 top novel candidates
-- Pipeline architecture and next steps
+Open `viewer.html` in a browser (serve from repo root: `python -m http.server 8000` then visit `http://localhost:8000/viewer.html`):
+
+- Full pipeline walkthrough: data → model training (04b–04e) → CRyPTIC validation → Vina docking → audit
+- gyrB Q538L PyMOL structural figure (`data/pdb/gyrB_Q538L_validation.png`)
+- Filterable table of all 32 tier-4 pocket Vina scores (10 validated)
+- Novelty audit table (CARD / PubMed / score verification)
+- Roadmap: manuscript → MRSA extension → Mantis platform integration
 
 ## Mutation forecasting
 `04e_mutation_forecasting.py` -- For the top hotspot-scoring residues, enumerate all SNV-accessible mutations. Score by: emergence = hotspot_score x mutation_score, where mutation_score combines resistance plausibility, fitness cost, and evolutionary accessibility.
@@ -264,14 +291,19 @@ After the fix, drug_proximity dropped from the dominant feature (+6.71 in LR) to
 
 ```
 tb-resistance-discovery/
-scripts/               -- 17 pipeline scripts (numbered by dependency)
+scripts/               -- pipeline scripts (numbered by dependency)
  04b_hotspot_model.py      Stage 0: sequence model
  04c_stage1_features.py    Stage 1: structural features
  04d_docking_features.py   Stage 2: XGBoost + drug proximity + Platt calibration
  04e_mutation_forecasting.py  P(emergence) scoring and watchlist generation
  05_leave_one_gene_out.py  Cross-gene generalization
+ 06_filter_pocket_candidates.py  Tier-4 pocket-direct filter (≤4.5 Å)
+ 07_tier4_pocket_vina_batch.py  Vina batch + fresh WT redock
  08_cryptic_validation_full.py  CRyPTIC cross-reference + matched-null validation
  12_audit.py               Full audit (~180 checks)
+analysis/
+ validate_novel_docking.py   Novel-candidate docking orchestration
+ audit_novelty_and_scores.py  PDBQT score re-parse + CARD/PubMed audit
 analysis/results/
  hotspot_model/           Model outputs (ranked predictions, metrics, feature importance)
  forecasting/             Watchlist, CRyPTIC validation, clinical top-20/50
@@ -282,6 +314,16 @@ data/
   metadata/               Clinical phenotypes
   pdb/                    AlphaFold + co-crystal structures
 ```
+
+---
+
+## Next steps
+
+1. **Manuscript** — Lead with gyrB Q538L (literature-novel + Vina STRONG + PyMOL). Frame 9 other validated hits as pipeline benchmarks. Include CRyPTIC Tier 1 retrospective confirmations.
+
+2. **Extend to other diseases — MRSA first** — Reuse the same architecture (homoplasy + structure + drug proximity + XGBoost + prospective validation) on *Staphylococcus aureus* resistance genes.
+
+3. **Mantis platform integration** — Deploy the emergence model inside the Mantis clinical genomics platform, surfacing Tier-4 surveillance alerts with structural validation and literature novelty flags at WGS interpretation time.
 
 ---
 
@@ -298,6 +340,9 @@ python scripts/09_stress_tests.py
 python scripts/10_generate_figures.py
 python scripts/11_render_figures.py
 python scripts/12_audit.py     # ~180 automated checks
+python scripts/06_filter_pocket_candidates.py
+python scripts/07_tier4_pocket_vina_batch.py
+python analysis/audit_novelty_and_scores.py
 ```
 
 The `12_audit.py` script checks: file existence, syntax, CRyPTIC data integrity, model output schema, figure completeness, package availability, claim consistency, leakage (homoplasy globality, drug_proximity self-exclusion, scaler placement, calibration, GroupKFold), and statistical rigor (permutation test, bootstrap CIs, ESM-2 baseline, matched-null validation).

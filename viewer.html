@@ -3,236 +3,318 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TB Resistance Early-Warning System</title>
+<title>TB Resistance Discovery — Full Pipeline Viewer</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 *{box-sizing:border-box}
-body{font-family:system-ui,-apple-system,sans-serif}
-.active-row{background:#eef2ff!important;border-left:4px solid #4f46e5!important}
-@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-@keyframes slideIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
-@keyframes pulse-glow{0%,100%{box-shadow:0 0 0 0 rgba(79,70,229,.15)}50%{box-shadow:0 0 0 8px rgba(79,70,229,0)}}
-@keyframes bar-grow{from{width:0%}to{width:var(--w)}}
-.fade-in{animation:fadeIn .35s ease-out}
-.slide-in{animation:slideIn .25s ease-out}
-.detail-card{animation:fadeIn .3s ease-out}
-.score-bar{height:6px;border-radius:99px;background:#e5e7eb;overflow:hidden}
-.score-bar-fill{height:100%;border-radius:99px;animation:bar-grow .6s ease-out forwards}
-tr{transition:all .15s ease;cursor:pointer}
-tr:hover{background:#f8fafc}
-.badge-icon{display:inline-flex;align-items:center;gap:4px}
-.step-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:3px}
+html{scroll-behavior:smooth}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif}
+.nav-link.active{background:#4f46e5;color:#fff}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.fade-up{animation:fadeUp .4s ease-out}
+section{scroll-margin-top:72px}
+tr.row-hover:hover{background:#f8fafc}
+.tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:700;border:1px solid transparent}
 </style>
 </head>
-<body class="bg-slate-50 text-slate-800 h-screen flex flex-col overflow-hidden">
+<body class="bg-slate-50 text-slate-800">
 
-<header class="bg-slate-900 text-white px-5 py-3 flex items-center justify-between shrink-0 shadow-md z-10">
-  <div class="flex items-center gap-4">
-    <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+<nav class="sticky top-0 z-50 bg-slate-900 text-white shadow-lg">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
     <div>
-      <h1 class="text-lg font-bold tracking-tight">TB Resistance Early-Warning System</h1>
-      <p class="text-[11px] text-slate-400">Finding resistance mutations before they emerge</p>
+      <p class="text-xs text-slate-400 uppercase tracking-widest">Kellis Lab · MIT</p>
+      <h1 class="text-lg font-bold">TB Resistance Early-Warning Pipeline</h1>
+    </div>
+    <div class="flex flex-wrap gap-1 text-xs font-semibold">
+      <a href="#overview" class="nav-link px-3 py-1.5 rounded-full hover:bg-slate-700 transition">Overview</a>
+      <a href="#data" class="nav-link px-3 py-1.5 rounded-full hover:bg-slate-700 transition">Data</a>
+      <a href="#training" class="nav-link px-3 py-1.5 rounded-full hover:bg-slate-700 transition">Training</a>
+      <a href="#forecast" class="nav-link px-3 py-1.5 rounded-full hover:bg-slate-700 transition">Forecasting</a>
+      <a href="#docking" class="nav-link px-3 py-1.5 rounded-full hover:bg-slate-700 transition">Docking</a>
+      <a href="#audit" class="nav-link px-3 py-1.5 rounded-full hover:bg-slate-700 transition">Audit</a>
+      <a href="#roadmap" class="nav-link px-3 py-1.5 rounded-full hover:bg-slate-700 transition">Next Steps</a>
     </div>
   </div>
-  <div class="flex gap-2 text-[11px] font-semibold">
-    <span class="bg-emerald-500/15 text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-500/25">Model AUROC: 0.97</span>
-    <span class="bg-blue-500/15 text-blue-400 px-2.5 py-1 rounded-full border border-blue-500/25">188 Forecasts</span>
-  </div>
-</header>
+</nav>
 
-<main class="flex flex-1 overflow-hidden">
+<main class="max-w-6xl mx-auto px-4 py-8 space-y-16">
 
-<!-- SIDEBAR: Pipeline visual -->
-<section class="w-64 bg-white border-r border-slate-200 p-5 overflow-y-auto shrink-0 hidden md:flex flex-col gap-5">
-  <div>
-    <h2 class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">How It Works</h2>
-    <div class="space-y-0">
-      <div class="flex items-start gap-2 pb-2">
-        <div class="step-dot bg-slate-300"></div>
-        <div><p class="text-xs font-semibold text-slate-700">1. Learn from known resistance</p><p class="text-[10px] text-slate-500">32 known hotspots across 13 genes</p></div>
-      </div>
-      <div class="ml-[4px] pl-[13px] border-l-2 border-slate-200 space-y-0">
-        <div class="flex items-start gap-2 pb-2"><div class="step-dot bg-slate-300"></div><div><p class="text-xs font-semibold text-slate-700">2. Extract features</p><p class="text-[10px] text-slate-500">Homoplasy, structure, drug proximity</p></div></div>
-        <div class="flex items-start gap-2 pb-2"><div class="step-dot bg-slate-300"></div><div><p class="text-xs font-semibold text-slate-700">3. Score all mutations</p><p class="text-[10px] text-slate-500">XGBoost ranks 6,350 positions</p></div></div>
-        <div class="flex items-start gap-2"><div class="step-dot bg-indigo-500"></div><div><p class="text-xs font-semibold text-indigo-700">4. Forecast Tier-4</p><p class="text-[10px] text-slate-500">188 never-seen mutations</p></div></div>
-      </div>
+<section id="overview" class="fade-up">
+  <div class="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-2xl text-white p-8 shadow-xl">
+    <p class="text-indigo-200 text-sm font-semibold mb-2">What this project does</p>
+    <h2 class="text-3xl font-bold mb-4">Predict drug resistance mutations before they appear in clinics</h2>
+    <p class="text-indigo-100 max-w-3xl leading-relaxed mb-6">
+      Three phases: learn structural signatures of known resistance hotspots across 13 TB genes,
+      enumerate and score all accessible mutations by P(emergence), then validate prospectively
+      in 12,287 CRyPTIC isolates and structurally with AutoDock Vina pocket-direct docking.
+    </p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
+      <div class="bg-white/10 rounded-xl p-4"><div class="text-2xl font-bold">0.971</div><div class="text-xs text-indigo-200">AUROC</div></div>
+      <div class="bg-white/10 rounded-xl p-4"><div class="text-2xl font-bold">188</div><div class="text-xs text-indigo-200">Tier-4 forecasts</div></div>
+      <div class="bg-white/10 rounded-xl p-4"><div class="text-2xl font-bold">10</div><div class="text-xs text-indigo-200">Vina-validated</div></div>
+      <div class="bg-white/10 rounded-xl p-4"><div class="text-2xl font-bold">1</div><div class="text-xs text-indigo-200">Literature-novel</div></div>
     </div>
   </div>
-
-  <div class="bg-indigo-50 rounded-lg p-3 border border-indigo-100">
-    <p class="text-[10px] font-bold uppercase tracking-wider text-indigo-600 mb-1">Pipeline Performance</p>
-    <div class="space-y-1.5 text-xs">
-      <div class="flex justify-between"><span class="text-slate-600">AUROC</span><span class="font-bold text-slate-900">0.971</span></div>
-      <div class="flex justify-between"><span class="text-slate-600">AUPRC</span><span class="font-bold text-slate-900">0.560</span></div>
-      <div class="flex justify-between"><span class="text-slate-600">GroupKFold</span><span class="font-bold text-slate-900">0.972</span></div>
-      <div class="flex justify-between"><span class="text-slate-600">Permutation p</span><span class="font-bold text-slate-900">0.005</span></div>
-    </div>
-  </div>
-
-  <div class="text-[10px] text-slate-400 border-t border-slate-100 pt-3">
-    Data: 1,037 TB genomes + CRyPTIC 12,287 isolates + WHO catalog
+  <div class="mt-8 grid md:grid-cols-5 gap-3 text-center text-xs">
+    <div class="bg-white rounded-xl border p-4 shadow-sm"><div class="text-indigo-600 font-bold text-lg">1</div><p class="font-semibold mt-1">Hotspot model</p><p class="text-[10px] text-slate-500">04b</p></div>
+    <div class="bg-white rounded-xl border p-4 shadow-sm"><div class="text-indigo-600 font-bold text-lg">2</div><p class="font-semibold mt-1">Structure</p><p class="text-[10px] text-slate-500">04c</p></div>
+    <div class="bg-white rounded-xl border p-4 shadow-sm"><div class="text-indigo-600 font-bold text-lg">3</div><p class="font-semibold mt-1">XGBoost</p><p class="text-[10px] text-slate-500">04d</p></div>
+    <div class="bg-white rounded-xl border p-4 shadow-sm"><div class="text-indigo-600 font-bold text-lg">4</div><p class="font-semibold mt-1">Forecast</p><p class="text-[10px] text-slate-500">04e</p></div>
+    <div class="bg-white rounded-xl border p-4 shadow-sm ring-2 ring-indigo-200"><div class="text-indigo-600 font-bold text-lg">5</div><p class="font-semibold mt-1">Validate</p><p class="text-[10px] text-slate-500">08 + 06/07</p></div>
   </div>
 </section>
 
-<!-- MAIN CONTENT -->
-<section class="flex-1 flex flex-col overflow-hidden">
-
-  <!-- TABLE -->
-  <div class="h-[45%] p-5 pb-2 overflow-hidden flex flex-col">
-    <div class="flex items-center justify-between mb-3 shrink-0">
-      <h2 class="text-sm font-bold text-slate-800">Top 5 Forecast-Only Candidate Mutations</h2>
-      <span class="text-[10px] text-slate-400">Click row for details</span>
+<section id="data" class="fade-up">
+  <h2 class="text-2xl font-bold mb-2">Data sources</h2>
+  <p class="text-slate-600 text-sm mb-6">All paths match files in this repository.</p>
+  <div class="grid md:grid-cols-2 gap-4">
+    <div class="bg-white rounded-xl border shadow-sm p-5">
+      <h3 class="font-bold text-sm mb-3 text-indigo-700">Genomic &amp; clinical</h3>
+      <ul class="text-xs space-y-2 text-slate-700">
+        <li><code class="bg-slate-100 px-1 rounded">data/genomes/</code> — 1,037 TB genomes (117 VCF + 920 NCBI assemblies)</li>
+        <li><code class="bg-slate-100 px-1 rounded">data/cryptic/MUTATIONS.csv.gz</code> — 12,287 CRyPTIC isolates</li>
+        <li><code class="bg-slate-100 px-1 rounded">data/metadata/cryptic_phenotypes.csv</code> — drug susceptibility phenotypes</li>
+        <li><code class="bg-slate-100 px-1 rounded">data/reference/H37Rv.{gff,fasta}</code> — 13 resistance genes</li>
+        <li>WHO 2021 catalog — 32 positive hotspot residues</li>
+      </ul>
     </div>
-    <div class="flex-1 overflow-y-auto rounded-lg border border-slate-200 shadow-sm">
-      <table class="w-full text-xs">
-        <thead class="bg-slate-100 text-[10px] font-semibold uppercase tracking-wider text-slate-500 sticky top-0">
-          <tr><th class="px-3 py-2.5 text-left">Gene</th><th class="px-3 py-2.5 text-left">Mutation</th><th class="px-3 py-2.5 text-left">Score</th><th class="px-3 py-2.5 text-left">Novelty</th><th class="px-3 py-2.5 text-left">Mechanism</th><th class="px-3 py-2.5 text-left">Docking</th></tr>
-        </thead>
-        <tbody id="rows" class="divide-y divide-slate-100"></tbody>
-      </table>
+    <div class="bg-white rounded-xl border shadow-sm p-5">
+      <h3 class="font-bold text-sm mb-3 text-indigo-700">Structural</h3>
+      <ul class="text-xs space-y-2 text-slate-700">
+        <li><code class="bg-slate-100 px-1 rounded">data/pdb/alphafold/</code> — 13 AlphaFold models</li>
+        <li><code class="bg-slate-100 px-1 rounded">data/pdb/crystal/</code> — rpoB 5UHB, gyrA 5BS8</li>
+        <li><code class="bg-slate-100 px-1 rounded">data/pdb/*_receptor.pdbqt</code> — Vina receptors</li>
+        <li><code class="bg-slate-100 px-1 rounded">MFX_ligand.pdbqt</code>, <code>RFP_ligand.pdbqt</code> — docking ligands</li>
+      </ul>
     </div>
   </div>
-
-  <!-- DETAIL CARD -->
-  <div class="h-[55%] p-5 pt-2 overflow-hidden">
-    <div id="card" class="h-full rounded-xl border border-slate-200 bg-white shadow-sm p-5 overflow-y-auto detail-card"></div>
-  </div>
-
 </section>
+
+<section id="training" class="fade-up">
+  <h2 class="text-2xl font-bold mb-2">Model creation &amp; training</h2>
+  <p class="text-slate-600 text-sm mb-6">Run scripts in order. Outputs live in <code>analysis/results/</code>.</p>
+  <div class="space-y-3">
+    <details class="bg-white rounded-xl border shadow-sm p-4" open>
+      <summary class="font-bold cursor-pointer text-sm">Stage 0 — <code class="text-indigo-600">scripts/04b_hotspot_model.py</code></summary>
+      <p class="text-xs text-slate-600 mt-2">Homoplasy + sequence features. AUROC <strong>0.888</strong>.</p>
+    </details>
+    <details class="bg-white rounded-xl border shadow-sm p-4">
+      <summary class="font-bold cursor-pointer text-sm">Stage 1 — <code class="text-indigo-600">scripts/04c_stage1_features.py</code></summary>
+      <p class="text-xs text-slate-600 mt-2">AlphaFold SASA, ESM-2, contact density. AUROC <strong>0.906</strong>.</p>
+    </details>
+    <details class="bg-white rounded-xl border shadow-sm p-4" open>
+      <summary class="font-bold cursor-pointer text-sm">Stage 2 — <code class="text-indigo-600">scripts/04d_docking_features.py</code></summary>
+      <p class="text-xs text-slate-600 mt-2">Drug proximity (10 Å, self-excluded) + XGBoost + Platt calibration. AUROC <strong>0.971</strong>, AUPRC <strong>0.560</strong>. Top feature: homoplasy_alleles (0.269).</p>
+    </details>
+    <details class="bg-white rounded-xl border shadow-sm p-4">
+      <summary class="font-bold cursor-pointer text-sm">Forecasting — <code class="text-indigo-600">scripts/04e_mutation_forecasting.py</code></summary>
+      <p class="text-xs text-slate-600 mt-2">Scores all SNV-accessible mutations. Writes watchlists to <code>analysis/results/forecasting/</code>.</p>
+    </details>
+  </div>
+  <div class="mt-4 bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-xs grid grid-cols-2 md:grid-cols-4 gap-2">
+    <div>GroupKFold AUROC: <strong>0.972 ± 0.018</strong></div>
+    <div>Permutation p: <strong>0.005</strong></div>
+    <div>Top-20 recall: <strong>26/32</strong></div>
+    <div>Audit: <code>12_audit.py</code> (~180 checks)</div>
+  </div>
+</section>
+
+<section id="forecast" class="fade-up">
+  <h2 class="text-2xl font-bold mb-2">CRyPTIC prospective validation</h2>
+  <p class="text-slate-600 text-sm mb-6"><code>scripts/08_cryptic_validation_full.py</code> · matched-null p = <strong>0.001</strong></p>
+  <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+    <div class="bg-white rounded-xl border p-4 text-center"><div class="text-xl font-bold">30</div><div class="text-[10px] text-slate-500">Tier 0 WHO</div></div>
+    <div class="bg-emerald-50 rounded-xl border border-emerald-200 p-4 text-center"><div class="text-xl font-bold text-emerald-700">24</div><div class="text-[10px] text-emerald-600">Tier 1 FDR</div></div>
+    <div class="bg-blue-50 rounded-xl border p-4 text-center"><div class="text-xl font-bold text-blue-700">32</div><div class="text-[10px] text-blue-600">Tier 2</div></div>
+    <div class="bg-amber-50 rounded-xl border p-4 text-center"><div class="text-xl font-bold text-amber-700">31</div><div class="text-[10px] text-amber-600">Tier 3</div></div>
+    <div class="bg-indigo-50 rounded-xl border border-indigo-300 p-4 text-center ring-2 ring-indigo-200"><div class="text-xl font-bold text-indigo-700">188</div><div class="text-[10px] text-indigo-600">Tier 4 forecast</div></div>
+  </div>
+</section>
+
+<section id="docking" class="fade-up">
+  <h2 class="text-2xl font-bold mb-2">Structural validation (AutoDock Vina)</h2>
+  <p class="text-slate-600 text-sm mb-4">
+    <code>scripts/06_filter_pocket_candidates.py</code> → pocket ≤ 4.5 Å.
+    <code>scripts/07_tier4_pocket_vina_batch.py</code> → fresh WT redock + mutant docking.
+    ΔΔG = ΔG<sub>mut</sub> − ΔG<sub>WT</sub>. Pass threshold: ΔΔG ≥ +0.15 kcal/mol.
+  </p>
+
+  <div class="bg-white rounded-2xl border-2 border-indigo-200 shadow-lg overflow-hidden mb-8">
+    <div class="grid md:grid-cols-2">
+      <div class="p-6">
+        <span class="tag bg-green-100 text-green-800 border-green-300">Literature-novel discovery</span>
+        <h3 class="text-2xl font-bold mt-2">gyrB <span class="text-indigo-600 font-mono">Q538L</span></h3>
+        <p class="text-sm text-slate-600 mt-1">Rank #131 · 0 CRyPTIC carriers · pocket 1.34 Å from MFX</p>
+        <div class="grid grid-cols-3 gap-2 mt-4 text-center text-xs">
+          <div class="bg-slate-50 rounded-lg p-3"><div class="font-bold text-lg">−7.07</div>WT ΔG</div>
+          <div class="bg-slate-50 rounded-lg p-3"><div class="font-bold text-lg">−6.33</div>Mut ΔG</div>
+          <div class="bg-emerald-50 rounded-lg p-3 border border-emerald-200"><div class="font-bold text-lg text-emerald-700">+0.74</div>ΔΔG STRONG</div>
+        </div>
+        <p class="text-xs text-slate-600 mt-4">Clinical Mtb reports N538D/K/S/T at codon 538 — never Q538L. PyMOL view shows mutant sidechain in the MFX pocket (AlphaFold gyrB).</p>
+        <p class="text-[10px] text-amber-800 bg-amber-50 border border-amber-200 rounded p-2 mt-3">Earlier run used stale WT baseline (−6.16 → ΔΔG −0.17). Tier-4 batch redocks WT fresh — <strong>+0.74 is authoritative</strong>.</p>
+      </div>
+      <div class="bg-slate-100 flex items-center justify-center p-4">
+        <img src="data/pdb/gyrB_Q538L_validation.png" alt="PyMOL: gyrB Q538L with moxifloxacin in binding pocket" class="max-h-72 rounded-lg shadow-md object-contain">
+      </div>
+    </div>
+  </div>
+
+  <div class="flex gap-2 mb-3">
+    <button id="btn-all" onclick="setFilter('all')" class="px-3 py-1 text-xs font-semibold rounded-full bg-indigo-600 text-white">All 32 screened</button>
+    <button id="btn-val" onclick="setFilter('validated')" class="px-3 py-1 text-xs font-semibold rounded-full bg-slate-200 text-slate-700">10 validated</button>
+  </div>
+  <div class="overflow-x-auto rounded-xl border bg-white shadow-sm">
+    <table class="w-full text-xs">
+      <thead class="bg-slate-100 text-[10px] uppercase text-slate-500">
+        <tr><th class="px-3 py-2 text-left">Gene</th><th class="px-3 py-2 text-left">Mutation</th><th class="px-3 py-2 text-left">Rank</th><th class="px-3 py-2 text-left">Pocket Å</th><th class="px-3 py-2 text-left">ΔG WT</th><th class="px-3 py-2 text-left">ΔG Mut</th><th class="px-3 py-2 text-left">ΔΔG</th><th class="px-3 py-2 text-left">Cat</th><th class="px-3 py-2 text-left">✓</th></tr>
+      </thead>
+      <tbody id="dock-rows"></tbody>
+    </table>
+  </div>
+  <p class="text-[10px] text-slate-400 mt-2">Source: <code>analysis/results/forecasting/tier4_pocket_vina_scores.csv</code> · all scores verified against PDBQT REMARK lines</p>
+</section>
+
+<section id="audit" class="fade-up">
+  <h2 class="text-2xl font-bold mb-2">Novelty &amp; score audit</h2>
+  <p class="text-slate-600 text-sm mb-4"><code>analysis/audit_novelty_and_scores.py</code> · CARD + PubMed + PDBQT re-parse</p>
+  <div class="overflow-x-auto rounded-xl border bg-white shadow-sm">
+    <table class="w-full text-xs">
+      <thead class="bg-slate-100 text-[10px] uppercase text-slate-500">
+        <tr><th class="px-3 py-2 text-left">Mutation</th><th class="px-3 py-2 text-left">ΔΔG</th><th class="px-3 py-2 text-left">Literature novel?</th><th class="px-3 py-2 text-left">Notes</th></tr>
+      </thead>
+      <tbody id="audit-rows"></tbody>
+    </table>
+  </div>
+  <div class="mt-4 bg-slate-800 text-slate-100 rounded-xl p-5 text-xs space-y-1">
+    <p><strong>Pipeline novel</strong> = Tier 4, 0 CRyPTIC carriers (all 10 validated hits)</p>
+    <p><strong>Literature novel</strong> = not in CARD / clinical literature for Mtb</p>
+    <p><strong>Structurally validated</strong> = pocket filter + Vina ΔΔG ≥ +0.15</p>
+    <p class="text-emerald-300 mt-2">Only gyrB Q538L passes all three as a de novo discovery.</p>
+  </div>
+</section>
+
+<section id="roadmap" class="fade-up pb-16">
+  <h2 class="text-2xl font-bold mb-2">Next steps</h2>
+  <div class="space-y-4 mt-4">
+    <div class="bg-white rounded-xl border-l-4 border-indigo-600 shadow-sm p-5">
+      <span class="tag bg-indigo-100 text-indigo-800 border-indigo-200">Now</span>
+      <h3 class="font-bold mt-2">Paper &amp; presentation</h3>
+      <p class="text-xs text-slate-600 mt-1">Lead with gyrB Q538L. Use 9 other Vina-validated hits as pipeline benchmarks. Include CRyPTIC Tier 1 retrospective confirmations.</p>
+    </div>
+    <div class="bg-white rounded-xl border-l-4 border-violet-500 shadow-sm p-5">
+      <span class="tag bg-violet-100 text-violet-800 border-violet-200">Phase 2</span>
+      <h3 class="font-bold mt-2">Extend to other diseases — MRSA first</h3>
+      <p class="text-xs text-slate-600 mt-1">Same pipeline architecture on <em>Staphylococcus aureus</em> (mecA, grlA/grlB, rpoB). MRSA is the first target pathogen.</p>
+    </div>
+    <div class="bg-white rounded-xl border-l-4 border-emerald-500 shadow-sm p-5">
+      <span class="tag bg-emerald-100 text-emerald-800 border-emerald-200">Phase 3</span>
+      <h3 class="font-bold mt-2">Mantis platform integration</h3>
+      <p class="text-xs text-slate-600 mt-1">Deploy emergence forecasting inside the Mantis clinical genomics platform — Tier-4 alerts with structural validation and literature novelty flags at WGS interpretation time.</p>
+    </div>
+  </div>
+</section>
+
 </main>
 
+<footer class="bg-slate-900 text-slate-400 text-center text-xs py-6">
+  Aly Dhedhi · Vinay Singamsetty · Li-Lun Ho · Manolis Kellis · Kellis Lab, MIT
+</footer>
+
 <script>
-const DATA = [
-  {
-    gene:"gyrB", mut:"Q538L", score:0.234, rank:131,
-    novelty:"TRULY NOVEL", noveltyClass:"bg-green-100 text-green-800 border-green-300",
-    mech:"Water-Bridge Disruption", mechIcon:"\ud83d\udca7",
-    dock:"WEAK (\u0394\u0394G -0.174)", dockClass:"bg-yellow-100 text-yellow-800",
-    whyNovel:"No entry in any clinical database. Position 538 is a known E. coli hotspot, but Mtb has Glutamine (not Asparagine) at this position \u2014 Q538L is an Mtb-specific discovery.",
-    location:"TOPRIM domain, 17\u201322\u00c5 from moxifloxacin",
-    trueMech:"Q538L swaps a polar Glutamine for hydrophobic Leucine, breaking the Mg\u00b2\u207a-water bridge that fluoroquinolones need to stabilize DNA cleavage. The mutation is too far from the drug for Vina to detect.",
-    vinaBlind:"17\u00c5 from drug \u2014 rigid docking cannot see electrostatic water-bridge disruption"
-  },
-  {
-    gene:"eis", mut:"V59A", score:0.409, rank:34,
-    novelty:"Mtb-NOVEL", noveltyClass:"bg-amber-100 text-amber-800 border-amber-300",
-    mech:"Coding-Region LoF", mechIcon:"\ud83d\udd33",
-    dock:"FAILED (Vina tree.h)", dockClass:"bg-red-100 text-red-800",
-    whyNovel:"All known eis resistance is from promoter mutations. A coding-region missense in eis has never been documented in clinical Mtb.",
-    location:"Aminoglycoside acetyltransferase core",
-    trueMech:"V59A destabilizes the catalytic pocket. The enzyme can no longer acetylate amikacin, even though its expression level is normal \u2014 a completely new mechanism for eis-mediated resistance.",
-    vinaBlind:"Rigid docking cannot model enzymatic loss-of-function; it tries to fit drug into a broken active site."
-  },
-  {
-    gene:"rpsL", mut:"K43E", score:0.446, rank:22,
-    novelty:"Mtb-NOVEL", noveltyClass:"bg-amber-100 text-amber-800 border-amber-300",
-    mech:"Charge Reversal", mechIcon:"\u26a1",
-    dock:"FAILED (Vina tree.h)", dockClass:"bg-red-100 text-red-800",
-    whyNovel:"K43R is the #1 streptomycin mutation worldwide \u2014 it preserves positive charge. K43E flips Lys\u207a to Glu\u207b, a charge reversal never seen in clinical Mtb.",
-    location:"Ribosomal protein S12, rRNA contact loop",
-    trueMech:"Positive-to-negative charge flip at the rRNA interface causes electrostatic repulsion against the backbone, deforming the loop and ejecting streptomycin. Vina crashes on streptomycin\u2019s 14-torsion branched rings.",
-    vinaBlind:"14-torsion branched-ring ligand crashes Vina parser; charge-reversal backbone warping invisible to rigid receptor."
-  },
-  {
-    gene:"rpoB", mut:"V170I", score:0.375, rank:47,
-    novelty:"Mtb-NOVEL", noveltyClass:"bg-amber-100 text-amber-800 border-amber-300",
-    mech:"Allosteric Shield", mechIcon:"\ud83d\udee1\ufe0f",
-    dock:"NONE (\u0394\u0394G +0.001)", dockClass:"bg-slate-100 text-slate-600",
-    whyNovel:"V170F is documented in Myanmar/Botswana. V170I \u2014 a conservative Val\u2192Ile \u2014 is completely undocumented anywhere.",
-    location:"Surface \u03b2-sheet outside RRDR (rifampicin resistance determining region)",
-    trueMech:"The extra methyl group in Ile shifts the breathing dynamics of RNA polymerase\u2019s entrance channel, slowing rifampicin uptake without touching the active site. Vina sees zero binding change because the pocket is untouched.",
-    vinaBlind:"Allosteric dynamics are invisible to rigid docking \u2014 \u0394\u0394G \u2248 0 despite functional impact."
-  },
-  {
-    gene:"inhA", mut:"I16V", score:0.426, rank:27,
-    novelty:"NOT NOVEL (Control)", noveltyClass:"bg-rose-100 text-rose-800 border-rose-300",
-    mech:"Validation Control", mechIcon:"\u2705",
-    dock:"NONE (\u0394\u0394G +0.019)", dockClass:"bg-slate-100 text-slate-600",
-    whyNovel:"Known from 2011 docking literature, but has 0 carriers in CRyPTIC. The model correctly flagged it anyway \u2014 a validation checkpoint.",
-    location:"NADH-binding gatekeeper loop",
-    trueMech:"Loss of one methyl group subtly restricts cofactor gatekeeping without killing enzyme function. The model found it unprompted \u2014 proving the pipeline detects real structural blind spots.",
-    vinaBlind:"INH-NAD adduct exceeds Vina torsion limits; rigid docking misses kinetics changes."
-  }
+const DOCK = [
+  ["gyrA","G88D",29,3.94,-5.269,-5.099,0.170,"MODERATE",1],
+  ["gyrA","G88S",30,3.94,-5.269,-5.090,0.179,"MODERATE",1],
+  ["rpoB","V170I",47,3.97,-9.847,-9.969,-0.122,"NONE",0],
+  ["gyrA","S91L",59,4.38,-5.269,-5.172,0.097,"WEAK",0],
+  ["gyrA","A90S",74,2.27,-5.269,-5.262,0.007,"NONE",0],
+  ["gyrA","A90G",118,2.27,-5.269,-5.266,0.003,"NONE",0],
+  ["rpoB","S450T",123,3.23,-9.847,-9.955,-0.108,"NONE",0],
+  ["rpoB","I491N",124,3.25,-9.847,-9.691,0.156,"MODERATE",1],
+  ["gyrA","A90P",125,2.27,-5.269,-5.133,0.136,"WEAK",0],
+  ["rpoB","V170D",130,3.97,-9.847,-9.800,0.047,"NONE",0],
+  ["gyrB","Q538L",131,1.34,-7.071,-6.334,0.737,"STRONG",1],
+  ["rpoB","L452R",132,4.30,-9.847,-8.802,1.045,"STRONG",1],
+  ["rpoB","P483R",140,2.53,-9.847,-8.593,1.254,"STRONG",1],
+  ["rpoB","L430M",141,3.75,-9.847,-9.753,0.094,"WEAK",0],
+  ["gyrA","G88R",142,3.94,-5.269,-5.144,0.125,"WEAK",0],
+  ["rpoB","P483H",144,2.53,-9.847,-9.876,-0.029,"NONE",0],
+  ["rpoB","L430Q",146,3.75,-9.847,-9.811,0.036,"NONE",0],
+  ["gyrB","Q538E",149,1.34,-7.071,-7.070,0.001,"NONE",0],
+  ["gyrB","Q538P",153,1.34,-7.071,-7.012,0.059,"WEAK",0],
+  ["rpoB","L430V",157,3.75,-9.847,-9.760,0.087,"WEAK",0],
+  ["rpoB","P483T",158,2.53,-9.847,-9.828,0.019,"NONE",0],
+  ["gyrB","Q538K",164,1.34,-7.071,-7.063,0.008,"NONE",0],
+  ["gyrA","S91A",170,4.38,-5.269,-5.066,0.203,"MODERATE",1],
+  ["rpoB","L452M",181,4.30,-9.847,-7.710,2.137,"STRONG",1],
+  ["gyrB","Q538H",183,1.34,-7.071,-7.059,0.012,"NONE",0],
+  ["rpoB","P483A",189,2.53,-9.847,-9.761,0.086,"WEAK",0],
+  ["rpoB","V170L",202,3.97,-9.847,-9.820,0.027,"NONE",0],
+  ["gyrA","S91T",204,4.38,-5.269,-5.132,0.137,"WEAK",0],
+  ["gyrA","G88V",207,3.94,-5.269,-5.091,0.178,"MODERATE",1],
+  ["rpoB","V170G",212,3.97,-9.847,-9.749,0.098,"WEAK",0],
+  ["gyrA","S91W",213,4.38,-5.269,-5.414,-0.145,"NONE",0],
+  ["rpoB","Q432R",225,2.39,-9.847,-9.448,0.399,"MODERATE",1]
 ];
 
-function render(i){
-  const d=DATA[i];
-  const card=document.getElementById('card');
-  card.style.opacity='0';
-  setTimeout(()=>{
-    card.innerHTML=`
-      <div class="flex items-start justify-between mb-4">
-        <div>
-          <div class="flex items-center gap-2 mb-1">
-            <span class="text-lg font-bold text-slate-900">${d.gene}</span>
-            <span class="font-mono text-lg font-bold text-indigo-600">${d.mut}</span>
-            <span class="px-2 py-0.5 text-[10px] font-bold rounded-full border ${d.noveltyClass}">${d.novelty}</span>
-          </div>
-          <div class="flex items-center gap-3 text-xs text-slate-500">
-            <span>${d.mechIcon} ${d.mech}</span>
-            <span>Rank ${d.rank}</span>
-            <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold ${d.dockClass}">${d.dock}</span>
-          </div>
-        </div>
-        <div class="text-right">
-          <div class="text-2xl font-bold text-indigo-600">${d.score.toFixed(3)}</div>
-          <div class="text-[10px] text-slate-400">emergence score</div>
-          <div class="score-bar w-24 mt-1 ml-auto">
-            <div class="score-bar-fill bg-indigo-500" style="--w:${d.score*200}%"></div>
-          </div>
-        </div>
-      </div>
-      <div class="grid grid-cols-2 gap-3 mb-3">
-        <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
-          <p class="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1">Why It\u2019s Novel</p>
-          <p class="text-xs text-slate-700">${d.whyNovel}</p>
-          <p class="text-[10px] text-slate-400 mt-2"><span class="font-semibold">Location:</span> ${d.location}</p>
-        </div>
-        <div class="bg-indigo-50 rounded-lg p-3 border border-indigo-200">
-          <p class="text-[9px] font-bold uppercase tracking-wider text-indigo-500 mb-1">True Mechanism</p>
-          <p class="text-xs text-indigo-900">${d.trueMech}</p>
-        </div>
-      </div>
-      <div class="bg-amber-50 rounded-lg p-3 border border-amber-200">
-        <p class="text-[9px] font-bold uppercase tracking-wider text-amber-600 mb-1">Why Vina Missed It</p>
-        <p class="text-xs text-amber-900">${d.vinaBlind}</p>
-      </div>
-    `;
-    card.style.opacity='1';
-    card.style.transition='opacity .25s ease';
-  },50);
+const AUDIT = [
+  ["gyrB Q538L","+0.737","YES","No PubMed/CARD; codon 538 = N538D/K/S/T only"],
+  ["rpoB P483R","+1.254","MAYBE","P483L reported; P483R not in WHO/CARD"],
+  ["rpoB L452M","+2.137","NO","CARD WHO-R"],
+  ["rpoB L452R","+1.045","NO","CARD PMID:25427352"],
+  ["rpoB Q432R","+0.399","NO","CARD PMID:15814606"],
+  ["rpoB I491N","+0.156","NO","Emerging codon 491 (I491F WHO borderline)"],
+  ["gyrA G88D","+0.170","NO","Rare clinical Mtb FQ mutation"],
+  ["gyrA G88S","+0.179","NO","G88 QRDR variant class"],
+  ["gyrA G88V","+0.178","NO","G88 QRDR variant class"],
+  ["gyrA S91A","+0.203","NO","Codon 91 established (S91P in MTBDRsl)"]
+];
+
+let filter = 'all';
+
+function catCls(c){
+  return c==='STRONG'?'bg-emerald-100 text-emerald-800':c==='MODERATE'?'bg-blue-100 text-blue-800':c==='WEAK'?'bg-amber-100 text-amber-800':'bg-slate-100 text-slate-600';
 }
 
-function init(){
-  const tbody=document.getElementById('rows');
-  DATA.forEach((d,i)=>{
-    const tr=document.createElement('tr');
-    const nShort=d.novelty.replace('TRULY NOVEL','TRULY').replace('Mtb-NOVEL','Mtb').replace('NOT NOVEL (Control)','CONTROL');
-    const scorePct=Math.round(d.score*100);
-    tr.innerHTML=`
-      <td class="px-3 py-2.5 font-bold text-slate-800">${d.gene}</td>
-      <td class="px-3 py-2.5"><code class="bg-slate-100 px-1.5 py-0.5 rounded text-rose-600 font-mono font-bold text-[11px]">${d.mut}</code></td>
-      <td class="px-3 py-2.5">
-        <div class="flex items-center gap-2">
-          <span class="font-bold text-indigo-600">${scorePct}%</span>
-          <div class="score-bar w-12"><div class="score-bar-fill bg-indigo-500" style="--w:${scorePct}%"></div></div>
-        </div>
-      </td>
-      <td class="px-3 py-2.5"><span class="px-2 py-0.5 text-[10px] font-bold rounded-full border ${d.noveltyClass}">${nShort}</span></td>
-      <td class="px-3 py-2.5"><span class="flex items-center gap-1 text-slate-600">${d.mechIcon} ${d.mech}</span></td>
-      <td class="px-3 py-2.5"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold ${d.dockClass}">${d.dock.includes('FAILED')?'FAILED':d.dock.includes('NONE')?'NONE':'WEAK'}</span></td>
-    `;
-    tr.addEventListener('click',()=>{
-      document.querySelectorAll('#rows tr').forEach(r=>r.classList.remove('active-row'));
-      tr.classList.add('active-row');
-      render(i);
-    });
-    tbody.appendChild(tr);
-  });
-  document.querySelector('#rows tr').classList.add('active-row');
-  render(0);
+function setFilter(f){
+  filter = f;
+  document.getElementById('btn-all').className = 'px-3 py-1 text-xs font-semibold rounded-full ' + (f==='all'?'bg-indigo-600 text-white':'bg-slate-200 text-slate-700');
+  document.getElementById('btn-val').className = 'px-3 py-1 text-xs font-semibold rounded-full ' + (f==='validated'?'bg-indigo-600 text-white':'bg-slate-200 text-slate-700');
+  renderDock();
 }
-window.onload=init;
+
+function renderDock(){
+  const tb = document.getElementById('dock-rows');
+  tb.innerHTML = '';
+  DOCK.filter(r => filter==='all' || r[8]).forEach(r => {
+    const hi = r[0]==='gyrB' && r[1]==='Q538L';
+    const tr = document.createElement('tr');
+    tr.className = 'row-hover' + (hi?' bg-indigo-50':'');
+    const ddg = r[6];
+    tr.innerHTML = `<td class="px-3 py-2 font-bold">${r[0]}</td><td class="px-3 py-2 font-mono font-bold text-rose-600">${r[1]}</td><td class="px-3 py-2">${r[2]}</td><td class="px-3 py-2">${r[3].toFixed(2)}</td><td class="px-3 py-2">${r[4].toFixed(3)}</td><td class="px-3 py-2">${r[5].toFixed(3)}</td><td class="px-3 py-2 font-bold ${ddg>=0.15?'text-emerald-700':ddg>0?'text-amber-700':'text-slate-500'}">${ddg>=0?'+':''}${ddg.toFixed(3)}</td><td class="px-3 py-2"><span class="tag ${catCls(r[7])}">${r[7]}</span></td><td class="px-3 py-2">${r[8]?'✓':'—'}</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+function renderAudit(){
+  const tb = document.getElementById('audit-rows');
+  AUDIT.forEach(r => {
+    const litCls = r[2]==='YES'?'text-emerald-700 font-bold':r[2]==='MAYBE'?'text-amber-700 font-bold':'text-slate-600';
+    const tr = document.createElement('tr');
+    tr.className = 'row-hover';
+    tr.innerHTML = `<td class="px-3 py-2 font-mono font-bold">${r[0]}</td><td class="px-3 py-2">${r[1]}</td><td class="px-3 py-2 ${litCls}">${r[2]}</td><td class="px-3 py-2 text-slate-600">${r[3]}</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+document.querySelectorAll('.nav-link').forEach(a=>{
+  a.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-link').forEach(x=>x.classList.remove('active'));
+    a.classList.add('active');
+  });
+});
+document.querySelector('.nav-link').classList.add('active');
+renderDock();
+renderAudit();
 </script>
 </body>
 </html>
