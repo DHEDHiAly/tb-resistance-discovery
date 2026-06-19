@@ -1,15 +1,19 @@
 {
   "pipeline": {
     "n_resistance_genes": 13,
-    "n_residues_in_genes": 6600,
+    "n_residues_in_genes": 6350,
     "n_total_snvs": 44016,
-    "n_watchlist_mutations": 309,
+    "n_watchlist_mutations": 305,
     "n_cryptic_samples": 12287,
-    "n_known_hotspots": 21,
+    "n_known_hotspots": 32,
     "n_known_mutations": 33,
-    "n_tier1_validated": 25,
-    "n_novel_observed": 98,
-    "n_forecast_only": 181
+    "n_tier1_validated": 24,
+    "n_novel_observed": 87,
+    "n_forecast_only": 188,
+    "auroc_stage2": 0.9707,
+    "auprc_stage2": 0.5597,
+    "top20_recall_cv": 0.6619,
+    "top20_recall_full_model": 0.625
   },
   "structural_validation": {
     "rmsd": [
@@ -28,44 +32,44 @@
       {
         "Metric": "AUROC",
         "Stage 0": 0.888,
-        "Stage 1": 0.91,
-        "Stage 1.5 (docking)": 0.938,
-        "Stage 3 (per-gene)": 0.977
+        "Stage 1": 0.9058,
+        "Stage 2 (XGBoost + drug)": 0.9707
       },
       {
         "Metric": "AUPRC",
-        "Stage 0": 0.386,
-        "Stage 1": 0.396,
-        "Stage 1.5 (docking)": 0.396,
-        "Stage 3 (per-gene)": 0.525
+        "Stage 0": "\u2014",
+        "Stage 1": 0.2048,
+        "Stage 2 (XGBoost + drug)": 0.5597
       },
       {
-        "Metric": "Top-20 recall",
-        "Stage 0": 0.333,
-        "Stage 1": 0.49,
-        "Stage 1.5 (docking)": 0.49,
-        "Stage 3 (per-gene)": 0.77
+        "Metric": "Top-20 recall (CV)",
+        "Stage 0": "\u2014",
+        "Stage 1": 0.3857,
+        "Stage 2 (XGBoost + drug)": 0.6619
       },
       {
-        "Metric": "Hotspots in Top 20",
-        "Stage 0": "7/21",
-        "Stage 1": "17/21",
-        "Stage 1.5 (docking)": "17/21",
-        "Stage 3 (per-gene)": "14/21"
+        "Metric": "Hotspots in Top 20 (full model)",
+        "Stage 0": "\u2014",
+        "Stage 1": "\u2014",
+        "Stage 2 (XGBoost + drug)": "20/32"
       },
       {
-        "Metric": "Hotspots in Top 50",
-        "Stage 0": "12/21",
-        "Stage 1": "18/21",
-        "Stage 1.5 (docking)": "18/21",
-        "Stage 3 (per-gene)": "20/21"
+        "Metric": "Hotspots in Top 50 (full model)",
+        "Stage 0": "\u2014",
+        "Stage 1": "\u2014",
+        "Stage 2 (XGBoost + drug)": "32/32"
       },
       {
-        "Metric": "Hotspots in Top 100",
-        "Stage 0": "14/21",
-        "Stage 1": "19/21",
-        "Stage 1.5 (docking)": "18/21",
-        "Stage 3 (per-gene)": "21/21"
+        "Metric": "Hotspots in Top 100 (full model)",
+        "Stage 0": "\u2014",
+        "Stage 1": "\u2014",
+        "Stage 2 (XGBoost + drug)": "32/32"
+      },
+      {
+        "Metric": "Best F1 (CV, optimal threshold)",
+        "Stage 0": "\u2014",
+        "Stage 1": "\u2014",
+        "Stage 2 (XGBoost + drug)": "0.550 \u00b1 0.119"
       }
     ],
     "rescued": [
@@ -110,152 +114,160 @@
   "feature_importance": {
     "top_features": [
       {
-        "feature": "drug_distance",
-        "coefficient": -14.39713543825886
-      },
-      {
-        "feature": "conservation_blosum",
-        "coefficient": -2.3565529976069826
-      },
-      {
-        "feature": "hydrophobicity",
-        "coefficient": -1.9051967320549013
-      },
-      {
-        "feature": "strand_propensity",
-        "coefficient": 1.6930227461720868
-      },
-      {
-        "feature": "charge",
-        "coefficient": -1.6327317583951624
-      },
-      {
-        "feature": "inner_distance",
-        "coefficient": -1.632155086886784
-      },
-      {
-        "feature": "contact_density_seq",
-        "coefficient": -0.7725732351965664
-      },
-      {
-        "feature": "sasa_relative",
-        "coefficient": 0.7253252286960377
-      },
-      {
         "feature": "homoplasy_alleles",
-        "coefficient": 0.7020525976666904
+        "importance": 0.2685995
       },
       {
-        "feature": "volume",
-        "coefficient": 0.5996615546596266
-      },
-      {
-        "feature": "esm2_intolerance",
-        "coefficient": -0.5019004480743404
-      },
-      {
-        "feature": "hbond",
-        "coefficient": -0.4648804612650234
-      },
-      {
-        "feature": "rel_position",
-        "coefficient": -0.3249032176850689
-      },
-      {
-        "feature": "contact_density_3d",
-        "coefficient": 0.1822156677702353
+        "feature": "drug_proximity",
+        "importance": 0.15779966
       },
       {
         "feature": "homoplasy_count",
-        "coefficient": 0.0417028307170683
+        "importance": 0.14895171
+      },
+      {
+        "feature": "inner_distance",
+        "importance": 0.047859617
+      },
+      {
+        "feature": "strand_propensity",
+        "importance": 0.04736675
+      },
+      {
+        "feature": "hydrophobicity",
+        "importance": 0.046420224
+      },
+      {
+        "feature": "volume",
+        "importance": 0.038507927
+      },
+      {
+        "feature": "plddt_environment",
+        "importance": 0.036356986
+      },
+      {
+        "feature": "hbond",
+        "importance": 0.036292046
+      },
+      {
+        "feature": "plddt_score",
+        "importance": 0.029114908
+      },
+      {
+        "feature": "sasa_relative",
+        "importance": 0.028262652
+      },
+      {
+        "feature": "contact_density_3d",
+        "importance": 0.024193365
+      },
+      {
+        "feature": "esm2_intolerance",
+        "importance": 0.020160647
+      },
+      {
+        "feature": "rel_position",
+        "importance": 0.020018242
+      },
+      {
+        "feature": "conservation_blosum",
+        "importance": 0.019734623
+      },
+      {
+        "feature": "contact_density_seq",
+        "importance": 0.017970504
       },
       {
         "feature": "helix_propensity",
-        "coefficient": 0.0271783960812146
+        "importance": 0.011724165
+      },
+      {
+        "feature": "charge",
+        "importance": 0.0006665092
       }
     ]
   },
   "mutation_forecasting": {
     "top50": [
       {
-        "gene": "gyrA",
-        "mutation": "D94G",
+        "gene": "embB",
+        "mutation": "M306T",
         "overall_rank": 1,
-        "emergence_score": 0.6397,
-        "status": "Known WHO"
-      },
-      {
-        "gene": "embB",
-        "mutation": "G406D",
-        "overall_rank": 2,
-        "emergence_score": 0.6394,
-        "status": "Known WHO"
-      },
-      {
-        "gene": "pncA",
-        "mutation": "A20T",
-        "overall_rank": 3,
-        "emergence_score": 0.6261,
-        "status": "Forecast-only"
-      },
-      {
-        "gene": "pncA",
-        "mutation": "I133T",
-        "overall_rank": 4,
-        "emergence_score": 0.6234,
+        "emergence_score": 0.5088,
         "status": "Observed"
-      },
-      {
-        "gene": "pncA",
-        "mutation": "V73I",
-        "overall_rank": 5,
-        "emergence_score": 0.6216,
-        "status": "Forecast-only"
-      },
-      {
-        "gene": "pncA",
-        "mutation": "I133V",
-        "overall_rank": 6,
-        "emergence_score": 0.6214,
-        "status": "Forecast-only"
-      },
-      {
-        "gene": "katG",
-        "mutation": "S315G",
-        "overall_rank": 7,
-        "emergence_score": 0.6209,
-        "status": "Observed"
-      },
-      {
-        "gene": "embB",
-        "mutation": "G406S",
-        "overall_rank": 8,
-        "emergence_score": 0.6206,
-        "status": "Validated"
       },
       {
         "gene": "gyrA",
         "mutation": "A90T",
-        "overall_rank": 9,
-        "emergence_score": 0.6197,
+        "overall_rank": 2,
+        "emergence_score": 0.5056,
         "status": "Forecast-only"
       },
       {
-        "gene": "embB",
-        "mutation": "D328G",
-        "overall_rank": 10,
-        "emergence_score": 0.6195,
+        "gene": "inhA",
+        "mutation": "S94L",
+        "overall_rank": 3,
+        "emergence_score": 0.5028,
+        "status": "Forecast-only"
+      },
+      {
+        "gene": "rpoB",
+        "mutation": "H445Y",
+        "overall_rank": 4,
+        "emergence_score": 0.5015,
+        "status": "Known WHO"
+      },
+      {
+        "gene": "rpoB",
+        "mutation": "D435G",
+        "overall_rank": 5,
+        "emergence_score": 0.4993,
         "status": "Validated"
+      },
+      {
+        "gene": "pncA",
+        "mutation": "Q10R",
+        "overall_rank": 6,
+        "emergence_score": 0.49,
+        "status": "Observed"
+      },
+      {
+        "gene": "embB",
+        "mutation": "M306V",
+        "overall_rank": 7,
+        "emergence_score": 0.4857,
+        "status": "Known WHO"
+      },
+      {
+        "gene": "embB",
+        "mutation": "M306I",
+        "overall_rank": 8,
+        "emergence_score": 0.485,
+        "status": "Known WHO"
+      },
+      {
+        "gene": "inhA",
+        "mutation": "S94P",
+        "overall_rank": 9,
+        "emergence_score": 0.4849,
+        "status": "Forecast-only"
+      },
+      {
+        "gene": "rpsL",
+        "mutation": "K88R",
+        "overall_rank": 10,
+        "emergence_score": 0.4818,
+        "status": "Known WHO"
       }
     ],
     "status_counts": [
       {
         "status": "Forecast-only",
-        "count": 181
+        "count": 188
       },
       {
         "status": "Observed",
-        "count": 73
+        "count": 63
       },
       {
         "status": "Known WHO",
@@ -263,16 +275,16 @@
       },
       {
         "status": "Validated",
-        "count": 25
+        "count": 24
       }
     ]
   },
   "cryptic_validation": {
     "cascade": {
-      "watchlist_total": 309,
-      "observed_in_cryptic": 128,
+      "watchlist_total": 305,
+      "observed_in_cryptic": 117,
       "with_phenotype_data": 80,
-      "fdr_significant": 25
+      "fdr_significant": 24
     },
     "tier_distribution": [
       {
@@ -282,261 +294,252 @@
       },
       {
         "tier": 1,
-        "count": 25,
+        "count": 24,
         "label": "Tier 1 (FDR-sig)"
       },
       {
         "tier": 2,
-        "count": 31,
+        "count": 32,
         "label": "Tier 2 (low power)"
       },
       {
         "tier": 3,
-        "count": 42,
+        "count": 31,
         "label": "Tier 3 (no pheno)"
       },
       {
         "tier": 4,
-        "count": 181,
+        "count": 188,
         "label": "Tier 4 (forecast-only)"
       }
     ],
     "tier1_hits": [
       {
-        "mutation": "Q445R",
-        "gene": "embB",
-        "rank": 39,
-        "n_carriers": 56,
-        "resistance_frac_str": "100%",
-        "odds_ratio": Infinity,
-        "pvalue_fdr": 2.548899791333267e-36
-      },
-      {
         "mutation": "D94A",
         "gene": "gyrA",
-        "rank": 119,
+        "rank": 210,
         "n_carriers": 147,
         "resistance_frac_str": "59%",
         "odds_ratio": 9.21905925473427,
-        "pvalue_fdr": 5.521900873316763e-36
+        "pvalue_fdr": 1.1043801746633526e-35
       },
       {
         "mutation": "Q497K",
         "gene": "embB",
-        "rank": 132,
+        "rank": 122,
         "n_carriers": 71,
         "resistance_frac_str": "84%",
         "odds_ratio": 20.181695220919742,
-        "pvalue_fdr": 1.1866327409279722e-20
+        "pvalue_fdr": 1.7799491113919584e-20
       },
       {
         "mutation": "D94H",
         "gene": "gyrA",
-        "rank": 148,
+        "rank": 209,
         "n_carriers": 44,
         "resistance_frac_str": "77%",
         "odds_ratio": 21.039763313609463,
-        "pvalue_fdr": 4.872167866184797e-20
+        "pvalue_fdr": 6.49622382157973e-20
       },
       {
         "mutation": "G406S",
         "gene": "embB",
-        "rank": 8,
+        "rank": 32,
         "n_carriers": 99,
         "resistance_frac_str": "75%",
         "odds_ratio": 11.066326123393727,
-        "pvalue_fdr": 8.531310209624102e-20
+        "pvalue_fdr": 1.0664137762030128e-19
+      },
+      {
+        "mutation": "I21T",
+        "gene": "inhA",
+        "rank": 33,
+        "n_carriers": 64,
+        "resistance_frac_str": "98%",
+        "odds_ratio": 66.40657084188912,
+        "pvalue_fdr": 6.619781924955553e-18
+      },
+      {
+        "mutation": "I194T",
+        "gene": "inhA",
+        "rank": 31,
+        "n_carriers": 64,
+        "resistance_frac_str": "97%",
+        "odds_ratio": 32.66535500427716,
+        "pvalue_fdr": 2.1501843812324991e-16
       },
       {
         "mutation": "D435G",
         "gene": "rpoB",
-        "rank": 60,
+        "rank": 5,
         "n_carriers": 61,
         "resistance_frac_str": "90%",
         "odds_ratio": 14.673004897724,
-        "pvalue_fdr": 3.2358667357840392e-16
+        "pvalue_fdr": 2.773600059243461e-16
+      },
+      {
+        "mutation": "G88C",
+        "gene": "gyrA",
+        "rank": 206,
+        "n_carriers": 24,
+        "resistance_frac_str": "88%",
+        "odds_ratio": 43.01526717557252,
+        "pvalue_fdr": 7.276801480168614e-15
       },
       {
         "mutation": "H445L",
         "gene": "rpoB",
-        "rank": 181,
+        "rank": 68,
         "n_carriers": 76,
         "resistance_frac_str": "82%",
         "odds_ratio": 7.091847775682443,
-        "pvalue_fdr": 1.09445768810076e-13
+        "pvalue_fdr": 8.512448685228134e-14
       },
       {
         "mutation": "H445R",
         "gene": "rpoB",
-        "rank": 62,
+        "rank": 19,
         "n_carriers": 33,
         "resistance_frac_str": "97%",
         "odds_ratio": 49.39875322441961,
-        "pvalue_fdr": 1.3402720095893048e-11
+        "pvalue_fdr": 1.0722176076714438e-11
       },
       {
         "mutation": "I491L",
         "gene": "rpoB",
-        "rank": 217,
+        "rank": 165,
         "n_carriers": 20,
         "resistance_frac_str": "100%",
         "odds_ratio": Infinity,
-        "pvalue_fdr": 2.105455094987489e-08
+        "pvalue_fdr": 1.7226450777170367e-08
       },
       {
         "mutation": "Q497P",
         "gene": "embB",
-        "rank": 137,
+        "rank": 117,
         "n_carriers": 26,
         "resistance_frac_str": "88%",
         "odds_ratio": 27.829474621549423,
-        "pvalue_fdr": 2.47318231074138e-08
+        "pvalue_fdr": 2.06098525895115e-08
       },
       {
-        "mutation": "D328G",
-        "gene": "embB",
-        "rank": 10,
-        "n_carriers": 16,
-        "resistance_frac_str": "92%",
-        "odds_ratio": 40.74888888888889,
-        "pvalue_fdr": 1.2221413234032031e-06
+        "mutation": "S94A",
+        "gene": "inhA",
+        "rank": 71,
+        "n_carriers": 46,
+        "resistance_frac_str": "89%",
+        "odds_ratio": 8.605386975792703,
+        "pvalue_fdr": 3.910281552180327e-08
       },
       {
         "mutation": "Q432K",
         "gene": "rpoB",
-        "rank": 202,
+        "rank": 253,
         "n_carriers": 14,
         "resistance_frac_str": "100%",
         "odds_ratio": Infinity,
-        "pvalue_fdr": 4.753015517744301e-06
+        "pvalue_fdr": 4.074013300923687e-06
       },
       {
         "mutation": "Q432P",
         "gene": "rpoB",
-        "rank": 233,
+        "rank": 254,
         "n_carriers": 17,
         "resistance_frac_str": "94%",
         "odds_ratio": 25.41418470109278,
-        "pvalue_fdr": 7.086594086095109e-06
-      },
-      {
-        "mutation": "D328Y",
-        "gene": "embB",
-        "rank": 280,
-        "n_carriers": 14,
-        "resistance_frac_str": "90%",
-        "odds_ratio": 33.31039076376554,
-        "pvalue_fdr": 1.7769795553446764e-05
+        "pvalue_fdr": 6.141714874615761e-06
       },
       {
         "mutation": "Q432L",
         "gene": "rpoB",
-        "rank": 261,
+        "rank": 250,
         "n_carriers": 14,
         "resistance_frac_str": "93%",
         "odds_ratio": 20.63576017130621,
-        "pvalue_fdr": 8.831530298032603e-05
+        "pvalue_fdr": 8.279559654405566e-05
       },
       {
         "mutation": "G406C",
         "gene": "embB",
-        "rank": 236,
+        "rank": 161,
         "n_carriers": 17,
         "resistance_frac_str": "73%",
         "odds_ratio": 9.862997484835034,
-        "pvalue_fdr": 0.0007966672573249
-      },
-      {
-        "mutation": "Q429L",
-        "gene": "rpoB",
-        "rank": 302,
-        "n_carriers": 8,
-        "resistance_frac_str": "100%",
-        "odds_ratio": Infinity,
-        "pvalue_fdr": 0.0010050997914857
+        "pvalue_fdr": 0.0007498044774822
       },
       {
         "mutation": "H445Q",
         "gene": "rpoB",
-        "rank": 253,
+        "rank": 120,
         "n_carriers": 10,
         "resistance_frac_str": "90%",
         "odds_ratio": 14.274069319640564,
-        "pvalue_fdr": 0.0022674862342378
-      },
-      {
-        "mutation": "S441L",
-        "gene": "rpoB",
-        "rank": 87,
-        "n_carriers": 10,
-        "resistance_frac_str": "90%",
-        "odds_ratio": 14.274069319640564,
-        "pvalue_fdr": 0.0022674862342378
+        "pvalue_fdr": 0.0023934576916954
       },
       {
         "mutation": "V170A",
         "gene": "rpoB",
-        "rank": 81,
+        "rank": 58,
         "n_carriers": 6,
         "resistance_frac_str": "100%",
         "odds_ratio": Infinity,
-        "pvalue_fdr": 0.0057105081834448
+        "pvalue_fdr": 0.0059942303744095
+      },
+      {
+        "mutation": "I21V",
+        "gene": "inhA",
+        "rank": 40,
+        "n_carriers": 16,
+        "resistance_frac_str": "87%",
+        "odds_ratio": 6.792246352222599,
+        "pvalue_fdr": 0.0059942303744095
       },
       {
         "mutation": "L430R",
         "gene": "rpoB",
-        "rank": 196,
+        "rank": 88,
         "n_carriers": 11,
         "resistance_frac_str": "82%",
         "odds_ratio": 7.13607188703466,
         "pvalue_fdr": 0.0073777192094431
       },
       {
-        "mutation": "Q432H",
-        "gene": "rpoB",
-        "rank": 246,
-        "n_carriers": 4,
-        "resistance_frac_str": "100%",
-        "odds_ratio": Infinity,
-        "pvalue_fdr": 0.0317916040531538
-      },
-      {
         "mutation": "H445P",
         "gene": "rpoB",
-        "rank": 262,
+        "rank": 101,
         "n_carriers": 4,
         "resistance_frac_str": "100%",
         "odds_ratio": Infinity,
-        "pvalue_fdr": 0.0317916040531538
+        "pvalue_fdr": 0.0331738477076387
       },
       {
-        "mutation": "Q429H",
+        "mutation": "Q432H",
         "gene": "rpoB",
-        "rank": 270,
+        "rank": 261,
         "n_carriers": 4,
         "resistance_frac_str": "100%",
         "odds_ratio": Infinity,
-        "pvalue_fdr": 0.0317916040531538
+        "pvalue_fdr": 0.0331738477076387
       },
       {
-        "mutation": "Q127P",
-        "gene": "katG",
-        "rank": 292,
-        "n_carriers": 8,
-        "resistance_frac_str": "88%",
-        "odds_ratio": 7.308474576271187,
-        "pvalue_fdr": 0.0480769167626414
+        "mutation": "V78A",
+        "gene": "inhA",
+        "rank": 284,
+        "n_carriers": 6,
+        "resistance_frac_str": "0%",
+        "odds_ratio": 0.0,
+        "pvalue_fdr": 0.0445099991939383
       }
     ]
   },
   "clinical_impact": {
     "n_known_who_observed": 30,
-    "n_novel_validated_tier1": 25,
-    "n_novel_observed_total": 68,
-    "n_forecast_targets": 181,
+    "n_novel_validated_tier1": 24,
+    "n_novel_observed_total": 57,
+    "n_forecast_targets": 188,
     "genes_with_tier1_hits": 4,
     "top_gene_tier1": "rpoB",
-    "n_tier1_in_top_gene": "15"
+    "n_tier1_in_top_gene": "12"
   },
   "supplementary": {
     "roc_comparison": [
@@ -562,27 +565,27 @@
         "gene": "embB",
         "n_hotspots": 3,
         "n_known_mutations": 9,
-        "top20_recall": 2,
-        "top50_recall": 4,
-        "top100_recall": 4,
-        "top20_pct": "2/9",
-        "top50_pct": "4/9",
-        "top100_pct": "4/9",
-        "median_rank": 122.0,
-        "auroc": 0.6066
+        "top20_recall": 3,
+        "top50_recall": 3,
+        "top100_recall": 7,
+        "top20_pct": "3/9",
+        "top50_pct": "3/9",
+        "top100_pct": "7/9",
+        "median_rank": 76.0,
+        "auroc": 0.6084
       },
       {
         "gene": "gyrA",
         "n_hotspots": 3,
         "n_known_mutations": 5,
-        "top20_recall": 1,
-        "top50_recall": 3,
+        "top20_recall": 4,
+        "top50_recall": 4,
         "top100_recall": 4,
-        "top20_pct": "1/5",
-        "top50_pct": "3/5",
+        "top20_pct": "4/5",
+        "top50_pct": "4/5",
         "top100_pct": "4/5",
-        "median_rank": 43.0,
-        "auroc": 0.6995
+        "median_rank": 8.0,
+        "auroc": 0.854
       },
       {
         "gene": "gyrB",
@@ -601,14 +604,14 @@
         "gene": "katG",
         "n_hotspots": 1,
         "n_known_mutations": 3,
-        "top20_recall": 0,
-        "top50_recall": 1,
-        "top100_recall": 2,
-        "top20_pct": "0/3",
-        "top50_pct": "1/3",
-        "top100_pct": "2/3",
-        "median_rank": 89.0,
-        "auroc": 0.61
+        "top20_recall": 1,
+        "top50_recall": 2,
+        "top100_recall": 3,
+        "top20_pct": "1/3",
+        "top50_pct": "2/3",
+        "top100_pct": "3/3",
+        "median_rank": 50.0,
+        "auroc": 0.81
       },
       {
         "gene": "pncA",
@@ -620,37 +623,36 @@
         "top20_pct": "2/4",
         "top50_pct": "2/4",
         "top100_pct": "2/4",
-        "median_rank": 63.5,
-        "auroc": 0.628
+        "median_rank": 61.5,
+        "auroc": 0.6333
       },
       {
         "gene": "rpoB",
         "n_hotspots": 7,
         "n_known_mutations": 10,
-        "top20_recall": 1,
-        "top50_recall": 5,
-        "top100_recall": 6,
-        "top20_pct": "1/10",
-        "top50_pct": "5/10",
-        "top100_pct": "6/10",
-        "median_rank": 64.5,
-        "auroc": 0.5763
+        "top20_recall": 0,
+        "top50_recall": 2,
+        "top100_recall": 3,
+        "top20_pct": "0/10",
+        "top50_pct": "2/10",
+        "top100_pct": "3/10",
+        "median_rank": 148.0,
+        "auroc": 0.4019
       },
       {
         "gene": "rpsL",
         "n_hotspots": 2,
         "n_known_mutations": 2,
-        "top20_recall": 0,
+        "top20_recall": 2,
         "top50_recall": 2,
         "top100_recall": 2,
-        "top20_pct": "0/2",
+        "top20_pct": "2/2",
         "top50_pct": "2/2",
         "top100_pct": "2/2",
-        "median_rank": 28.5,
-        "auroc": 0.8726
+        "median_rank": 4.5,
+        "auroc": 0.9852
       }
     ],
-    "watchlist_size": 309,
     "benchmark": [
       {
         "model": "LogisticRegression",
@@ -716,5 +718,311 @@
         "top20_std": 0.2657066051117284
       }
     ]
+  },
+  "publication_metrics": {
+    "generated_at": "2026-06-19T14:08:38.671947+00:00",
+    "dataset": {
+      "n_residues": 6350,
+      "n_positives": 32,
+      "positive_rate": 0.00504,
+      "n_features_stage2": 16,
+      "features": [
+        "inner_distance",
+        "homoplasy_count",
+        "homoplasy_alleles",
+        "helix_propensity",
+        "strand_propensity",
+        "hydrophobicity",
+        "volume",
+        "charge",
+        "hbond",
+        "rel_position",
+        "conservation_blosum",
+        "contact_density_seq",
+        "sasa_relative",
+        "esm2_intolerance",
+        "contact_density_3d",
+        "drug_proximity"
+      ],
+      "n_resistance_genes": 13
+    },
+    "stage_progression": {
+      "stage0_auroc": 0.888,
+      "stage1_auroc": 0.9058,
+      "stage2_auroc": 0.9707,
+      "stage1_auprc": 0.2048,
+      "stage2_auprc": 0.5597,
+      "stage1_top20_recall": 0.3857,
+      "stage2_top20_recall": 0.6571
+    },
+    "stratified_5fold_cv": {
+      "auroc_mean": 0.9675,
+      "auroc_std": 0.0336,
+      "auprc_mean": 0.4645,
+      "auprc_std": 0.1565,
+      "auprc_x_random": 92.2,
+      "best_f1_mean": 0.5505,
+      "best_f1_std": 0.1192,
+      "best_f1_precision_mean": 0.631,
+      "best_f1_recall_mean": 0.5619,
+      "f1_at_05_mean": 0.3843,
+      "f1_at_05_std": 0.1419,
+      "top20_recall_mean": 0.6619,
+      "top20_recall_std": 0.0957,
+      "top50_recall_mean": 0.8286,
+      "top100_recall_mean": 0.8571,
+      "pooled_oof": {
+        "auroc": 0.9638,
+        "auprc": 0.4348,
+        "best_f1": 0.5,
+        "best_f1_threshold": 0.2352,
+        "best_f1_precision": 0.5357,
+        "best_f1_recall": 0.4688,
+        "f1_at_05": 0.4,
+        "precision_at_05": 0.5556,
+        "recall_at_05": 0.3125,
+        "top20_recall": 0.3438,
+        "top20_n": 11,
+        "top50_recall": 0.5,
+        "top50_n": 16,
+        "top100_recall": 0.6562,
+        "top100_n": 21,
+        "n_positives_in_fold": 32
+      },
+      "folds": [
+        {
+          "auroc": 0.9897151898734177,
+          "auprc": 0.6125925925925925,
+          "best_f1": 0.6666666666666666,
+          "best_f1_threshold": 0.6799139976501465,
+          "best_f1_precision": 0.6666666666666666,
+          "best_f1_recall": 0.6666666666666666,
+          "f1_at_05": 0.5714285714285714,
+          "precision_at_05": 0.5,
+          "recall_at_05": 0.6666666666666666,
+          "top20_recall": 0.6666666666666666,
+          "top20_n": 4,
+          "top50_recall": 1.0,
+          "top50_n": 6,
+          "top100_recall": 1.0,
+          "top100_n": 6,
+          "n_positives_in_fold": 6
+        },
+        {
+          "auroc": 0.9938027426160337,
+          "auprc": 0.5373931623931624,
+          "best_f1": 0.5,
+          "best_f1_threshold": 0.9251314401626587,
+          "best_f1_precision": 1.0,
+          "best_f1_recall": 0.3333333333333333,
+          "f1_at_05": 0.5,
+          "precision_at_05": 1.0,
+          "recall_at_05": 0.3333333333333333,
+          "top20_recall": 0.6666666666666666,
+          "top20_n": 4,
+          "top50_recall": 1.0,
+          "top50_n": 6,
+          "top100_recall": 1.0,
+          "top100_n": 6,
+          "n_positives_in_fold": 6
+        },
+        {
+          "auroc": 0.9930116033755274,
+          "auprc": 0.6192550505050505,
+          "best_f1": 0.6666666666666666,
+          "best_f1_threshold": 0.3791808784008026,
+          "best_f1_precision": 0.6666666666666666,
+          "best_f1_recall": 0.6666666666666666,
+          "f1_at_05": 0.4,
+          "precision_at_05": 0.5,
+          "recall_at_05": 0.3333333333333333,
+          "top20_recall": 0.8333333333333334,
+          "top20_n": 5,
+          "top50_recall": 1.0,
+          "top50_n": 6,
+          "top100_recall": 1.0,
+          "top100_n": 6,
+          "n_positives_in_fold": 6
+        },
+        {
+          "auroc": 0.9072503110507861,
+          "auprc": 0.29454927070256115,
+          "best_f1": 0.5714285714285714,
+          "best_f1_threshold": 0.2351936548948288,
+          "best_f1_precision": 0.5714285714285714,
+          "best_f1_recall": 0.5714285714285714,
+          "f1_at_05": 0.2,
+          "precision_at_05": 0.3333333333333333,
+          "recall_at_05": 0.14285714285714285,
+          "top20_recall": 0.5714285714285714,
+          "top20_n": 4,
+          "top50_recall": 0.5714285714285714,
+          "top50_n": 4,
+          "top100_recall": 0.5714285714285714,
+          "top100_n": 4,
+          "n_positives_in_fold": 7
+        },
+        {
+          "auroc": 0.9538513742789277,
+          "auprc": 0.25881018842744785,
+          "best_f1": 0.34782608695652173,
+          "best_f1_threshold": 0.01817532442510128,
+          "best_f1_precision": 0.25,
+          "best_f1_recall": 0.5714285714285714,
+          "f1_at_05": 0.25,
+          "precision_at_05": 1.0,
+          "recall_at_05": 0.14285714285714285,
+          "top20_recall": 0.5714285714285714,
+          "top20_n": 4,
+          "top50_recall": 0.5714285714285714,
+          "top50_n": 4,
+          "top100_recall": 0.7142857142857143,
+          "top100_n": 5,
+          "n_positives_in_fold": 7
+        }
+      ]
+    },
+    "groupkfold_by_gene": {
+      "auroc_mean": 0.9737,
+      "auroc_std": 0.0178,
+      "auprc_mean": 0.5858,
+      "auprc_std": 0.2255,
+      "best_f1_mean": 0.6757,
+      "best_f1_std": 0.1908,
+      "top20_recall_mean": 0.7411,
+      "top20_recall_std": 0.1775,
+      "n_folds": 4,
+      "folds": [
+        {
+          "auroc": 0.9985967184801382,
+          "auprc": 0.8545080532212885,
+          "best_f1": 0.875,
+          "best_f1_threshold": 0.00447459751740098,
+          "best_f1_precision": 0.875,
+          "best_f1_recall": 0.875,
+          "f1_at_05": 0.5454545454545454,
+          "precision_at_05": 1.0,
+          "recall_at_05": 0.375,
+          "top20_recall": 1.0,
+          "top20_n": 8,
+          "top50_recall": 1.0,
+          "top50_n": 8,
+          "top100_recall": 1.0,
+          "top100_n": 8,
+          "n_positives_in_fold": 8
+        },
+        {
+          "auroc": 0.9778498713502629,
+          "auprc": 0.3125741700160305,
+          "best_f1": 0.5,
+          "best_f1_threshold": 0.9292171597480774,
+          "best_f1_precision": 0.38461538461538464,
+          "best_f1_recall": 0.7142857142857143,
+          "f1_at_05": 0.2702702702702703,
+          "precision_at_05": 0.16666666666666666,
+          "recall_at_05": 0.7142857142857143,
+          "top20_recall": 0.7142857142857143,
+          "top20_n": 5,
+          "top50_recall": 0.7142857142857143,
+          "top50_n": 5,
+          "top100_recall": 1.0,
+          "top100_n": 7,
+          "n_positives_in_fold": 7
+        },
+        {
+          "auroc": 0.948941798941799,
+          "auprc": 0.4198436904820392,
+          "best_f1": 0.47058823529411764,
+          "best_f1_threshold": 0.14783646166324615,
+          "best_f1_precision": 0.8,
+          "best_f1_recall": 0.3333333333333333,
+          "f1_at_05": 0.2857142857142857,
+          "precision_at_05": 1.0,
+          "recall_at_05": 0.16666666666666666,
+          "top20_recall": 0.5,
+          "top20_n": 6,
+          "top50_recall": 0.5833333333333334,
+          "top50_n": 7,
+          "top100_recall": 0.6666666666666666,
+          "top100_n": 8,
+          "n_positives_in_fold": 12
+        },
+        {
+          "auroc": 0.9692947702060222,
+          "auprc": 0.7562893081761006,
+          "best_f1": 0.8571428571428571,
+          "best_f1_threshold": 0.7265159487724304,
+          "best_f1_precision": 1.0,
+          "best_f1_recall": 0.75,
+          "f1_at_05": 0.75,
+          "precision_at_05": 0.75,
+          "recall_at_05": 0.75,
+          "top20_recall": 0.75,
+          "top20_n": 3,
+          "top50_recall": 0.75,
+          "top50_n": 3,
+          "top100_recall": 0.75,
+          "top100_n": 3,
+          "n_positives_in_fold": 4
+        }
+      ]
+    },
+    "ranking_full_model": {
+      "all_positives_in_top_n": 32,
+      "last_positive_rank": 32,
+      "first_negative_rank": 33,
+      "top20_recall": 0.625,
+      "top20_n": 20,
+      "top50_recall": 1.0,
+      "top50_n": 32,
+      "top100_recall": 1.0,
+      "top100_n": 32,
+      "score_gap_last_pos_first_neg": 0.4009,
+      "last_positive_score": 0.6499614615924656,
+      "first_negative_score": 0.2490506585687399
+    },
+    "baselines": {
+      "esm2_only_auroc": 0.6178,
+      "full_model_lift_auroc": 0.3497
+    },
+    "permutation_test": {
+      "p_value": 0.004975124378109453,
+      "real_auroc": 0.928375161395967
+    },
+    "cryptic_validation": {
+      "tier_counts": {
+        "0": 30,
+        "1": 24,
+        "2": 32,
+        "3": 31,
+        "4": 188
+      },
+      "n_total": 305
+    },
+    "matched_null": {
+      "real_tier1_count": 24,
+      "null_mean": 9.3,
+      "null_std": 0.5621387729022078,
+      "null_max": 11,
+      "n_permutations": 1000,
+      "n_null_exceeded": 0,
+      "p_value": 0.000999000999000999
+    },
+    "vina_validation": {
+      "n_candidates": 32,
+      "n_validated": 10,
+      "validated_mutations": [
+        "G88D",
+        "G88S",
+        "I491N",
+        "Q538L",
+        "L452R",
+        "P483R",
+        "S91A",
+        "L452M",
+        "G88V",
+        "Q432R"
+      ]
+    }
   }
 }

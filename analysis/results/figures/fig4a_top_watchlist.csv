@@ -1,51 +1,51 @@
 gene,mutation,overall_rank,emergence_score,status
-embB,G406D,1,0.6244,Known WHO
-pncA,D8G,2,0.6243,Forecast-only
-pncA,D12G,3,0.6242,Known WHO
-eis,G53D,4,0.6148,Forecast-only
-pncA,I133T,5,0.6092,Observed
-inhA,I194T,6,0.6089,Forecast-only
-inhA,G104D,7,0.6069,Forecast-only
-inhA,I21T,8,0.6062,Forecast-only
-pncA,A20T,9,0.6022,Forecast-only
-inhA,I105T,10,0.6011,Forecast-only
-inhA,I202T,11,0.6006,Forecast-only
-inhA,I16T,12,0.5978,Forecast-only
-pncA,L4S,13,0.5933,Known WHO
-inhA,S94L,14,0.5905,Forecast-only
-embB,M306T,15,0.5888,Observed
-embB,G406S,16,0.5886,Validated
-katG,S315G,17,0.5886,Observed
-pncA,F13S,18,0.5874,Observed
-pncA,G97D,19,0.5871,Forecast-only
-pncA,Q10R,20,0.5813,Observed
-embB,Q497R,21,0.5812,Known WHO
-mmpR5,R140Q,22,0.5806,Forecast-only
-pncA,V7I,23,0.5798,Observed
-pncA,I133V,24,0.5797,Forecast-only
-eis,G53S,25,0.5795,Forecast-only
-inhA,I194V,26,0.5795,Forecast-only
-pncA,I5T,27,0.5782,Observed
-pncA,I6T,28,0.578,Observed
-inhA,I21V,29,0.5769,Forecast-only
-gyrB,G537D,30,0.5743,Forecast-only
-inhA,V203I,31,0.5741,Forecast-only
-pncA,A3T,32,0.574,Forecast-only
-pncA,I5V,33,0.5723,Forecast-only
-inhA,G104S,36,0.5721,Forecast-only
-inhA,I105V,35,0.5721,Forecast-only
-pncA,I6V,34,0.5721,Observed
-eis,V59I,37,0.5717,Forecast-only
-inhA,I202V,38,0.5716,Forecast-only
-inhA,S94P,39,0.5712,Forecast-only
-pncA,V21I,40,0.5706,Forecast-only
-eis,P54S,41,0.5697,Forecast-only
-pncA,D8N,42,0.5695,Forecast-only
-pncA,D12N,43,0.5694,Observed
-inhA,I16V,44,0.5689,Forecast-only
-pncA,N11D,45,0.5689,Forecast-only
-katG,S315N,46,0.5685,Known WHO
-pncA,N11S,47,0.5678,Forecast-only
-pncA,G97S,48,0.5661,Forecast-only
-rpoB,H445Y,49,0.5647,Known WHO
-embB,M306V,50,0.5633,Known WHO
+embB,M306T,1,0.5088,Observed
+gyrA,A90T,2,0.5056,Forecast-only
+inhA,S94L,3,0.5028,Forecast-only
+rpoB,H445Y,4,0.5015,Known WHO
+rpoB,D435G,5,0.4993,Validated
+pncA,Q10R,6,0.49,Observed
+embB,M306V,7,0.4857,Known WHO
+embB,M306I,8,0.485,Known WHO
+inhA,S94P,9,0.4849,Forecast-only
+rpsL,K88R,10,0.4818,Known WHO
+pncA,D12G,11,0.4793,Known WHO
+rpsL,K43R,12,0.4761,Known WHO
+rpoB,D435N,13,0.4726,Forecast-only
+rpoB,S450L,14,0.4718,Known WHO
+rpoB,S450P,15,0.4709,Forecast-only
+gyrA,A90V,16,0.467,Known WHO
+katG,S315G,17,0.4621,Observed
+rpsL,K88E,18,0.4515,Forecast-only
+rpoB,H445R,19,0.4506,Validated
+inhA,I16T,20,0.4504,Observed
+katG,S315N,21,0.4462,Known WHO
+rpsL,K43E,22,0.4459,Forecast-only
+embB,G406D,23,0.4411,Known WHO
+embB,Q497R,24,0.4381,Known WHO
+pncA,D12N,25,0.4353,Observed
+eis,V59I,26,0.4265,Observed
+inhA,I16V,27,0.4263,Forecast-only
+pncA,V125I,28,0.4253,Forecast-only
+gyrA,G88D,29,0.4225,Forecast-only
+gyrA,G88S,30,0.4181,Forecast-only
+inhA,I194T,31,0.416,Validated
+embB,G406S,32,0.4144,Validated
+inhA,I21T,33,0.413,Validated
+eis,V59A,34,0.4086,Forecast-only
+pncA,V125A,35,0.4074,Forecast-only
+inhA,I95T,36,0.4004,Forecast-only
+rpoB,I491V,37,0.3993,Observed
+rpoB,I491T,38,0.3955,Observed
+inhA,I194V,39,0.3938,Forecast-only
+inhA,I21V,40,0.391,Validated
+rpoB,P483S,41,0.3902,Observed
+pncA,L4S,42,0.3869,Known WHO
+inhA,M103T,43,0.3864,Forecast-only
+inhA,I95V,44,0.379,Observed
+inhA,V203I,45,0.3765,Forecast-only
+gyrB,Q538R,46,0.3754,Observed
+rpoB,V170I,47,0.3746,Forecast-only
+inhA,P99S,48,0.3743,Forecast-only
+inhA,M103V,49,0.3689,Forecast-only
+inhA,M103I,50,0.3683,Forecast-only

@@ -1,2 +1,2 @@
-n_resistance_genes,n_residues_in_genes,n_total_snvs,n_watchlist_mutations,n_cryptic_samples,n_known_hotspots,n_known_mutations,n_tier1_validated,n_novel_observed,n_forecast_only
-13,6600,44016,338,12287,21,33,25,98,181
+n_resistance_genes,n_residues_in_genes,n_total_snvs,n_watchlist_mutations,n_cryptic_samples,n_known_hotspots,n_known_mutations,n_tier1_validated,n_novel_observed,n_forecast_only,auroc_stage2,auprc_stage2,top20_recall_cv,top20_recall_full_model
+13,6350,44016,305,12287,32,33,24,87,188,0.9707,0.5597,0.6619,0.625

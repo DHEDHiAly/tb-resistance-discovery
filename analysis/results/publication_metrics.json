@@ -1,5 +1,40 @@
 {
-  "stratified_kfold": {
+  "generated_at": "2026-06-19T14:12:06.875223+00:00",
+  "dataset": {
+    "n_residues": 6350,
+    "n_positives": 32,
+    "positive_rate": 0.00504,
+    "n_features_stage2": 16,
+    "features": [
+      "inner_distance",
+      "homoplasy_count",
+      "homoplasy_alleles",
+      "helix_propensity",
+      "strand_propensity",
+      "hydrophobicity",
+      "volume",
+      "charge",
+      "hbond",
+      "rel_position",
+      "conservation_blosum",
+      "contact_density_seq",
+      "sasa_relative",
+      "esm2_intolerance",
+      "contact_density_3d",
+      "drug_proximity"
+    ],
+    "n_resistance_genes": 13
+  },
+  "stage_progression": {
+    "stage0_auroc": 0.888,
+    "stage1_auroc": 0.9058,
+    "stage2_auroc": 0.9707,
+    "stage1_auprc": 0.2048,
+    "stage2_auprc": 0.5597,
+    "stage1_top20_recall": 0.3857,
+    "stage2_top20_recall": 0.6571
+  },
+  "stratified_5fold_cv": {
     "auroc_mean": 0.9675,
     "auroc_std": 0.0336,
     "auprc_mean": 0.4645,
@@ -15,6 +50,24 @@
     "top20_recall_std": 0.0957,
     "top50_recall_mean": 0.8286,
     "top100_recall_mean": 0.8571,
+    "pooled_oof": {
+      "auroc": 0.9638,
+      "auprc": 0.4348,
+      "best_f1": 0.5,
+      "best_f1_threshold": 0.2352,
+      "best_f1_precision": 0.5357,
+      "best_f1_recall": 0.4688,
+      "f1_at_05": 0.4,
+      "precision_at_05": 0.5556,
+      "recall_at_05": 0.3125,
+      "top20_recall": 0.3438,
+      "top20_n": 11,
+      "top50_recall": 0.5,
+      "top50_n": 16,
+      "top100_recall": 0.6562,
+      "top100_n": 21,
+      "n_positives_in_fold": 32
+    },
     "folds": [
       {
         "auroc": 0.9897151898734177,
@@ -108,7 +161,7 @@
       }
     ]
   },
-  "groupkfold": {
+  "groupkfold_by_gene": {
     "auroc_mean": 0.9737,
     "auroc_std": 0.0178,
     "auprc_mean": 0.5858,
@@ -191,6 +244,63 @@
         "top100_n": 3,
         "n_positives_in_fold": 4
       }
+    ]
+  },
+  "ranking_full_model": {
+    "all_positives_in_top_n": 32,
+    "last_positive_rank": 32,
+    "first_negative_rank": 33,
+    "top20_recall": 0.625,
+    "top20_n": 20,
+    "top50_recall": 1.0,
+    "top50_n": 32,
+    "top100_recall": 1.0,
+    "top100_n": 32,
+    "score_gap_last_pos_first_neg": 0.4009,
+    "last_positive_score": 0.6499614615924656,
+    "first_negative_score": 0.2490506585687399
+  },
+  "baselines": {
+    "esm2_only_auroc": 0.6178,
+    "full_model_lift_auroc": 0.3497
+  },
+  "permutation_test": {
+    "p_value": 0.004975124378109453,
+    "real_auroc": 0.928375161395967
+  },
+  "cryptic_validation": {
+    "tier_counts": {
+      "0": 30,
+      "1": 24,
+      "2": 32,
+      "3": 31,
+      "4": 188
+    },
+    "n_total": 305
+  },
+  "matched_null": {
+    "real_tier1_count": 24,
+    "null_mean": 9.3,
+    "null_std": 0.5621387729022078,
+    "null_max": 11,
+    "n_permutations": 1000,
+    "n_null_exceeded": 0,
+    "p_value": 0.000999000999000999
+  },
+  "vina_validation": {
+    "n_candidates": 32,
+    "n_validated": 10,
+    "validated_mutations": [
+      "G88D",
+      "G88S",
+      "I491N",
+      "Q538L",
+      "L452R",
+      "P483R",
+      "S91A",
+      "L452M",
+      "G88V",
+      "Q432R"
     ]
   }
 }

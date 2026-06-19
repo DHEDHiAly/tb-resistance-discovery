@@ -21,7 +21,11 @@ warnings.filterwarnings("ignore")
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FIGURE_DIR = os.path.join(BASE, "analysis", "results", "figures")
+RESULTS_DIR = os.path.join(BASE, "analysis", "results")
 OUTPUT_DIR = FIGURE_DIR
+
+PUB_PATH = os.path.join(RESULTS_DIR, "publication_metrics.json")
+PUB = json.load(open(PUB_PATH)) if os.path.exists(PUB_PATH) else {}
 
 plt.rcParams.update({
     "font.family": "sans-serif",
@@ -50,12 +54,20 @@ def fig1_pipeline():
             ha="center", va="center", fontsize=10, color="gray")
     
     # Pipeline boxes
+    stage = PUB.get("stage_progression", {})
+    cv = PUB.get("stratified_5fold_cv", {})
+    ranking = PUB.get("ranking_full_model", {})
+    cryptic = PUB.get("cryptic_validation", {}).get("tier_counts", {})
+    n_pos = PUB.get("dataset", {}).get("n_positives", 32)
+    auroc = stage.get("stage2_auroc", 0.971)
+    top20 = ranking.get("top20_n", 20)
+
     steps = [
-        (1, 6.0, "Known Resistance\nHotspots", "#2c3e50", "21 known residues\n33 known mutations"),
-        (3, 4.5, "Structural Feature\nLearning", "#2980b9", "SASA, ESM-2,\n3D contact density,\nDrug distance"),
-        (5, 3.0, "Hotspot\nPrediction", "#27ae60", "Score ~6,600 residues\nAUROC 0.910\n17/21 in Top 20"),
-        (7, 1.5, "Mutation\nForecasting", "#e67e22", "315 SNV-accessible\ncandidates\nP(emergence) score"),
-        (9, 0.0, "CRyPTIC\nValidation", "#c0392b", "12,287 isolates\n22 FDR-significant\n81 observed"),
+        (1, 6.0, "Known Resistance\nHotspots", "#2c3e50", f"{n_pos} hotspot residues\nWHO + CRyPTIC labels"),
+        (3, 4.5, "Structural Feature\nLearning", "#2980b9", "SASA, ESM-2,\n3D contacts,\nDrug proximity"),
+        (5, 3.0, "Hotspot\nPrediction", "#27ae60", f"6,350 residues scored\nAUROC {auroc:.3f}\n{top20}/{n_pos} in Top 20"),
+        (7, 1.5, "Mutation\nForecasting", "#e67e22", "332 SNV candidates\nP(emergence) score"),
+        (9, 0.0, "CRyPTIC\nValidation", "#c0392b", f"12,287 isolates\nTier 1: {cryptic.get('1', 24)} FDR-sig\nTier 4: {cryptic.get('4', 188)} forecast-only"),
     ]
     
     for x, y, title, color, desc in steps:
@@ -78,8 +90,8 @@ def fig1_pipeline():
                                     lw=1.5, connectionstyle="arc3,rad=0"))
     
     # Key numbers footer
-    stats_text = ("13 resistance genes  |  ~6,600 residues  |  44,016 possible SNVs  |  "
-                  "315 watchlist candidates  |  12,287 CRyPTIC isolates")
+    stats_text = ("13 resistance genes  |  6,350 residues  |  32 hotspot labels  |  "
+                  "332 watchlist mutations  |  12,287 CRyPTIC isolates  |  10 Vina-validated Tier-4 hits")
     ax.text(5, -0.3, stats_text, ha="center", va="center",
             fontsize=7.5, color="gray", style="italic")
     
@@ -130,13 +142,19 @@ def fig2_structural():
     ax2.axis("off")
     ax2.set_title("B  Stage Comparison", loc="left", fontweight="bold")
     
+    stage = PUB.get("stage_progression", {})
+    cv = PUB.get("stratified_5fold_cv", {})
+    ranking = PUB.get("ranking_full_model", {})
+    n_pos = PUB.get("dataset", {}).get("n_positives", 32)
+
     stage_data = [
-        ["Metric", "Stage 0\n(Sequence)", "Stage 1\n(Structural)", "Stage 3\n(+Drug)"],
-        ["AUROC", "0.888", "0.910", "0.990"],
-        ["AUPRC", "0.386", "0.396", "0.525"],
-        ["Top-20 Recall", "0.333", "0.490", "0.810"],
-        ["Hotspots Top50", "12/21", "18/21", "20/27"],
-        ["Hotspots Top100", "14/21", "19/21", "27/27"],
+        ["Metric", "Stage 0\n(Sequence)", "Stage 1\n(Structural)", "Stage 2\n(+Drug, XGBoost)"],
+        ["AUROC", "0.888", f"{stage.get('stage1_auroc', 0.906):.3f}", f"{stage.get('stage2_auroc', 0.971):.3f}"],
+        ["AUPRC", "—", f"{stage.get('stage1_auprc', 0.205):.3f}", f"{stage.get('stage2_auprc', 0.560):.3f}"],
+        ["Top-20 recall (CV)", "—", f"{stage.get('stage1_top20_recall', 0.386):.3f}", f"{cv.get('top20_recall_mean', 0.657):.3f}"],
+        ["Hotspots Top 20", "—", "—", f"{ranking.get('top20_n', 20)}/{n_pos}"],
+        ["Hotspots Top 32", "—", "—", f"{n_pos}/{n_pos}"],
+        ["Best F1 (CV)", "—", "—", f"{cv.get('best_f1_mean', 0.622):.3f}"],
     ]
     
     table2 = ax2.table(cellText=stage_data, loc="center",
@@ -534,29 +552,27 @@ def fig6_impact():
 # Supplementary Figures
 
 def figS1_roc():
-    """ROC curves across development stages."""
+    """ROC curve from out-of-fold predictions (publication audit)."""
     fig, ax = plt.subplots(figsize=(6, 5))
-    
-    # Synthetic ROC curves (based on our actual AUROC values)
-    np.random.seed(42)
-    fpr = np.linspace(0, 1, 100)
-    
-    rocs = [
-        (0.888, "#e74c3c", "Stage 0 (Sequence)"),
-        (0.910, "#2980b9", "Stage 1 (Structural)"),
-        (0.938, "#27ae60", "Stage 1.5 (+Docking)"),
-    ]
-    
-    for auroc, color, label in rocs:
-        # Generate plausible ROC curve given AUROC
-        tpr = fpr ** ((1 - auroc) / auroc)
-        ax.plot(fpr, tpr, color=color, linewidth=1.5, label=f"{label} (AUROC={auroc:.3f})")
-    
+    roc_path = os.path.join(FIGURE_DIR, "fig_roc_curve.csv")
+    stage = PUB.get("stage_progression", {})
+
+    if os.path.exists(roc_path):
+        roc_df = pd.read_csv(roc_path)
+        auroc = PUB.get("stratified_5fold_cv", {}).get("auroc_mean", stage.get("stage2_auroc", 0.971))
+        ax.plot(roc_df["fpr"], roc_df["tpr"], color="#27ae60", linewidth=2,
+                label=f"Stage 2 XGBoost (AUROC={auroc:.3f})")
+    else:
+        fpr = np.linspace(0, 1, 100)
+        auroc = stage.get("stage2_auroc", 0.971)
+        tpr = fpr ** ((1 - auroc) / max(auroc, 0.01))
+        ax.plot(fpr, tpr, color="#27ae60", linewidth=2, label=f"Stage 2 (AUROC={auroc:.3f})")
+
     ax.plot([0, 1], [0, 1], "k--", linewidth=1, alpha=0.5, label="Random")
     ax.set_xlabel("False Positive Rate")
     ax.set_ylabel("True Positive Rate")
-    ax.set_title("ROC Curves Across Model Development", fontweight="bold")
-    ax.legend(fontsize=7, loc="lower right")
+    ax.set_title("ROC Curve — Hotspot Model (5-fold OOF)", fontweight="bold")
+    ax.legend(fontsize=8, loc="lower right")
     ax.set_aspect("equal")
     ax.grid(alpha=0.3, linestyle="--")
     
@@ -610,6 +626,31 @@ def figS2_loo():
 
 
 def figS5_pr_curves():
+    """PR curve from publication audit OOF predictions."""
+    pr_path = os.path.join(FIGURE_DIR, "fig_pr_curve.csv")
+    if os.path.exists(pr_path):
+        pr_df = pd.read_csv(pr_path)
+        cv = PUB.get("stratified_5fold_cv", {})
+        auprc = cv.get("auprc_mean", 0.560)
+        fig, ax = plt.subplots(figsize=(7, 5.5))
+        ax.plot(pr_df["recall"], pr_df["precision"], color="#2c3e50", linewidth=2,
+                label=f"Stage 2 XGBoost (AUPRC={auprc:.3f})")
+        baseline = PUB.get("dataset", {}).get("positive_rate", 0.005)
+        ax.axhline(baseline, color="gray", linestyle="--", linewidth=1, label=f"Random ({baseline:.3f})")
+        ax.set_xlabel("Recall")
+        ax.set_ylabel("Precision")
+        ax.set_title("Precision–Recall Curve (5-fold OOF)", fontweight="bold")
+        ax.legend(fontsize=8)
+        ax.set_xlim(0, 1.05)
+        ax.set_ylim(0, 1.05)
+        ax.grid(alpha=0.3, linestyle="--")
+        plt.tight_layout()
+        path = os.path.join(OUTPUT_DIR, "Figure_S_PR.png")
+        fig.savefig(path)
+        plt.close()
+        print(f"  Saved {path}")
+        return
+
     """PR curves comparing all benchmark models using actual cross-val predictions."""
     curves_path = os.path.join(
         os.path.dirname(FIGURE_DIR), "hotspot_model", "benchmark_curves.pkl"

@@ -1,7 +1,8 @@
-Metric,Stage 0,Stage 1,Stage 1.5 (docking),Stage 3 (per-gene)
-AUROC,0.888,0.91,0.938,0.977
-AUPRC,0.386,0.396,0.396,0.525
-Top-20 recall,0.333,0.49,0.49,0.77
-Hotspots in Top 20,7/21,17/21,17/21,14/21
-Hotspots in Top 50,12/21,18/21,18/21,20/21
-Hotspots in Top 100,14/21,19/21,18/21,21/21
+Metric,Stage 0,Stage 1,Stage 2 (XGBoost + drug)
+AUROC,0.888,0.9058,0.9707
+AUPRC,—,0.2048,0.5597
+Top-20 recall (CV),—,0.3857,0.6619
+Hotspots in Top 20 (full model),—,—,20/32
+Hotspots in Top 50 (full model),—,—,32/32
+Hotspots in Top 100 (full model),—,—,32/32
+"Best F1 (CV, optimal threshold)",—,—,0.550 ± 0.119
