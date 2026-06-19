@@ -15,19 +15,7 @@
     "top20_recall_cv": 0.6619,
     "top20_recall_full_model": 0.625
   },
-  "structural_validation": {
-    "rmsd": [
-      {
-        "Protein": "rpoB",
-        "Crystal": "N/A",
-        "RMSD": "N/A"
-      },
-      {
-        "Protein": "katG",
-        "Crystal": "N/A",
-        "RMSD": "N/A"
-      }
-    ],
+  "model": {
     "stage_comparison": [
       {
         "Metric": "AUROC",
@@ -70,44 +58,6 @@
         "Stage 0": "\u2014",
         "Stage 1": "\u2014",
         "Stage 2 (XGBoost + drug)": "0.550 \u00b1 0.119"
-      }
-    ],
-    "rescued": [
-      {
-        "Hotspot": "rpoB_D435",
-        "Stage 0 Rank": 597,
-        "Stage 1 Rank": 20,
-        "Stage 3 Rank": 30
-      },
-      {
-        "Hotspot": "rpoB_V170",
-        "Stage 0 Rank": 953,
-        "Stage 1 Rank": 24,
-        "Stage 3 Rank": 41
-      },
-      {
-        "Hotspot": "rpoB_L452",
-        "Stage 0 Rank": 526,
-        "Stage 1 Rank": 19,
-        "Stage 3 Rank": 64
-      },
-      {
-        "Hotspot": "rpsL_K88",
-        "Stage 0 Rank": 278,
-        "Stage 1 Rank": 3,
-        "Stage 3 Rank": 19
-      },
-      {
-        "Hotspot": "gyrB_N538",
-        "Stage 0 Rank": 3208,
-        "Stage 1 Rank": 3208,
-        "Stage 3 Rank": 43
-      },
-      {
-        "Hotspot": "pncA_V125",
-        "Stage 0 Rank": 2899,
-        "Stage 1 Rank": 2899,
-        "Stage 3 Rank": 55
       }
     ]
   },
@@ -184,98 +134,6 @@
       {
         "feature": "charge",
         "importance": 0.0006665092
-      }
-    ]
-  },
-  "mutation_forecasting": {
-    "top50": [
-      {
-        "gene": "embB",
-        "mutation": "M306T",
-        "overall_rank": 1,
-        "emergence_score": 0.5088,
-        "status": "Observed"
-      },
-      {
-        "gene": "gyrA",
-        "mutation": "A90T",
-        "overall_rank": 2,
-        "emergence_score": 0.5056,
-        "status": "Forecast-only"
-      },
-      {
-        "gene": "inhA",
-        "mutation": "S94L",
-        "overall_rank": 3,
-        "emergence_score": 0.5028,
-        "status": "Forecast-only"
-      },
-      {
-        "gene": "rpoB",
-        "mutation": "H445Y",
-        "overall_rank": 4,
-        "emergence_score": 0.5015,
-        "status": "Known WHO"
-      },
-      {
-        "gene": "rpoB",
-        "mutation": "D435G",
-        "overall_rank": 5,
-        "emergence_score": 0.4993,
-        "status": "Validated"
-      },
-      {
-        "gene": "pncA",
-        "mutation": "Q10R",
-        "overall_rank": 6,
-        "emergence_score": 0.49,
-        "status": "Observed"
-      },
-      {
-        "gene": "embB",
-        "mutation": "M306V",
-        "overall_rank": 7,
-        "emergence_score": 0.4857,
-        "status": "Known WHO"
-      },
-      {
-        "gene": "embB",
-        "mutation": "M306I",
-        "overall_rank": 8,
-        "emergence_score": 0.485,
-        "status": "Known WHO"
-      },
-      {
-        "gene": "inhA",
-        "mutation": "S94P",
-        "overall_rank": 9,
-        "emergence_score": 0.4849,
-        "status": "Forecast-only"
-      },
-      {
-        "gene": "rpsL",
-        "mutation": "K88R",
-        "overall_rank": 10,
-        "emergence_score": 0.4818,
-        "status": "Known WHO"
-      }
-    ],
-    "status_counts": [
-      {
-        "status": "Forecast-only",
-        "count": 188
-      },
-      {
-        "status": "Observed",
-        "count": 63
-      },
-      {
-        "status": "Known WHO",
-        "count": 30
-      },
-      {
-        "status": "Validated",
-        "count": 24
       }
     ]
   },
@@ -532,34 +390,7 @@
       }
     ]
   },
-  "clinical_impact": {
-    "n_known_who_observed": 30,
-    "n_novel_validated_tier1": 24,
-    "n_novel_observed_total": 57,
-    "n_forecast_targets": 188,
-    "genes_with_tier1_hits": 4,
-    "top_gene_tier1": "rpoB",
-    "n_tier1_in_top_gene": "12"
-  },
   "supplementary": {
-    "roc_comparison": [
-      {
-        "Model": "Stage 0 (Sequence)",
-        "AUROC": 0.888
-      },
-      {
-        "Model": "Stage 1 (Structural)",
-        "AUROC": 0.91
-      },
-      {
-        "Model": "Stage 1.5 (+Docking)",
-        "AUROC": 0.938
-      },
-      {
-        "Model": "Stage 3 (per-gene drug)",
-        "AUROC": 0.977
-      }
-    ],
     "loo": [
       {
         "gene": "embB",
@@ -652,75 +483,10 @@
         "median_rank": 4.5,
         "auroc": 0.9852
       }
-    ],
-    "benchmark": [
-      {
-        "model": "LogisticRegression",
-        "auroc_mean": 0.9096409472880062,
-        "auroc_std": 0.09162665493524,
-        "auprc_mean": 0.3957004470027242,
-        "auprc_std": 0.2675538413345343,
-        "top20_mean": 0.44,
-        "top20_std": 0.3382306905057552
-      },
-      {
-        "model": "ElasticNet",
-        "auroc_mean": 0.9082734912146676,
-        "auroc_std": 0.0952150572190895,
-        "auprc_mean": 0.3937923315897503,
-        "auprc_std": 0.2611890023879855,
-        "top20_mean": 0.49,
-        "top20_std": 0.3611094017053557
-      },
-      {
-        "model": "RandomForest",
-        "auroc_mean": 0.914083269671505,
-        "auroc_std": 0.0971972622577334,
-        "auprc_mean": 0.2824650561571236,
-        "auprc_std": 0.1711091746415224,
-        "top20_mean": 0.44,
-        "top20_std": 0.198494332412792
-      },
-      {
-        "model": "SVM_RBF",
-        "auroc_mean": 0.776401833460657,
-        "auroc_std": 0.1495459118737948,
-        "auprc_mean": 0.0269971292146247,
-        "auprc_std": 0.0139645639886792,
-        "top20_mean": 0.05,
-        "top20_std": 0.1
-      },
-      {
-        "model": "GradientBoosting",
-        "auroc_mean": 0.9100763941940412,
-        "auroc_std": 0.0878440603613268,
-        "auprc_mean": 0.3222610860388434,
-        "auprc_std": 0.248047380706093,
-        "top20_mean": 0.5900000000000001,
-        "top20_std": 0.349857113690718
-      },
-      {
-        "model": "MLPClassifier",
-        "auroc_mean": 0.8707639419404124,
-        "auroc_std": 0.0854537464055117,
-        "auprc_mean": 0.2460138496992897,
-        "auprc_std": 0.20760063082449,
-        "top20_mean": 0.3,
-        "top20_std": 0.2449489742783178
-      },
-      {
-        "model": "XGBoost",
-        "auroc_mean": 0.8880634071810543,
-        "auroc_std": 0.0959863560063696,
-        "auprc_mean": 0.3539906769954335,
-        "auprc_std": 0.2727942710962412,
-        "top20_mean": 0.58,
-        "top20_std": 0.2657066051117284
-      }
     ]
   },
   "publication_metrics": {
-    "generated_at": "2026-06-19T14:08:38.671947+00:00",
+    "generated_at": "2026-06-19T14:12:06.875223+00:00",
     "dataset": {
       "n_residues": 6350,
       "n_positives": 32,

@@ -176,25 +176,16 @@ Matched-null: real Tier-1 count (24) vs null mean 9.3, **p = 0.001**.
 
 | ID | File | Content |
 |----|------|---------|
-| Fig 1 | `analysis/results/figures/Figure_1.png` | Pipeline schematic |
-| Fig 2 | `Figure_2.png` | AlphaFold validation + stage comparison |
-| Fig 3 | `Figure_3.png` | XGBoost feature importance |
-| Fig 4 | `Figure_4.png` | Emergence watchlist |
-| Fig 5 | `Figure_5.png` | CRyPTIC validation cascade |
-| Fig 6 | `Figure_6.png` | Clinical impact |
-| Fig S1 | `Figure_S1.png` | ROC curve (OOF) |
-| Fig S2 | `Figure_S2.png` | Leave-one-gene-out |
-| Fig S_PR | `Figure_S_PR.png` | Precision–recall curve |
-| Fig 7 (struct) | `data/pdb/gyrB_Q538L_validation.png` | Q538L PyMOL validation |
+| **Fig 1** | `analysis/results/figures/Figure_1.png` | Pipeline overview |
+| **Fig 2** | `Figure_2.png` | Model performance: stage table + ROC + PR |
+| **Fig 3** | `Figure_3.png` | XGBoost feature importance |
+| **Fig 4** | `Figure_4.png` | CRyPTIC tier distribution + Tier 1 hits |
+| **Fig S2** | `Figure_S2.png` | Leave-one-gene-out validation |
+| **Fig 5 (struct)** | `data/pdb/gyrB_Q538L_validation.png` | Q538L PyMOL structural validation |
 
-| Table | Source CSV |
-|-------|------------|
-| Model metrics | `PUBLICATION_METRICS.md` |
-| Stage comparison | `fig2b_stage_comparison.csv` |
-| Feature importance | `fig3_feature_importance.csv` |
-| CRyPTIC tiers | `fig5b_tier_distribution.csv` |
-| Tier-1 hits | `fig5c_tier1_hits.csv` |
-| Vina scores | `forecasting/tier4_pocket_vina_scores.csv` |
+Supporting CSVs (not separate figures): `fig2b_stage_comparison.csv`, `fig3_feature_importance.csv`, `fig5a/b/c_*.csv`, `fig_roc_curve.csv`, `fig_pr_curve.csv`, `figS2_leave_one_gene_out.csv`.
+
+**Removed as redundant:** old Figure 4 (stale watchlist), Figure 5/6 (duplicated CRyPTIC/infographic), separate S1/S_PR (merged into Figure 2).
 
 ---
 

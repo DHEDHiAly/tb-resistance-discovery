@@ -303,7 +303,7 @@ scripts/
  05_leave_one_gene_out.py    Cross-gene generalization
  06_filter_pocket_candidates.py / 07_tier4_pocket_vina_batch.py  Vina validation
  08–09                       CRyPTIC validation + FDR tiers
- 10–11                       Paper figure tables + PNGs
+ 10–11                       Paper figures (5 PNGs) + CSV tables
  12_audit.py                  ~180 automated checks
  13_final_publication_audit.py  Authoritative metrics (AUROC, F1, AUPRC, PR/ROC)
  15e_compute_homoplasy_v4.py  Homoplasy from assemblies (current)
@@ -316,7 +316,7 @@ analysis/results/
  publication_metrics.json
  hotspot_model/              Feature tables, ranked predictions, CV metrics
  forecasting/                Watchlist, CRyPTIC tiers, Vina scores
- figures/                    Figure_1.png … Figure_S_PR.png + CSV tables
+ figures/                    Figure_1–4.png, Figure_S2.png + CSV tables
 ```
 
 ---
@@ -336,7 +336,7 @@ analysis/results/
 ```bash
 python scripts/13_final_publication_audit.py   # authoritative metrics + ROC/PR curves
 python scripts/10_generate_figures.py
-python scripts/11_render_figures.py            # Figure_1.png … Figure_S_PR.png
+python scripts/11_render_figures.py            # Figure_1–4.png, Figure_S2.png
 python scripts/04b_hotspot_model.py
 python scripts/04c_stage1_features.py
 python scripts/04d_docking_features.py

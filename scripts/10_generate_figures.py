@@ -143,39 +143,15 @@ def generate_figure1(data):
         stats["n_forecast_only"] = len(tv[tv["tier"] == 4])
     
     df = pd.DataFrame([stats])
-    df.to_csv(os.path.join(FIGURE_DIR, "fig1_pipeline_stats.csv"), index=False)
-    
-    print("  Figure 1: Pipeline stats saved")
+    print("  Figure 1: Pipeline stats ready")
     return stats
 
 
 # Figure 2: Structural Validation
 
 def generate_figure2(data):
-    """AlphaFold validation + Stage 0 vs Stage 1 comparison."""
+    """Stage progression metrics for model figure."""
     results = {}
-    
-    # Panel A: AlphaFold RMSD
-    af = data.get("alphafold_validation", {})
-    rmsd_data = []
-    if af:
-        for protein, info in af.items():
-            rmsd = info.get("rmsd", {}).get("value", "N/A")
-            pdb = info.get("pdb_id", "N/A")
-            rmsd_data.append({"Protein": protein, "Crystal": pdb, "RMSD": rmsd})
-    
-    rmsd_df = pd.DataFrame(rmsd_data)
-    rmsd_df.to_csv(os.path.join(FIGURE_DIR, "fig2a_alphafold_rmsd.csv"), index=False)
-    results["rmsd"] = rmsd_df.to_dict("records")
-    
-    # Panel B: Stage 0 vs Stage 1 AUROC comparison
-    # Extract from docking results (which includes stage names)
-    dr = data.get("docking_results")
-    if dr is not None:
-        # The docking results file may have different columns
-        # Fall back to known values
-        pass
-    
     stage = PUB.get("stage_progression", {})
     cv = PUB.get("stratified_5fold_cv", {})
     ranking = PUB.get("ranking_full_model", {})
@@ -203,33 +179,7 @@ def generate_figure2(data):
     stage_comparison.to_csv(os.path.join(FIGURE_DIR, "fig2b_stage_comparison.csv"), index=False)
     results["stage_comparison"] = stage_comparison.to_dict("records")
     
-    # Panel C: Rescued failures
-    rp = data.get("ranked_predictions")
-    if rp is not None:
-        rescued = [
-            {"Hotspot": "rpoB_D435", "Stage 0 Rank": 597, "Stage 1 Rank": 20, "Stage 3 Rank": 30},
-            {"Hotspot": "rpoB_V170", "Stage 0 Rank": 953, "Stage 1 Rank": 24, "Stage 3 Rank": 41},
-            {"Hotspot": "rpoB_L452", "Stage 0 Rank": 526, "Stage 1 Rank": 19, "Stage 3 Rank": 64},
-            {"Hotspot": "rpsL_K88", "Stage 0 Rank": 278, "Stage 1 Rank": 3, "Stage 3 Rank": 19},
-            {"Hotspot": "gyrB_N538", "Stage 0 Rank": 3208, "Stage 1 Rank": 3208, "Stage 3 Rank": 43},
-            {"Hotspot": "pncA_V125", "Stage 0 Rank": 2899, "Stage 1 Rank": 2899, "Stage 3 Rank": 55},
-        ]
-        rescued_df = pd.DataFrame(rescued)
-        rescued_df.to_csv(os.path.join(FIGURE_DIR, "fig2c_rescued_failures.csv"), index=False)
-        results["rescued"] = rescued
-    else:
-        # Use known values
-        rescued = [
-            {"Hotspot": "rpoB_D435", "Stage 0 Rank": 597, "Stage 1 Rank": 20},
-            {"Hotspot": "rpoB_V170", "Stage 0 Rank": 953, "Stage 1 Rank": 24},
-            {"Hotspot": "rpoB_L452", "Stage 0 Rank": 526, "Stage 1 Rank": 19},
-            {"Hotspot": "rpsL_K88",  "Stage 0 Rank": 278, "Stage 1 Rank": 3},
-        ]
-        rescued_df = pd.DataFrame(rescued)
-        rescued_df.to_csv(os.path.join(FIGURE_DIR, "fig2c_rescued_failures.csv"), index=False)
-        results["rescued"] = rescued
-    
-    print("  Figure 2: Structural validation tables saved")
+    print("  Figure 2: Stage comparison saved")
     return results
 
 
@@ -430,41 +380,13 @@ def generate_figure6(data):
 # Supplementary Figures
 
 def generate_supplementary(data):
-    """All supplementary figure data."""
+    """LOO table only (other supplementary curves rendered in Figure 2)."""
     results = {}
-    
-    # S1: ROC curves across development
-    stage_data = pd.DataFrame([
-        {"Model": "Stage 0 (Sequence)", "AUROC": 0.888},
-        {"Model": "Stage 1 (Structural)", "AUROC": 0.910},
-        {"Model": "Stage 1.5 (+Docking)", "AUROC": 0.938},
-        {"Model": "Stage 3 (per-gene drug)", "AUROC": 0.977},
-    ])
-    stage_data.to_csv(os.path.join(FIGURE_DIR, "figS1_roc_comparison.csv"), index=False)
-    results["roc_comparison"] = stage_data.to_dict("records")
-    
-    # S2: Leave-one-gene-out
     loo = data.get("loo_results")
     if loo is not None:
         loo.to_csv(os.path.join(FIGURE_DIR, "figS2_leave_one_gene_out.csv"), index=False)
         results["loo"] = loo.to_dict("records")
-    
-    # S3/S4: Removed to stay within 10-figure limit.
-    # S3 (docking analysis) content merged into Figure 2 panel C.
-    # S4 (complete watchlist) available as CSV via emergence_watchlist.csv.
-    
-    # S5: Model benchmark comparison
-    
-    # S5: Model benchmark comparison
-    benchmark_path = os.path.join(
-        os.path.dirname(FIGURE_DIR), "hotspot_model", "results_benchmark.csv"
-    )
-    if os.path.exists(benchmark_path):
-        bm = pd.read_csv(benchmark_path)
-        bm.to_csv(os.path.join(FIGURE_DIR, "figS5_model_benchmark.csv"), index=False)
-        results["benchmark"] = bm.to_dict("records")
-    
-    print("  Supplementary figures data saved")
+    print("  Supplementary LOO table saved")
     return results
 
 
@@ -488,32 +410,19 @@ def main():
     print("\n[Figure 3] Feature importance...")
     fig3 = generate_figure3(data)
     
-    print("\n[Figure 4] Mutation forecasting...")
-    fig4 = generate_figure4(data)
-    
-    print("\n[Figure 5] Prospective clinical validation...")
+    print("\n[Figure 4] CRyPTIC validation...")
     fig5 = generate_figure5(data)
     
-    print("\n[Figure 6] Clinical impact...")
-    fig6 = generate_figure6(data)
-    
-    print("\n[Supplementary] All supplementary figures...")
+    print("\n[Supplementary] Leave-one-gene-out...")
     supp = generate_supplementary(data)
     
     # Paper summary JSON
     summary = {
         "pipeline": fig1,
-        "structural_validation": fig2,
+        "model": fig2,
         "feature_importance": fig3,
-        "mutation_forecasting": {
-            "top50": fig4.get("top50", [])[:10],
-            "status_counts": fig4.get("status_counts", []),
-        },
         "cryptic_validation": fig5,
-        "clinical_impact": fig6,
-        "supplementary": {
-            k: v for k, v in supp.items() if not isinstance(v, list) or len(v) < 20
-        },
+        "supplementary": supp,
     }
     
     summary_path = os.path.join(FIGURE_DIR, "paper_summary.json")
