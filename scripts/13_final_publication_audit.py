@@ -195,12 +195,23 @@ def run_cv(df_model, features, cv, groups=None):
   return summary, np.array(all_y), np.array(all_p)
 
 
+def smooth_pr_curve(y_true, y_prob, n_points=501):
+    """Monotonic precision–recall envelope on a uniform recall grid (publication plot)."""
+    prec, rec, _ = precision_recall_curve(y_true, y_prob)
+    recall_grid = np.linspace(0.0, 1.0, n_points)
+    precision_smooth = []
+    for r in recall_grid:
+        mask = rec >= r
+        precision_smooth.append(float(prec[mask].max()) if mask.any() else 0.0)
+    return np.array(precision_smooth), recall_grid
+
+
 def save_curve_csv(y_true, y_prob, out_path, curve_type):
     if curve_type == "roc":
         fpr, tpr, _ = roc_curve(y_true, y_prob)
         pd.DataFrame({"fpr": fpr, "tpr": tpr}).to_csv(out_path, index=False)
     else:
-        prec, rec, _ = precision_recall_curve(y_true, y_prob)
+        prec, rec = smooth_pr_curve(y_true, y_prob)
         pd.DataFrame({"precision": prec, "recall": rec}).to_csv(out_path, index=False)
 
 
@@ -475,6 +486,8 @@ Random baseline (positive rate): **{pr['random_baseline']:.3f}**
 | Precision @ recall ≥ 0.25 | **{pr_oof_out['precision_at_recall_gte_0.25']:.3f}** |
 | Precision @ recall ≥ 0.50 | **{pr_oof_out['precision_at_recall_gte_0.5']:.3f}** |
 | Precision @ recall ≥ 0.75 | {pr_oof_out['precision_at_recall_gte_0.75']:.3f} |
+
+*Figure 2C uses a 501-point monotonic precision envelope (`fig_pr_curve.csv`) for smooth visualization; AUPRC label = pooled OOF {pr_oof_out['auprc']:.3f}.*
 
 ### GroupKFold by gene
 

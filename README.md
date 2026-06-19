@@ -59,7 +59,20 @@ Dataset: 6,350 residues across 13 genes. 32 positive (hotspot) residues (0.50%).
 
 **Stage progression (feature ablation):** Stage 0 AUROC 0.888 → Stage 1 0.906 (AUPRC 0.205) → Stage 2 **0.971** (AUPRC **0.560**, 111× random; top-20 recall 0.657).
 
-**PR operating points (pooled OOF, `fig_pr_curve.csv`):** precision **0.800** @ recall ≥ 0.25 · **0.432** @ recall ≥ 0.50.
+**PR operating points (pooled OOF):** precision **0.800** @ recall ≥ 0.25 · **0.432** @ recall ≥ 0.50.
+
+**PR curve figure:** `fig_pr_curve.csv` is a 501-point precision envelope (smooth, monotonic); Figure 2C legend AUPRC = pooled OOF **0.435**.
+
+### Lead novel candidate: gyrB Q538L
+
+| Property | Value |
+|----------|-------|
+| Tier | 4 (forecast-only, **0 CRyPTIC carriers**) |
+| Rank / emergence score | 131 / 0.234 |
+| Vina ΔΔG | **+0.737** kcal/mol (STRONG); 1.34 Å from moxifloxacin |
+| Literature | **Novel** — Q538L not reported in Mtb (N538D/K/S/T only) |
+
+Only Vina-validated hit that is pipeline-novel, literature-novel, and structurally STRONG.
 
 ### Full-model ranking (calibrated on all residues)
 

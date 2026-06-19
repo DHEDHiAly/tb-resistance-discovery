@@ -1,6 +1,6 @@
 # Publication Metrics (Authoritative)
 
-Generated: 2026-06-19T16:18:52.732860+00:00
+Generated: 2026-06-19T17:27:33.973030+00:00
 
 ## Dataset
 - Residues: **6350** across 13 resistance genes
@@ -49,6 +49,8 @@ Random baseline (positive rate): **0.005**
 | Precision @ recall ≥ 0.25 | **0.800** |
 | Precision @ recall ≥ 0.50 | **0.432** |
 | Precision @ recall ≥ 0.75 | 0.140 |
+
+*Figure 2C uses a 501-point monotonic precision envelope (`fig_pr_curve.csv`) for smooth visualization; AUPRC label = pooled OOF 0.435.*
 
 ### GroupKFold by gene
 

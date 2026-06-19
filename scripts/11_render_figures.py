@@ -52,6 +52,7 @@ def _csv(name):
 
 def fig1_pipeline():
     stage = PUB.get("stage_progression", {})
+    cv = PUB.get("stratified_5fold_cv", {})
     cryptic = PUB.get("cryptic_validation", {}).get("tier_counts", {})
     ranking = PUB.get("ranking_full_model", {})
     n_pos = PUB.get("dataset", {}).get("n_positives", 32)
@@ -68,7 +69,7 @@ def fig1_pipeline():
     steps = [
         (1.2, 5.2, "Labels", "#2c3e50", f"{n_pos} hotspot residues\nWHO + CRyPTIC"),
         (3.2, 5.2, "Features", "#2980b9", "Homoplasy, structure,\nESM-2, drug proximity"),
-        (5.2, 5.2, "Classifier", "#27ae60", f"XGBoost AUROC {stage.get('stage2_auroc', 0.971):.3f}\n{ranking.get('top20_n', 20)}/{n_pos} in top 20"),
+        (5.2, 5.2, "Classifier", "#27ae60", f"AUROC {cv.get('auroc_mean', 0.968):.3f}\n{ranking.get('top20_n', 20)}/{n_pos} in top 20"),
         (7.2, 5.2, "Forecast", "#e67e22", "332 mutations\nP(emergence)"),
         (9.0, 5.2, "Validate", "#c0392b", f"12,287 isolates\nTier 1: {cryptic.get('1', 24)} · Tier 4: {cryptic.get('4', 188)}"),
     ]
@@ -136,21 +137,25 @@ def fig2_model_performance():
     ax2.set_aspect("equal")
     ax2.grid(alpha=0.3, linestyle="--")
 
-    # Panel C: PR
+    # Panel C: PR (smooth envelope from pooled OOF)
     ax3 = plt.subplot(1, 3, 3)
     pr_df = _csv("fig_pr_curve.csv")
-    auprc = cv.get("auprc_mean", stage.get("stage2_auprc", 0.560))
+    pooled = PUB.get("stratified_5fold_cv", {}).get("pooled_oof", {})
+    auprc = pooled.get("auprc", cv.get("auprc_mean", 0.465))
     baseline = PUB.get("dataset", {}).get("positive_rate", 0.005)
-    if pr_df is not None:
+    if pr_df is not None and len(pr_df):
+        pr_df = pr_df.sort_values("recall")
         ax3.plot(pr_df["recall"], pr_df["precision"], color="#2c3e50", lw=2,
                  label=f"AUPRC = {auprc:.3f}")
+        ax3.fill_between(pr_df["recall"], pr_df["precision"], baseline,
+                         alpha=0.12, color="#2c3e50")
     ax3.axhline(baseline, color="gray", ls="--", lw=1, label=f"Random ({baseline:.3f})")
     ax3.set_title("C  Precision–recall (5-fold OOF)", loc="left", fontweight="bold")
     ax3.set_xlabel("Recall")
     ax3.set_ylabel("Precision")
-    ax3.legend(fontsize=8)
-    ax3.set_xlim(0, 1.05)
-    ax3.set_ylim(0, 1.05)
+    ax3.legend(fontsize=8, loc="upper right")
+    ax3.set_xlim(0, 1.02)
+    ax3.set_ylim(0, 1.02)
     ax3.grid(alpha=0.3, linestyle="--")
 
     plt.tight_layout()
