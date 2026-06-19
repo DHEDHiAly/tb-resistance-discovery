@@ -1030,11 +1030,15 @@ python -m http.server 8000
 
 1. **Manuscript** — Lead with gyrB Q538L (literature-novel + Vina STRONG + PyMOL). Frame 9 other validated hits as pipeline benchmarks. Include CRyPTIC Tier 1 retrospective confirmations.
 
-2. **MRSA extension** — Same architecture (homoplasy + structure + drug proximity + XGBoost + prospective validation) on *Staphylococcus aureus* resistance genes.
+2. **Phase 2: Phenotypic validation (in vivo MICs)** — To test whether the mutation causes true physiological drug resistance:
+   - **Surrogate modeling:** Transform the mutant *gyrB* plasmid (Q538L) into a fast-growing, non-pathogenic surrogate such as *Mycobacterium smegmatis* (BSL-1/2 lab).
+   - **MIC testing:** Run minimum inhibitory concentration (MIC) assays by broth microdilution to determine whether cells carrying Q538L show a survival shift against escalating moxifloxacin doses vs wild-type *gyrB*.
 
-3. **Mantis platform** — Deploy emergence model in Mantis clinical genomics platform; Tier-4 surveillance alerts with structural validation and literature novelty flags at WGS interpretation time.
+3. **Phase 3: MRSA extension** — Same architecture (homoplasy + structure + drug proximity + XGBoost + prospective validation) on *Staphylococcus aureus* resistance genes.
 
-4. **Future structural work** — OpenMM MD/MM-PBSA for Q538L (`build_mfx_system_v2.py`); PyMOL figures for other hits; strict WHO 2023 PDF grep for P483R.
+4. **Phase 4: Mantis platform** — Deploy emergence model in Mantis clinical genomics platform; Tier-4 surveillance alerts with structural validation and literature novelty flags at WGS interpretation time.
+
+5. **Future structural work** — OpenMM MD/MM-PBSA for Q538L (`build_mfx_system_v2.py`); PyMOL figures for other hits; strict WHO 2023 PDF grep for P483R.
 
 ---
 

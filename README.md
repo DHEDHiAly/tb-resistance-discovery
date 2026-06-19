@@ -244,7 +244,7 @@ Open `viewer.html` in a browser (serve from repo root: `python -m http.server 80
 - gyrB Q538L PyMOL structural figure (`data/pdb/gyrB_Q538L_validation.png`)
 - Filterable table of all 32 tier-4 pocket Vina scores (10 validated)
 - Novelty audit table (CARD / PubMed / score verification)
-- Roadmap: manuscript → MRSA extension → Mantis platform integration
+- Roadmap: manuscript → phenotypic MIC validation (M. smegmatis) → MRSA extension → Mantis platform integration
 
 ## Mutation forecasting
 `04e_mutation_forecasting.py` -- For the top hotspot-scoring residues, enumerate all SNV-accessible mutations. Score by: emergence = hotspot_score x mutation_score, where mutation_score combines resistance plausibility, fitness cost, and evolutionary accessibility.
@@ -325,9 +325,13 @@ analysis/results/
 
 1. **Manuscript** — Lead with gyrB Q538L (literature-novel + Vina STRONG + PyMOL). Frame 9 other validated hits as pipeline benchmarks. Include CRyPTIC Tier 1 retrospective confirmations.
 
-2. **Extend to other diseases — MRSA first** — Reuse the same architecture (homoplasy + structure + drug proximity + XGBoost + prospective validation) on *Staphylococcus aureus* resistance genes.
+2. **Phase 2: Phenotypic validation (in vivo MICs)** — Test whether Q538L causes true physiological drug resistance:
+   - **Surrogate modeling:** Transform a mutant *gyrB* plasmid (Q538L) into a fast-growing, non-pathogenic surrogate such as *Mycobacterium smegmatis* (BSL-1/2 compatible).
+   - **MIC testing:** Run minimum inhibitory concentration (MIC) assays by broth microdilution and measure whether cells carrying Q538L show a right-shift in survival against escalating moxifloxacin doses compared to wild-type *gyrB*.
 
-3. **Mantis platform integration** — Deploy the emergence model inside the Mantis clinical genomics platform, surfacing Tier-4 surveillance alerts with structural validation and literature novelty flags at WGS interpretation time.
+3. **Phase 3: Extend to other diseases — MRSA** — Reuse the same architecture (homoplasy + structure + drug proximity + XGBoost + prospective validation) on *Staphylococcus aureus* resistance genes.
+
+4. **Phase 4: Mantis platform integration** — Deploy the emergence model inside the Mantis clinical genomics platform, surfacing Tier-4 surveillance alerts with structural validation and literature novelty flags at WGS interpretation time.
 
 ---
 

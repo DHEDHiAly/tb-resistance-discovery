@@ -134,6 +134,7 @@ Matched-null: real Tier-1 count (24) vs null mean 9.3, **p = 0.001**.
 - 32 positives; global homoplasy not per-fold; pncA phenotype blind spot; no direct emergence benchmark.
 
 ### 3.6 Future work
+- **Phase 2 — Phenotypic validation (in vivo MICs):** Transform mutant *gyrB* (Q538L) into *Mycobacterium smegmatis* as a BSL-1/2 surrogate; run broth microdilution MIC assays to test for a moxifloxacin resistance shift vs wild-type *gyrB*.
 - MRSA extension; Mantis platform integration; MD/MM-PBSA for Q538L.
 
 ---
