@@ -1,6 +1,6 @@
 # Paper Outline — Emergence Forecasting Model for Protein Hotspots
 
-**Working title:** *A general framework for forecasting emergent pathogenic mutations: residue-level hotspot modeling validated in tuberculosis, with extensions to MRSA and Alzheimer's disease*
+**Working title:** *Emergence Forecasting Model for protein hotspots: residue-level mutation forecasting validated in M. tuberculosis drug resistance*
 
 **Authors:** Aly Dhedhi, Vinay Singamsetty, Li-Lun Ho, Manolis Kellis (Kellis Lab, MIT)
 
@@ -19,23 +19,23 @@ This is **not** a TB resistance catalog paper. The contribution is a **reusable 
 3. **Score** P(emergence) = P(hotspot) × P(mutation | biochemistry, structure, selective pressure).
 4. **Validate** prospectively against independent clinical/population databases and orthogonal biophysics.
 
-**Tuberculosis** is the **proof-of-concept benchmark** (12,287 CRyPTIC isolates, 1,037 homoplasy genomes, Vina structural validation, lead hit **gyrB Q538L**).
+**Tuberculosis** is the **only implemented benchmark** in this repository (12,287 CRyPTIC isolates, 1,037 homoplasy genomes, Vina structural validation, lead hit **gyrB Q538L**).
 
-**MRSA** and **Alzheimer's disease** are **direct transfer targets** — same math, different genes, labels, and validation cohorts.
+**Scope note:** MRSA and Alzheimer's are **planned next steps only** — not implemented, not validated, and **not part of this manuscript's results**.
 
 ---
 
 ## Abstract (~280 words)
 
-**Background.** Genomic medicine is retrospective: we annotate variants after they appear in ClinVar, CRyPTIC, or gnomAD. For antimicrobial resistance and neurodegeneration, the clinically urgent question is different: **which mutations have not yet been seen but are likely to emerge next?**
+**Background.** Genomic surveillance catalogs resistance mutations retrospectively (WHO, CRyPTIC). Genotype→phenotype tools score variants already seen in clinic. The open question: **which mutations have not yet been observed but are likely to emerge next?**
 
 **Methods.** We introduce an **Emergence Forecasting Model (EFM)** — a staged, residue-level classifier that integrates (i) population homoplasy from 1,037 genomes, (ii) AlphaFold structural features, (iii) ESM-2 mutation intolerance, and (iv) self-excluded drug-binding proximity, trained with XGBoost and Platt calibration on 6,350 residues across 13 *M. tuberculosis* resistance genes (32 positive hotspots, 0.50% prevalence). Accessible SNVs are enumerated at high-risk codons; each receives P(emergence). We evaluate with stratified 5-fold CV, GroupKFold by gene, and **precision–recall analysis** at 0.5% prevalence (random baseline AUPRC = 0.005). TB predictions are validated against 12,287 CRyPTIC isolates (tiered FDR framework) and AutoDock Vina (Tier-4 pocket-direct, fresh WT redock).
 
 **Results (TB benchmark).** Primary CV: AUROC **0.968 ± 0.034**, **AUPRC 0.465 ± 0.157** (92× random), **precision 0.631 / recall 0.562** at optimal F1 (**F1 0.550 ± 0.119**). At fixed recall ≥ 0.50, precision **0.432** (~86× random). GroupKFold: AUPRC **0.586 ± 0.226**, precision **0.765 / recall 0.668** at best F1. All 32 known hotspots rank in the top 32. **24** predictions retrospectively confirmed in CRyPTIC (Tier 1, matched-null p = 0.001); **188** remain forecast-only (Tier 4). Lead de novo finding: **gyrB Q538L** (ΔΔG +0.737, literature-novel).
 
-**Conclusions.** EFM provides a transferable blueprint for prospective mutation surveillance. We outline deployment to **MRSA** (mecA/fem/rpoB resistance genes) and **Alzheimer's** (APP, PSEN1, BACE1 pathogenic hotspot forecasting before ClinVar/gnomAD saturation).
+**Conclusions.** EFM enables prospective TB resistance mutation forecasting with strong precision–recall performance and independent CRyPTIC/Vina validation. The architecture is designed to transfer to other domains; **MRSA and Alzheimer's application are future work** (§5).
 
-**Keywords:** emergence forecasting, precision–recall, homoplasy, XGBoost, antimicrobial resistance, MRSA, Alzheimer's disease, prospective validation
+**Keywords:** emergence forecasting, precision–recall, homoplasy, XGBoost, tuberculosis, antimicrobial resistance, prospective validation
 
 ---
 
@@ -53,14 +53,13 @@ EFM reframes the problem as **ranking residues and mutations by P(emergence)** u
 - **Functional constraint** (ESM-2 intolerance as a feature),
 - **Mechanistic proximity** (distance to ligand-binding pocket, self-excluded to prevent circularity).
 
-TB drug resistance is the **first full instantiation**; the architecture is **pathogen- and disease-agnostic**.
+TB drug resistance is the **first and only full instantiation** reported here. The pipeline is gene-agnostic in design, but **all results in this paper are TB-only**.
 
-### 1.3 Contributions
+### 1.3 Contributions (this work)
 1. **Novel model:** Staged EFM (sequence → structure → drug proximity → XGBoost + Platt) with explicit P(emergence) decomposition and SNV enumeration.
 2. **Rigorous PR evaluation:** Full precision–recall reporting at 0.5% prevalence — the operative metric regime for rare hotspot discovery.
 3. **Prospective validation framework:** CRyPTIC tier system (Tiers 0–4) + matched-null enrichment + orthogonal Vina ΔΔG.
 4. **TB lead discovery:** **gyrB Q538L** — pipeline-novel, literature-novel, structurally STRONG.
-5. **Transfer roadmap:** Concrete gene lists and validation strategies for **MRSA** and **Alzheimer's**.
 
 ---
 
@@ -240,52 +239,7 @@ At **0.50% prevalence** (32/6,350), accuracy and F1@0.5 are misleading (6,318 ne
 
 ---
 
-### 2.9 Transferability: applying EFM to MRSA
-
-**Conceptual mapping:**
-
-| EFM component | TB (this paper) | MRSA extension |
-|---------------|-----------------|----------------|
-| Gene set | 13 TB resistance genes | *mecA*, *femAB*, *rpoB*, *gyrA*, *grlA/B*, *dfrB*, *fusA* |
-| Hotspot labels | WHO TB catalog | CARD + EUCAST + SCC*mec* literature |
-| Homoplasy | 1,037 TB genomes | Public *S. aureus* collections (e.g. PATRIC, NCBI Pathogen Detection) |
-| Structure | AlphaFold + co-crystals | AlphaFold + PDB (mecA/penicillin, quinolone-DNA gyrase) |
-| Ligand proximity | RIF, MFX, INH-NAD, EMB | Oxacillin, moxifloxacin, vancomycin (where applicable) |
-| Clinical validation | CRyPTIC 12,287 | CDC NHSN / public WGS + AST matched cohorts |
-| Forecast tier | Tier 4 (0 carriers) | Mutations absent from surveillance but ranked by EFM |
-
-**MRSA-specific value:** mecA promoter and femAB pathway mutations emerge under β-lactam pressure before appearing in local antibiograms — EFM ranks **accessible SNVs at hotspot codons** for hospital surveillance dashboards (Phase 4: Mantis platform).
-
-**Expected PR regime:** MRSA resistance hotspots are similarly rare at residue resolution; **AUPRC and precision @ recall ≥ 0.25** remain the operative metrics (not accuracy).
-
----
-
-### 2.10 Transferability: applying EFM to Alzheimer's disease
-
-**Conceptual mapping:**
-
-| EFM component | TB (this paper) | Alzheimer's extension |
-|---------------|-----------------|----------------------|
-| Gene set | TB resistance genes | **APP**, **PSEN1**, **PSEN2**, **BACE1**, **MAPT** (tau) |
-| Hotspot labels | WHO resistance residues | ClinVar pathogenic/likely-pathogenic **missense** at known AD loci |
-| Homoplasy / population signal | TB homoplasy | gnomAD v4 allele recurrence; ADSP/ADNI carrier enrichment |
-| Structure | AlphaFold | AlphaFold + cryo-EM (γ-secretase, BACE1) |
-| Ligand proximity | Anti-TB drugs | γ-secretase modulators, BACE inhibitors (mechanistic pocket) |
-| Clinical validation | CRyPTIC phenotypes | Longitudinal cohorts: variants that **appear** in AD cases after model forecast |
-| Forecast tier | Tier 4 (0 carriers) | Variants **absent from ClinVar** but high P(emergence) at APP/PSEN1 cleavage sites |
-
-**Alzheimer's-specific framing:** AD genetics is dominated by **known familial mutations** (APP Swedish, PSEN1 E280A). EFM asks: **which accessible substitutions at structurally critical APP/PSEN1/BACE1 residues have not yet been reported but plausibly will?** — analogous to forecasting Q538L before CRyPTIC detection.
-
-**Validation strategy:**
-1. Train on ClinVar pathogenic residues (exclude VUS).
-2. Hold out recently deposited pathogenic variants (temporal split).
-3. Test enrichment in AD case-control WGS vs matched-null (same matched-null logic as CRyPTIC Tier 1).
-
-**Caveat for paper:** Alzheimer's transfer is **proposed** — TB results are **demonstrated**. Frame AD as Discussion + Future Work with explicit gene list and validation design.
-
----
-
-### 2.11 Statistical software and reproducibility
+### 2.9 Statistical software and reproducibility
 
 ```bash
 python scripts/13_final_publication_audit.py   # AUROC, AUPRC, precision, recall, PR/ROC CSVs
@@ -329,36 +283,50 @@ Homoplasy alleles (gain 0.269) dominate over drug proximity (0.158) — selectiv
 
 ## 4. Discussion
 
-### 4.1 EFM as a general framework
-The staged architecture (population → structure → mechanism → calibrated trees) is **not TB-specific**. Any domain with (i) sparse hotspot labels, (ii) population recurrence data, (iii) protein structure, and (iv) an independent validation cohort can run the same pipeline.
+### 4.1 EFM as a general framework (design intent only)
+The staged architecture (population → structure → mechanism → calibrated trees) is **not TB-specific in design**, but **only TB is implemented and validated in this work**.
 
 ### 4.2 Why precision–recall must lead the narrative
 At 0.5% prevalence, F1@0.5 = 0.38 despite excellent ranking (32/32 in top 32). Reviewers will ask about "low F1" — answer with **AUPRC 0.465**, **P = 0.80 @ R ≥ 0.25**, and top-K recall. Figure 2C is the primary classifier figure.
 
-### 4.3 MRSA deployment path
-- Near-term: swap gene table + CARD labels + *S. aureus* homoplasy; validate against public AST-matched WGS.
-- Clinical hook: pre-emptive alerts for ranked Tier-4 *mecA*/*fem*/*rpoB* SNVs in hospital WGS pipelines.
-
-### 4.4 Alzheimer's deployment path
-- Train on APP/PSEN1/BACE1 ClinVar pathogenic residues; gnomAD as carrier matrix.
-- Forecast accessible substitutions at γ-secretase cleavage sites and BACE1 catalytic pocket before ClinVar saturation.
-- Longitudinal validation: variants that emerge in ADSP cases after model publication.
-
-### 4.5 Limitations
-- TB demo: 32 positive residues; homoplasy not recomputed per CV fold.
+### 4.3 Limitations (this work)
+- TB only: 32 positive residues; homoplasy not recomputed per CV fold.
 - Vina: rigid receptor; misses allosteric resistance.
-- MRSA/AD: proposed extensions, not yet run in this repository.
-
-### 4.6 Roadmap
-1. **Manuscript** — Lead with EFM methodology + PR metrics; TB as benchmark; Q538L as de novo case study.
-2. **Phase 2** — *M. smegmatis* MIC for Q538L (phenotypic proof).
-3. **Phase 3** — MRSA EFM instantiation.
-4. **Phase 4** — Alzheimer's gene set + gnomAD validation.
-5. **Phase 5** — Mantis clinical WGS integration.
+- **MRSA and Alzheimer's not yet attempted** — see §5 for planned extensions.
 
 ---
 
-## 5. Figures
+## 5. Next steps *(not implemented — do not report as results)*
+
+Everything in this section is **future work**. None of it has been run in this repository.
+
+### 5.1 Phase 2 — Phenotypic validation (TB)
+- *M. smegmatis* surrogate + broth microdilution MIC for **gyrB Q538L** vs moxifloxacin.
+
+### 5.2 Phase 3 — MRSA extension *(planned)*
+Apply the same EFM pipeline to *S. aureus*:
+- **Genes:** *mecA*, *femAB*, *rpoB*, *gyrA*, *grlA/B*, *dfrB*, *fusA*
+- **Labels:** CARD + EUCAST resistance catalog
+- **Homoplasy:** Public *S. aureus* WGS (PATRIC, NCBI Pathogen Detection)
+- **Validation:** AST-matched WGS cohorts (e.g. CDC NHSN); same tier + matched-null logic as CRyPTIC
+
+### 5.3 Phase 4 — Alzheimer's extension *(planned)*
+Apply EFM to AD-relevant genes:
+- **Genes:** APP, PSEN1, PSEN2, BACE1, MAPT
+- **Labels:** ClinVar pathogenic/likely-pathogenic missense residues
+- **Population signal:** gnomAD allele recurrence; ADSP/ADNI enrichment
+- **Validation:** Temporal holdout of newly deposited ClinVar variants; matched-null vs gnomAD
+
+### 5.4 Phase 5 — Clinical deployment (Mantis)
+Integrate Tier-4 surveillance alerts into WGS interpretation workflows.
+
+### 5.5 Manuscript framing
+- **Report:** EFM model + TB benchmark + PR metrics + Q538L + CRyPTIC tiers.
+- **Do not report:** MRSA or Alzheimer's metrics, figures, or validation — only list as §5 next steps.
+
+---
+
+## 6. Figures
 
 | ID | File | Content |
 |----|------|---------|
@@ -369,15 +337,14 @@ At 0.5% prevalence, F1@0.5 = 0.38 despite excellent ranking (32/32 in top 32). R
 | **Fig 5** | `gyrB_Q538L_validation.png` | Lead structural validation |
 | **Fig S2** | `Figure_S2.png` | Leave-one-gene-out |
 
-**Extended Data (recommended):** Full PR metric table (§2.6.3), all 10 Vina hits, MRSA/AD gene mapping tables.
+**Extended Data (recommended):** Full PR metric table (§2.6.3), all 10 Vina hits.
 
 ---
 
-## 6. Target venues
+## 7. Target venues
 
-1. ***Nature Communications* / *Nature Methods*** — General EFM framework + PR evaluation + cross-disease roadmap; TB as benchmark.
-2. ***Nature Microbiology*** — If emphasizing Q538L + CRyPTIC clinical story.
-3. ***Bioinformatics* / *PLOS Computational Biology*** — Methods-first with full §2 reproduction.
+1. ***Nature Communications* / *Nature Microbiology*** — EFM methodology + PR evaluation + TB benchmark (Q538L, CRyPTIC).
+2. ***Bioinformatics* / *PLOS Computational Biology*** — Methods-first with full §2 reproduction.
 
 ---
 
