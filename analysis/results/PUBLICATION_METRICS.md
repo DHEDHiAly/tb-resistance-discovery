@@ -1,6 +1,6 @@
 # Publication Metrics (Authoritative)
 
-Generated: 2026-06-19T15:33:56.656085+00:00
+Generated: 2026-06-19T16:18:52.732860+00:00
 
 ## Dataset
 - Residues: **6350** across 13 resistance genes
@@ -19,6 +19,45 @@ Generated: 2026-06-19T15:33:56.656085+00:00
 | Top-20 recall | **0.662** (21/32) |
 | Top-50 recall | 0.829 |
 | Top-100 recall | 0.857 |
+
+## Precision–Recall (recomputed)
+
+Random baseline (positive rate): **0.005**
+
+### Stratified 5-fold CV (primary)
+
+| Metric | Value |
+|--------|-------|
+| AUPRC | **0.465 ± 0.157** (92× random) |
+| Best F1 | **0.550 ± 0.119** |
+| Precision @ best F1 | **0.631** |
+| Recall @ best F1 | **0.562** |
+| Precision @ threshold 0.5 | 0.667 |
+| Recall @ threshold 0.5 | 0.324 |
+| Per-fold AUPRC | 0.613 · 0.537 · 0.619 · 0.294 · 0.259 |
+
+### Pooled OOF PR curve (`fig_pr_curve.csv`)
+
+| Metric | Value |
+|--------|-------|
+| AUPRC | **0.435** |
+| Best F1 | 0.500 |
+| Precision @ best F1 | 0.536 |
+| Recall @ best F1 | 0.469 |
+| Precision @ threshold 0.5 | 0.556 |
+| Recall @ threshold 0.5 | 0.312 |
+| Precision @ recall ≥ 0.25 | **0.800** |
+| Precision @ recall ≥ 0.50 | **0.432** |
+| Precision @ recall ≥ 0.75 | 0.140 |
+
+### GroupKFold by gene
+
+| Metric | Value |
+|--------|-------|
+| AUPRC | **0.586 ± 0.226** |
+| Precision @ best F1 | 0.765 |
+| Recall @ best F1 | 0.668 |
+| Per-fold AUPRC | 0.855 · 0.313 · 0.420 · 0.756 |
 
 ## GroupKFold by Gene (conservative)
 

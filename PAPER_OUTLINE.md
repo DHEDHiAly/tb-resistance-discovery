@@ -39,7 +39,7 @@
 | | Top-50 / Top-100 recall | 0.829 / 0.857 |
 | **Stage ablation (Stage 2)** | AUROC / AUPRC | 0.971 / **0.560** (111× random) |
 | | Top-20 recall | 0.657 |
-| **PR operating points (OOF curve)** | Precision @ recall ≥ 0.25 / 0.50 | **0.80** / **0.43** |
+| **PR operating points (OOF curve)** | Precision @ recall ≥ 0.25 / 0.50 | **0.800** / **0.432** |
 | **GroupKFold (by gene)** | AUROC | **0.974 ± 0.018** |
 | | AUPRC | **0.586 ± 0.226** |
 | | Best F1 | 0.676 ± 0.191 |
@@ -136,8 +136,8 @@ Random baseline AUPRC = positive rate = **0.005** (32 / 6,350).
 
 | Recall ≥ | Precision |
 |----------|-----------|
-| 0.25 | **0.80** |
-| 0.50 | **0.43** |
+| 0.25 | **0.800** |
+| 0.50 | **0.432** |
 | 0.75 | 0.14 |
 | 1.00 | 0.012 |
 

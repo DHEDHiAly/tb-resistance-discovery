@@ -215,10 +215,10 @@ footer {
     rigid-receptor docking where the mutation sits in the drug pocket.
   </p>
   <div class="stats">
-    <div><div class="num">0.968</div><div class="lbl">AUROC (5-fold CV)</div></div>
+    <div><div class="num">0.631</div><div class="lbl">Precision @ best F1 (CV)</div></div>
+    <div><div class="num">0.562</div><div class="lbl">Recall @ best F1 (CV)</div></div>
     <div><div class="num">0.465</div><div class="lbl">AUPRC (92× random)</div></div>
-    <div><div class="num">188</div><div class="lbl">Tier-4 forecasts (0 carriers)</div></div>
-    <div><div class="num">10</div><div class="lbl">Vina-validated (ΔΔG ≥ 0.15)</div></div>
+    <div><div class="num">0.432</div><div class="lbl">Precision @ recall ≥ 0.50</div></div>
   </div>
   <div class="pipeline">
     <div class="step"><strong>1. Hotspots</strong><span><code>04b</code> sequence + homoplasy</span></div>
@@ -268,7 +268,7 @@ footer {
   </details>
   <details class="panel" open>
     <summary>Stage 2 — <code>scripts/04d_docking_features.py</code></summary>
-    <p>Drug proximity (10 Å, self-excluded), XGBoost, Platt calibration. AUROC 0.968 ± 0.034, AUPRC 0.465 ± 0.157, best F1 0.550. Top feature: homoplasy_alleles (0.269 gain).</p>
+    <p>Drug proximity (10 Å, self-excluded), XGBoost, Platt calibration. AUPRC 0.465 ± 0.157; precision **0.631** / recall **0.562** @ best F1. Top feature: homoplasy_alleles (0.269 gain).</p>
   </details>
   <details class="panel">
     <summary>Forecasting — <code>scripts/04e_mutation_forecasting.py</code></summary>

@@ -200,7 +200,7 @@ Source: `analysis/results/PUBLICATION_METRICS.md` — regenerate with `python sc
 | ESM-2 baseline AUROC | 0.618 | Near random |
 | Full model lift over ESM-2 | +0.350 AUROC | |
 
-**PR operating points (pooled OOF):** precision **0.80** @ recall ≥ 0.25 · **0.43** @ recall ≥ 0.50.
+**PR operating points (pooled OOF):** precision **0.800** @ recall ≥ 0.25 · **0.432** @ recall ≥ 0.50.
 
 ### Stage progression (feature ablation — not duplicated as primary CV)
 

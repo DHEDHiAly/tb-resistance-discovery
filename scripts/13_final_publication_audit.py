@@ -188,8 +188,10 @@ def run_cv(df_model, features, cv, groups=None):
       m, s = mean_std(key)
       summary[f"{key}_mean"] = m
       summary[f"{key}_std"] = s
-  for key in ["best_f1_precision", "best_f1_recall"]:
+  for key in ["best_f1_precision", "best_f1_recall", "precision_at_05", "recall_at_05"]:
       summary[f"{key}_mean"] = float(np.mean([f[key] for f in folds]))
+      if key in ("precision_at_05", "recall_at_05"):
+          summary[f"{key}_std"] = float(np.std([f[key] for f in folds]))
   return summary, np.array(all_y), np.array(all_p)
 
 
@@ -200,6 +202,18 @@ def save_curve_csv(y_true, y_prob, out_path, curve_type):
     else:
         prec, rec, _ = precision_recall_curve(y_true, y_prob)
         pd.DataFrame({"precision": prec, "recall": rec}).to_csv(out_path, index=False)
+
+
+def precision_at_recall(y_true, y_prob, recall_targets=(0.25, 0.5, 0.75, 1.0)):
+    """Max precision achievable at each minimum recall threshold."""
+    prec_arr, rec_arr, _ = precision_recall_curve(y_true, y_prob)
+    out = {}
+    for target in recall_targets:
+        mask = rec_arr >= target
+        out[f"precision_at_recall_gte_{target}"] = (
+            float(prec_arr[mask].max()) if mask.any() else 0.0
+        )
+    return out
 
 
 def load_json(path, default=None):
@@ -274,6 +288,9 @@ def main():
     esm2 = load_json(HOTSPOT / "esm2_baseline_results.json", {})
     perm = load_json(HOTSPOT / "permutation_test_results.json", {})
 
+    pr_oof = precision_at_recall(y_oof, p_oof)
+    pr_random_baseline = round(n_pos / n_samples, 5)
+
     # Vina validation
     vina = {}
     vina_path = FORECAST / "tier4_pocket_vina_scores.csv"
@@ -314,6 +331,10 @@ def main():
             "best_f1_recall_mean": round(strat["best_f1_recall_mean"], 4),
             "f1_at_05_mean": round(strat["f1_at_05_mean"], 4),
             "f1_at_05_std": round(strat["f1_at_05_std"], 4),
+            "precision_at_05_mean": round(strat["precision_at_05_mean"], 4),
+            "precision_at_05_std": round(strat.get("precision_at_05_std", 0), 4),
+            "recall_at_05_mean": round(strat["recall_at_05_mean"], 4),
+            "recall_at_05_std": round(strat.get("recall_at_05_std", 0), 4),
             "top20_recall_mean": round(strat["top20_recall_mean"], 4),
             "top20_recall_std": round(strat["top20_recall_std"], 4),
             "top50_recall_mean": round(strat["top50_recall_mean"], 4),
@@ -329,6 +350,8 @@ def main():
             "auprc_std": round(group["auprc_std"], 4),
             "best_f1_mean": round(group["best_f1_mean"], 4),
             "best_f1_std": round(group["best_f1_std"], 4),
+            "best_f1_precision_mean": round(group.get("best_f1_precision_mean", 0), 4),
+            "best_f1_recall_mean": round(group.get("best_f1_recall_mean", 0), 4),
             "top20_recall_mean": round(group["top20_recall_mean"], 4),
             "top20_recall_std": round(group["top20_recall_std"], 4),
             "n_folds": group["n_folds"],
@@ -348,6 +371,41 @@ def main():
         "cryptic_validation": cryptic,
         "matched_null": matched,
         "vina_validation": vina,
+        "precision_recall": {
+            "random_baseline": pr_random_baseline,
+            "stratified_5fold_cv": {
+                "auprc_mean": round(strat["auprc_mean"], 4),
+                "auprc_std": round(strat["auprc_std"], 4),
+                "auprc_x_random": round(strat["auprc_mean"] / random_baseline, 1),
+                "best_f1_mean": round(strat["best_f1_mean"], 4),
+                "best_f1_std": round(strat["best_f1_std"], 4),
+                "best_f1_precision_mean": round(strat["best_f1_precision_mean"], 4),
+                "best_f1_recall_mean": round(strat["best_f1_recall_mean"], 4),
+                "precision_at_05_mean": round(strat["precision_at_05_mean"], 4),
+                "recall_at_05_mean": round(strat["recall_at_05_mean"], 4),
+                "per_fold_auprc": [round(f["auprc"], 4) for f in strat["folds"]],
+            },
+            "pooled_oof": {
+                "auprc": round(strat["pooled_oof"]["auprc"], 4),
+                "best_f1": round(strat["pooled_oof"]["best_f1"], 4),
+                "best_f1_precision": round(strat["pooled_oof"]["best_f1_precision"], 4),
+                "best_f1_recall": round(strat["pooled_oof"]["best_f1_recall"], 4),
+                "precision_at_05": round(strat["pooled_oof"]["precision_at_05"], 4),
+                "recall_at_05": round(strat["pooled_oof"]["recall_at_05"], 4),
+                **{k: round(v, 4) for k, v in pr_oof.items()},
+            },
+            "groupkfold_by_gene": {
+                "auprc_mean": round(group["auprc_mean"], 4),
+                "auprc_std": round(group["auprc_std"], 4),
+                "best_f1_precision_mean": round(group.get("best_f1_precision_mean", 0), 4),
+                "best_f1_recall_mean": round(group.get("best_f1_recall_mean", 0), 4),
+                "per_fold_auprc": [round(f["auprc"], 4) for f in group["folds"]],
+            },
+            "stage_ablation": {
+                "stage1_auprc": round(stage_global.get("stage1_auprc", 0.205), 4),
+                "stage2_auprc": round(stage_global.get("stage3_auprc", 0.560), 4),
+            },
+        },
     }
 
     # Save outputs
@@ -362,6 +420,10 @@ def main():
     # Markdown report
     s = publication["stratified_5fold_cv"]
     g = publication["groupkfold_by_gene"]
+    pr = publication["precision_recall"]
+    pr_cv = pr["stratified_5fold_cv"]
+    pr_oof_out = pr["pooled_oof"]
+    pr_gk = pr["groupkfold_by_gene"]
     md = f"""# Publication Metrics (Authoritative)
 
 Generated: {publication['generated_at']}
@@ -383,6 +445,45 @@ Generated: {publication['generated_at']}
 | Top-20 recall | **{s['top20_recall_mean']:.3f}** ({int(s['top20_recall_mean']*n_pos)}/{n_pos}) |
 | Top-50 recall | {s['top50_recall_mean']:.3f} |
 | Top-100 recall | {s['top100_recall_mean']:.3f} |
+
+## Precision–Recall (recomputed)
+
+Random baseline (positive rate): **{pr['random_baseline']:.3f}**
+
+### Stratified 5-fold CV (primary)
+
+| Metric | Value |
+|--------|-------|
+| AUPRC | **{pr_cv['auprc_mean']:.3f} ± {pr_cv['auprc_std']:.3f}** ({pr_cv['auprc_x_random']:.0f}× random) |
+| Best F1 | **{pr_cv['best_f1_mean']:.3f} ± {pr_cv['best_f1_std']:.3f}** |
+| Precision @ best F1 | **{pr_cv['best_f1_precision_mean']:.3f}** |
+| Recall @ best F1 | **{pr_cv['best_f1_recall_mean']:.3f}** |
+| Precision @ threshold 0.5 | {pr_cv['precision_at_05_mean']:.3f} |
+| Recall @ threshold 0.5 | {pr_cv['recall_at_05_mean']:.3f} |
+| Per-fold AUPRC | {' · '.join(f'{x:.3f}' for x in pr_cv['per_fold_auprc'])} |
+
+### Pooled OOF PR curve (`fig_pr_curve.csv`)
+
+| Metric | Value |
+|--------|-------|
+| AUPRC | **{pr_oof_out['auprc']:.3f}** |
+| Best F1 | {pr_oof_out['best_f1']:.3f} |
+| Precision @ best F1 | {pr_oof_out['best_f1_precision']:.3f} |
+| Recall @ best F1 | {pr_oof_out['best_f1_recall']:.3f} |
+| Precision @ threshold 0.5 | {pr_oof_out['precision_at_05']:.3f} |
+| Recall @ threshold 0.5 | {pr_oof_out['recall_at_05']:.3f} |
+| Precision @ recall ≥ 0.25 | **{pr_oof_out['precision_at_recall_gte_0.25']:.3f}** |
+| Precision @ recall ≥ 0.50 | **{pr_oof_out['precision_at_recall_gte_0.5']:.3f}** |
+| Precision @ recall ≥ 0.75 | {pr_oof_out['precision_at_recall_gte_0.75']:.3f} |
+
+### GroupKFold by gene
+
+| Metric | Value |
+|--------|-------|
+| AUPRC | **{pr_gk['auprc_mean']:.3f} ± {pr_gk['auprc_std']:.3f}** |
+| Precision @ best F1 | {pr_gk['best_f1_precision_mean']:.3f} |
+| Recall @ best F1 | {pr_gk['best_f1_recall_mean']:.3f} |
+| Per-fold AUPRC | {' · '.join(f'{x:.3f}' for x in pr_gk['per_fold_auprc'])} |
 
 ## GroupKFold by Gene (conservative)
 
@@ -446,8 +547,16 @@ Generated: {publication['generated_at']}
     print(f"  AUROC:  {s['auroc_mean']:.4f} ± {s['auroc_std']:.4f}")
     print(f"  AUPRC:  {s['auprc_mean']:.4f} ± {s['auprc_std']:.4f} ({s['auprc_x_random']:.0f}x random)")
     print(f"  F1*:    {s['best_f1_mean']:.4f} ± {s['best_f1_std']:.4f}")
+    print(f"    precision @ best F1: {s['best_f1_precision_mean']:.4f}")
+    print(f"    recall @ best F1:    {s['best_f1_recall_mean']:.4f}")
     print(f"  F1@0.5: {s['f1_at_05_mean']:.4f} ± {s['f1_at_05_std']:.4f}")
+    print(f"    precision @ 0.5: {s['precision_at_05_mean']:.4f}")
+    print(f"    recall @ 0.5:    {s['recall_at_05_mean']:.4f}")
     print(f"  Top-20: {s['top20_recall_mean']:.4f} ({int(s['top20_recall_mean']*n_pos)}/{n_pos})")
+    print(f"\n--- POOLED OOF PR ---")
+    print(f"  AUPRC: {pr_oof_out['auprc']:.4f}")
+    print(f"  P @ R>=0.25: {pr_oof_out['precision_at_recall_gte_0.25']:.4f}")
+    print(f"  P @ R>=0.50: {pr_oof_out['precision_at_recall_gte_0.5']:.4f}")
     print(f"\nSaved: {out_json}")
     print(f"Saved: {md_path}")
     print(f"Saved: {FIGURES / 'fig_roc_curve.csv'}")

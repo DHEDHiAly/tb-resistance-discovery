@@ -52,14 +52,14 @@ Dataset: 6,350 residues across 13 genes. 32 positive (hotspot) residues (0.50%).
 |--------|---------------------|-------------------|
 | AUROC | **0.968 ± 0.034** | **0.974 ± 0.018** |
 | AUPRC | **0.465 ± 0.157** (92× random) | **0.586 ± 0.226** |
-| Best F1 (optimal threshold) | **0.550 ± 0.119** (P 0.631 / R 0.562) | **0.676 ± 0.191** |
-| F1 @ threshold 0.5 | 0.384 ± 0.142 | — |
+| Best F1 (optimal threshold) | **0.550 ± 0.119** (P **0.631** / R **0.562**) | **0.676 ± 0.191** (P 0.765 / R 0.668) |
+| F1 @ threshold 0.5 | 0.384 ± 0.142 (P 0.667 / R 0.324) | — |
 | Top-20 recall (CV) | **0.662** (21/32) | **0.741** |
 | Top-50 / Top-100 recall | 0.829 / 0.857 | — |
 
 **Stage progression (feature ablation):** Stage 0 AUROC 0.888 → Stage 1 0.906 (AUPRC 0.205) → Stage 2 **0.971** (AUPRC **0.560**, 111× random; top-20 recall 0.657).
 
-**PR operating points (pooled OOF curve):** precision **0.80** @ recall ≥ 0.25 · **0.43** @ recall ≥ 0.50.
+**PR operating points (pooled OOF, `fig_pr_curve.csv`):** precision **0.800** @ recall ≥ 0.25 · **0.432** @ recall ≥ 0.50.
 
 ### Full-model ranking (calibrated on all residues)
 
