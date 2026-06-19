@@ -4,7 +4,6 @@ Final publication audit: recompute and consolidate all model metrics.
 Produces authoritative tables for the manuscript:
   analysis/results/publication_metrics.json
   analysis/results/PUBLICATION_METRICS.md
-  analysis/results/hotspot_model/cv_f1_pr_metrics.json
   analysis/results/figures/fig_pr_curve.csv
   analysis/results/figures/fig_roc_curve.csv
 
@@ -356,18 +355,6 @@ def main():
     out_json = RESULTS / "publication_metrics.json"
     with open(out_json, "w") as f:
         json.dump(publication, f, indent=2)
-
-    cv_out = {
-        "stratified_kfold": {
-            k: v for k, v in publication["stratified_5fold_cv"].items()
-            if k != "pooled_oof"
-        },
-        "groupkfold": {
-            k: v for k, v in publication["groupkfold_by_gene"].items()
-        },
-    }
-    with open(HOTSPOT / "cv_f1_pr_metrics.json", "w") as f:
-        json.dump(cv_out, f, indent=2)
 
     save_curve_csv(y_oof, p_oof, FIGURES / "fig_roc_curve.csv", "roc")
     save_curve_csv(y_oof, p_oof, FIGURES / "fig_pr_curve.csv", "pr")

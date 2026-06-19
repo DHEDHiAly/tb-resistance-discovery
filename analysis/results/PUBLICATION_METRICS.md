@@ -1,6 +1,6 @@
 # Publication Metrics (Authoritative)
 
-Generated: 2026-06-19T14:47:10.413364+00:00
+Generated: 2026-06-19T15:33:56.656085+00:00
 
 ## Dataset
 - Residues: **6350** across 13 resistance genes

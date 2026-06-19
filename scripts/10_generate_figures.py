@@ -451,10 +451,12 @@ def main():
     print("KEY NUMBERS FOR ABSTRACT")
     print(f"{'=' * 70}")
     print(f"""
-  Hotspot model (Stage 2, 5-fold CV):
-    AUROC: {stage.get('stage2_auroc', 0.971):.3f}  |  AUPRC: {stage.get('stage2_auprc', 0.560):.3f}
-    Best F1: {cv.get('best_f1_mean', 0.622):.3f} ± {cv.get('best_f1_std', 0.105):.3f}
-    Top-20 recall (CV): {cv.get('top20_recall_mean', 0.657):.3f}
+  Hotspot model (stratified 5-fold CV — primary):
+    AUROC: {cv.get('auroc_mean', 0.968):.3f} ± {cv.get('auroc_std', 0.034):.3f}
+    AUPRC: {cv.get('auprc_mean', 0.465):.3f} ± {cv.get('auprc_std', 0.157):.3f} ({cv.get('auprc_x_random', 92):.0f}x random)
+    Best F1: {cv.get('best_f1_mean', 0.550):.3f} ± {cv.get('best_f1_std', 0.119):.3f}
+    Top-20 recall (CV): {cv.get('top20_recall_mean', 0.662):.3f}
+  Stage progression (Stage 2 ablation): AUROC {stage.get('stage2_auroc', 0.971):.3f} | AUPRC {stage.get('stage2_auprc', 0.560):.3f}
   
   CRyPTIC prospective validation (12,287 isolates):
     Tier 1 (FDR q<0.05): {n_tier1}

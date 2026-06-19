@@ -50,25 +50,26 @@ Dataset: 6,350 residues across 13 genes. 32 positive (hotspot) residues (0.50%).
 
 | Metric | Stratified 5-fold CV | GroupKFold by gene |
 |--------|---------------------|-------------------|
-| AUROC | **0.971** (stage progression) / 0.968 ± 0.034 (OOF) | **0.974 ± 0.018** |
-| AUPRC | **0.560** (111× random) | 0.586 ± 0.226 |
-| Best F1 (optimal threshold) | **0.550 ± 0.119** | 0.676 ± 0.191 |
+| AUROC | **0.968 ± 0.034** | **0.974 ± 0.018** |
+| AUPRC | **0.465 ± 0.157** (92× random) | **0.586 ± 0.226** |
+| Best F1 (optimal threshold) | **0.550 ± 0.119** (P 0.631 / R 0.562) | **0.676 ± 0.191** |
 | F1 @ threshold 0.5 | 0.384 ± 0.142 | — |
-| Top-20 recall (CV) | **0.657** (21/32 per-fold avg) | **0.741** |
+| Top-20 recall (CV) | **0.662** (21/32) | **0.741** |
+| Top-50 / Top-100 recall | 0.829 / 0.857 | — |
+
+**Stage progression (feature ablation):** Stage 0 AUROC 0.888 → Stage 1 0.906 (AUPRC 0.205) → Stage 2 **0.971** (AUPRC **0.560**, 111× random; top-20 recall 0.657).
+
+**PR operating points (pooled OOF curve):** precision **0.80** @ recall ≥ 0.25 · **0.43** @ recall ≥ 0.50.
 
 ### Full-model ranking (calibrated on all residues)
 
 All **32/32** known positives occupy ranks 1–32. Score gap between last positive (0.650) and first negative (0.249) = **0.40**. Top-20 full-model recall: **20/32**.
 
-| Metric | Value | Notes |
-|--------|-------|-------|
-| Recall (OOF @ optimal threshold) | 0.562 | Per-fold average |
-| Specificity | 0.879 | TN / (TN + FP) |
-| MCC | 0.306 | At 0.5% prevalence |
-| Permutation test | p = 0.005 | 200 shuffles |
-| Top-50 recall (CV) | 0.829 | |
-| Top-100 recall (CV) | 0.857 | |
-| ESM-2 baseline AUROC | 0.618 | Full model lift +0.35 |
+| Metric | Value |
+|--------|-------|
+| Permutation test | p = 0.005 |
+| ESM-2 baseline AUROC | 0.618 |
+| Full model lift | +0.35 AUROC |
 
 ### Why F1 is still moderate despite excellent ranking
 
@@ -122,7 +123,7 @@ All 32 known positive residues occupy ranks 1–32. The 24 Tier 1 novel mutation
 ### Stage 2: Drug proximity + XGBoost + calibration
 `04d_docking_features.py` -- Adds per-residue distance to drug-binding pocket (co-crystal or dilated pocket proxy, 10A radius, self-excluded). Replaces logistic regression with XGBoost (scale_pos_weight=10, max_depth=6, lr=0.05, 300 trees). Platt calibration via CalibratedClassifierCV.
 
-AUROC = **0.971**, AUPRC = **0.560 (111x random)**, Top-20 recall = **0.657**.
+AUROC = **0.971**, AUPRC = **0.560** (111× random), Top-20 recall = **0.657** (stage ablation; primary CV: AUROC **0.968 ± 0.034**, AUPRC **0.465 ± 0.157**).
 
 Feature importance (XGBoost gain):
 | Feature | Importance | Type |
@@ -137,7 +138,7 @@ Feature importance (XGBoost gain):
 | plddt_environment | 0.036 | AlphaFold confidence |
 | hbond | 0.036 | Physicochemical |
 
-GroupKFold by gene: AUROC 0.972 ± 0.018, AUPRC 0.575, Top-20 recall 0.741.
+GroupKFold by gene: AUROC **0.974 ± 0.018**, AUPRC **0.586 ± 0.226**, Top-20 recall **0.741**.
 
 ### Structural validation with AutoDock Vina
 

@@ -52,7 +52,7 @@ Existing TB genomics work (WHO catalog, CRyPTIC) focuses on **genotype → pheno
 
 ### What success looks like
 
-- **Ranking quality:** All 32 known hotspot residues rank in the top 32 by model score (AUROC 0.971).
+- **Ranking quality:** All 32 known hotspot residues rank in the top 32 by model score (AUROC 0.968 ± 0.034).
 - **Prospective signal:** 188 Tier-4 mutations (0 carriers in CRyPTIC) flagged for surveillance.
 - **Retrospective confirmation:** 24 Tier-1 mutations reach FDR significance in CRyPTIC (model predicted before clinical confirmation).
 - **Structural orthogonal validation:** 10 Tier-4 pocket-direct mutations show ΔΔG ≥ +0.15 kcal/mol in Vina.
@@ -183,28 +183,26 @@ Master feature table: `analysis/results/hotspot_model/residue_hotspot_data_with_
 
 ### Hotspot model (Stage 2 — primary claims)
 
-Source: `analysis/results/hotspot_model/stage3_results.json`, `README.md`
+Source: `analysis/results/PUBLICATION_METRICS.md` — regenerate with `python scripts/13_final_publication_audit.py`
 
 | Metric | Value | Notes |
 |--------|-------|-------|
-| AUROC (5-fold stratified CV) | **0.971** | Threshold-independent ranking |
-| AUPRC | **0.560** | 111× random baseline (0.005) |
-| Best F1 (CV, Youden-optimized) | **0.622 ± 0.105** | Precision 0.83, recall 0.53 |
-| F1 @ threshold 0.5 | **0.532 ± 0.181** | Diluted by 0.5% positive rate |
-| Recall | **0.931** | TP / (TP + FN) |
-| Specificity | 0.879 | TN / (TN + FP) |
-| MCC | **0.306** | Matthews correlation |
+| AUROC (stratified 5-fold CV) | **0.968 ± 0.034** | Primary headline |
+| AUPRC | **0.465 ± 0.157** | 92× random baseline (0.005) |
+| Best F1 (per-fold optimal) | **0.550 ± 0.119** | Precision 0.631, recall 0.562 |
+| F1 @ threshold 0.5 | **0.384 ± 0.142** | Diluted by 0.5% positive rate |
+| Top-20 recall (CV) | **21/32 (0.662)** | Per-fold average |
+| Top-50 / Top-100 recall | 0.829 / 0.857 | |
 | Permutation test | **p = 0.005** | 200 label shuffles |
-| Top-20 recall | **26/32 (0.657)** | Known hotspots in top 20 |
-| Top-50 recall | 25/32 (0.781) | |
-| Top-100 recall | 27/32 (0.844) | |
-| GroupKFold AUROC | **0.972 ± 0.018** | By gene, 4/5 folds |
-| GroupKFold AUPRC | **0.575** | |
+| GroupKFold AUROC | **0.974 ± 0.018** | By gene, 4 folds |
+| GroupKFold AUPRC | **0.586 ± 0.226** | |
 | GroupKFold Top-20 recall | **0.741** | |
 | ESM-2 baseline AUROC | 0.618 | Near random |
-| Full model lift over ESM-2 | +0.353 AUROC (+57%) | |
+| Full model lift over ESM-2 | +0.350 AUROC | |
 
-### Stage progression (AUROC)
+**PR operating points (pooled OOF):** precision **0.80** @ recall ≥ 0.25 · **0.43** @ recall ≥ 0.50.
+
+### Stage progression (feature ablation — not duplicated as primary CV)
 
 | Stage | Script | AUROC | AUPRC | Top-20 recall |
 |-------|--------|-------|-------|---------------|
@@ -444,7 +442,7 @@ Merges assembly homoplasy into master feature table.
 - **Self-exclusion:** query residue excluded from distance (fixes circularity bug)  
 **Model:** XGBoost → CalibratedClassifierCV (sigmoid/Platt, 5-fold).  
 **Evaluation:** StratifiedKFold + GroupKFold by gene.  
-**AUROC:** 0.971; GroupKFold 0.972 ± 0.018.  
+**AUROC:** 0.968 ± 0.034 (primary CV); stage ablation 0.971. GroupKFold **0.974 ± 0.018**.  
 **Outputs:**
 - `hotspot_model/drug_distances.pkl`, `plddt_data.pkl`
 - `hotspot_model/residue_hotspot_data_with_docking.csv`
@@ -724,7 +722,7 @@ Pattern: `{gene}_{MUTATION}.pdbqt` (receptor) + `{gene}_{MUTATION}_docked.pdbqt`
 | `positives_whitelisted.csv` | 32 known hotspot residues |
 | `stage3_results.json` | Stage 1 vs 3 AUROC per gene |
 | `full_metrics.json` | AUROC, AUPRC, F1, MCC, bootstrap CIs |
-| `cv_f1_pr_metrics.json` | 5-fold CV F1/precision/recall |
+| `publication_metrics.json` | Authoritative AUROC, AUPRC, F1, PR/ROC (`13_final_publication_audit.py`) |
 | `f1_pr_analysis.json` | Precision-recall curve analysis |
 | `permutation_test_results.json` | p = 0.005 |
 | `esm2_baseline_results.json` | ESM-2 vs full model |
@@ -950,7 +948,7 @@ Script: `analysis/audit_novelty_and_scores.py`
 | drug_proximity self-exclusion | Fixed |
 | Scaler fit inside CV folds only | Verified |
 | CalibratedClassifierCV internal CV | 5-fold; final model on all data |
-| GroupKFold by gene | AUROC 0.972 ± 0.018 |
+| GroupKFold by gene | AUROC 0.974 ± 0.018 |
 | Permutation test | p = 0.005 |
 | ESM-2 baseline | AUROC 0.618 |
 | Matched-null CRyPTIC validation | p = 0.001 |
