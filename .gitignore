@@ -57,3 +57,5 @@ analysis/results/forecasting/all_mutations_scored.csv
 # MMPBSA / MD scratch outputs
 analysis/results/*.pdb
 analysis/results/mmpbsa.in
+mlx_project/
+mlx_project/.venv/
