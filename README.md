@@ -1,7 +1,7 @@
 # Forecasting Emerging Tuberculosis Drug Resistance
 
 Aly Dhedhi, Vinay Singamsetty, Li-Lun Ho, Manolis Kellis
-Kellis Lab, MIT
+Kellis Lab, MIT CSAIL
 
 ---
 
@@ -42,30 +42,47 @@ These are the highest-confidence mutations predicted by our model that have **ne
 
 ## Model performance
 
-Dataset: 6,350 residues across 12 genes. 32 positive (hotspot) residues (0.50% of all residues). 17 features: homoplasy (from 1,037 genomes: 117 VCF + 920 NCBI assemblies), sequence properties, structural (AlphaFold), and drug proximity.
+**Authoritative tables:** [`analysis/results/PUBLICATION_METRICS.md`](analysis/results/PUBLICATION_METRICS.md) — regenerate with `python scripts/13_final_publication_audit.py`
 
-Metrics are from 5-fold stratified cross-validation.
+Dataset: 6,350 residues across 13 genes. 32 positive (hotspot) residues (0.50%). 16 Stage-2 features: homoplasy (1,037 genomes), sequence, structural (AlphaFold, ESM-2), and drug proximity (self-excluded).
 
-| Metric | Value | Notes |
-|--------|-------|-------|
-| AUROC | **0.971** | Threshold-independent ranking |
-| AUPRC | **0.560 (111x random)** | Precision-recall area |
-| Best F1 (CV) | **0.622 ± 0.105** | Optimized per fold; precision=0.83, recall=0.53 |
-| F1@0.5 | **0.532 ± 0.181** | At standard threshold |
-| Recall | **0.931** | TP / (TP + FN) |
-| Specificity | 0.879 | TN / (TN + FP) |
-| MCC | **0.306** | Balanced correlation coefficient |
-| Permutation test | p = 0.005 | 200 shuffles |
-| Top-20 recall | **0.657 (26/32)** | All 26 are known hotspots |
-| Top-50 recall | **0.781 (25/32)** | |
-| Top-100 recall | **0.844 (27/32)** | |
-| GroupKFold AUROC | **0.972 ± 0.018** | By gene (4/5 folds) |
-| GroupKFold AUPRC | **0.575** | By gene |
-| GroupKFold Top-20 recall | **0.741** | By gene |
+### Hotspot classifier (Stage 2 — XGBoost + Platt calibration)
 
-ESM-2 alone (baseline): AUROC 0.618 (near random). Full model lift: +0.353 AUROC (+57%).
+| Metric | Stratified 5-fold CV | GroupKFold by gene |
+|--------|---------------------|-------------------|
+| AUROC | **0.968 ± 0.034** | **0.974 ± 0.018** |
+| AUPRC | **0.465 ± 0.157** (92× random) | **0.586 ± 0.226** |
+| Best F1 (optimal threshold) | **0.550 ± 0.119** (P **0.631** / R **0.562**) | **0.676 ± 0.191** (P 0.765 / R 0.668) |
+| F1 @ threshold 0.5 | 0.384 ± 0.142 (P 0.667 / R 0.324) | — |
+| Top-20 recall (CV) | **0.662** (21/32) | **0.741** |
+| Top-50 / Top-100 recall | 0.829 / 0.857 | — |
 
-The model achieves near-perfect ranking: all 32 positives occupy ranks 1–32 with a score gap of 0.40 between the last positive (0.650) and the first negative (0.249). At threshold 0.5, precision is 0.75 with zero false positives at rank ≤32.
+**Stage progression (feature ablation):** Stage 0 AUROC 0.888 → Stage 1 0.906 (AUPRC 0.205) → Stage 2 **0.971** (AUPRC **0.560**, 111× random; top-20 recall 0.657).
+
+**PR operating points (pooled OOF):** precision **0.800** @ recall ≥ 0.25 · **0.432** @ recall ≥ 0.50.
+
+**PR curve figure:** `fig_pr_curve.csv` is a 501-point precision envelope (smooth, monotonic); Figure 2C legend AUPRC = pooled OOF **0.435**.
+
+### Lead novel candidate: gyrB Q538L
+
+| Property | Value |
+|----------|-------|
+| Tier | 4 (forecast-only, **0 CRyPTIC carriers**) |
+| Rank / emergence score | 131 / 0.234 |
+| Vina ΔΔG | **+0.737** kcal/mol (STRONG); 1.34 Å from moxifloxacin |
+| Literature | **Novel** — Q538L not reported in Mtb (N538D/K/S/T only) |
+
+Only Vina-validated hit that is pipeline-novel, literature-novel, and structurally STRONG.
+
+### Full-model ranking (calibrated on all residues)
+
+All **32/32** known positives occupy ranks 1–32. Score gap between last positive (0.650) and first negative (0.249) = **0.40**. Top-20 full-model recall: **20/32**.
+
+| Metric | Value |
+|--------|-------|
+| Permutation test | p = 0.005 |
+| ESM-2 baseline AUROC | 0.618 |
+| Full model lift | +0.35 AUROC |
 
 ### Why F1 is still moderate despite excellent ranking
 
@@ -119,7 +136,7 @@ All 32 known positive residues occupy ranks 1–32. The 24 Tier 1 novel mutation
 ### Stage 2: Drug proximity + XGBoost + calibration
 `04d_docking_features.py` -- Adds per-residue distance to drug-binding pocket (co-crystal or dilated pocket proxy, 10A radius, self-excluded). Replaces logistic regression with XGBoost (scale_pos_weight=10, max_depth=6, lr=0.05, 300 trees). Platt calibration via CalibratedClassifierCV.
 
-AUROC = **0.971**, AUPRC = **0.560 (111x random)**, Top-20 recall = **0.657**.
+AUROC = **0.971**, AUPRC = **0.560** (111× random), Top-20 recall = **0.657** (stage ablation; primary CV: AUROC **0.968 ± 0.034**, AUPRC **0.465 ± 0.157**).
 
 Feature importance (XGBoost gain):
 | Feature | Importance | Type |
@@ -134,7 +151,7 @@ Feature importance (XGBoost gain):
 | plddt_environment | 0.036 | AlphaFold confidence |
 | hbond | 0.036 | Physicochemical |
 
-GroupKFold by gene: AUROC 0.972 ± 0.018, AUPRC 0.575, Top-20 recall 0.741.
+GroupKFold by gene: AUROC **0.974 ± 0.018**, AUPRC **0.586 ± 0.226**, Top-20 recall **0.741**.
 
 ### Structural validation with AutoDock Vina
 
@@ -165,7 +182,7 @@ Outputs: `analysis/results/forecasting/tier4_pocket_vina_scores.csv`, `analysis/
 
 Score audit: `analysis/audit_novelty_and_scores.py` re-parses all PDBQT REMARK lines (all 32 match CSV within 0.02 kcal/mol) and cross-checks CARD/PubMed.
 
-**Q538L score note:** an earlier run used WT baseline −6.16 (`gyrB_WT_docked.pdbqt`) and reported ΔΔG −0.17. The tier-4 batch redocks WT fresh (−7.07) — **+0.737 is authoritative**. Mutant score unchanged at −6.334.
+**Q538L score note:** an earlier run used a stale WT baseline and reported ΔΔG −0.17. The tier-4 batch redocks WT fresh (−7.071) — **+0.737 is authoritative** (see `tier4_pocket_vina_scores.csv`, not deprecated `novel_docking_validation.json`).
 
 ### Phase 1: Crystal structures (high confidence)
 
@@ -241,7 +258,7 @@ Open `viewer.html` in a browser (serve from repo root: `python -m http.server 80
 - gyrB Q538L PyMOL structural figure (`data/pdb/gyrB_Q538L_validation.png`)
 - Filterable table of all 32 tier-4 pocket Vina scores (10 validated)
 - Novelty audit table (CARD / PubMed / score verification)
-- Roadmap: manuscript → MRSA extension → Mantis platform integration
+- Roadmap: manuscript → phenotypic MIC validation (M. smegmatis) → MRSA extension → Mantis platform integration
 
 ## Mutation forecasting
 `04e_mutation_forecasting.py` -- For the top hotspot-scoring residues, enumerate all SNV-accessible mutations. Score by: emergence = hotspot_score x mutation_score, where mutation_score combines resistance plausibility, fitness cost, and evolutionary accessibility.
@@ -291,28 +308,29 @@ After the fix, drug_proximity dropped from the dominant feature (+6.71 in LR) to
 
 ```
 tb-resistance-discovery/
-scripts/               -- pipeline scripts (numbered by dependency)
- 04b_hotspot_model.py      Stage 0: sequence model
- 04c_stage1_features.py    Stage 1: structural features
- 04d_docking_features.py   Stage 2: XGBoost + drug proximity + Platt calibration
- 04e_mutation_forecasting.py  P(emergence) scoring and watchlist generation
- 05_leave_one_gene_out.py  Cross-gene generalization
- 06_filter_pocket_candidates.py  Tier-4 pocket-direct filter (≤4.5 Å)
- 07_tier4_pocket_vina_batch.py  Vina batch + fresh WT redock
- 08_cryptic_validation_full.py  CRyPTIC cross-reference + matched-null validation
- 12_audit.py               Full audit (~180 checks)
+README.md                    Project summary
+EXECUTIVE_SUMMARY.md         Complete internal reference (all scripts, files, scores)
+PAPER_OUTLINE.md             Manuscript outline + figure checklist
+viewer.html                  Interactive pipeline dashboard
+scripts/
+ 04b–04e                     Model training + emergence forecasting
+ 05_leave_one_gene_out.py    Cross-gene generalization
+ 06_filter_pocket_candidates.py / 07_tier4_pocket_vina_batch.py  Vina validation
+ 08–09                       CRyPTIC validation + FDR tiers
+ 10–11                       Paper figures (5 PNGs) + CSV tables
+ 12_audit.py                  ~180 automated checks
+ 13_final_publication_audit.py  Authoritative metrics (AUROC, F1, AUPRC, PR/ROC)
+ 15e_compute_homoplasy_v4.py  Homoplasy from assemblies (current)
+ 16_merge_homoplasy.py
 analysis/
- validate_novel_docking.py   Novel-candidate docking orchestration
- audit_novelty_and_scores.py  PDBQT score re-parse + CARD/PubMed audit
+ compute_metrics.py / permutation_test.py / esm2_baseline.py
+ audit_novelty_and_scores.py / validate_novel_docking.py
 analysis/results/
- hotspot_model/           Model outputs (ranked predictions, metrics, feature importance)
- forecasting/             Watchlist, CRyPTIC validation, clinical top-20/50
- figures/                 9 publication figures
-data/
-  cryptic/                CRyPTIC mutation table (1.5 GB)
-  genomes/                920 NCBI genome assemblies (4.1 GB)
-  metadata/               Clinical phenotypes
-  pdb/                    AlphaFold + co-crystal structures
+ PUBLICATION_METRICS.md       Authoritative metric table for paper
+ publication_metrics.json
+ hotspot_model/              Feature tables, ranked predictions, CV metrics
+ forecasting/                Watchlist, CRyPTIC tiers, Vina scores
+ figures/                    Figure_1–4.png, Figure_S2.png + CSV tables
 ```
 
 ---
@@ -321,15 +339,22 @@ data/
 
 1. **Manuscript** — Lead with gyrB Q538L (literature-novel + Vina STRONG + PyMOL). Frame 9 other validated hits as pipeline benchmarks. Include CRyPTIC Tier 1 retrospective confirmations.
 
-2. **Extend to other diseases — MRSA first** — Reuse the same architecture (homoplasy + structure + drug proximity + XGBoost + prospective validation) on *Staphylococcus aureus* resistance genes.
+2. **Phase 2: Phenotypic validation (in vivo MICs)** — Test whether Q538L causes true physiological drug resistance:
+   - **Surrogate modeling:** Transform a mutant *gyrB* plasmid (Q538L) into a fast-growing, non-pathogenic surrogate such as *Mycobacterium smegmatis* (BSL-1/2 compatible).
+   - **MIC testing:** Run minimum inhibitory concentration (MIC) assays by broth microdilution and measure whether cells carrying Q538L show a right-shift in survival against escalating moxifloxacin doses compared to wild-type *gyrB*.
 
-3. **Mantis platform integration** — Deploy the emergence model inside the Mantis clinical genomics platform, surfacing Tier-4 surveillance alerts with structural validation and literature novelty flags at WGS interpretation time.
+3. **Phase 3: Extend to other diseases — MRSA** — Reuse the same architecture (homoplasy + structure + drug proximity + XGBoost + prospective validation) on *Staphylococcus aureus* resistance genes.
+
+4. **Phase 4: Mantis platform integration** — Deploy the emergence model inside the Mantis clinical genomics platform, surfacing Tier-4 surveillance alerts with structural validation and literature novelty flags at WGS interpretation time.
 
 ---
 
 ## Reproducibility
 
 ```bash
+python scripts/13_final_publication_audit.py   # authoritative metrics + ROC/PR curves
+python scripts/10_generate_figures.py
+python scripts/11_render_figures.py            # Figure_1–4.png, Figure_S2.png
 python scripts/04b_hotspot_model.py
 python scripts/04c_stage1_features.py
 python scripts/04d_docking_features.py
@@ -337,9 +362,7 @@ python scripts/04e_mutation_forecasting.py
 python scripts/05_leave_one_gene_out.py
 python scripts/08_cryptic_validation_full.py
 python scripts/09_stress_tests.py
-python scripts/10_generate_figures.py
-python scripts/11_render_figures.py
-python scripts/12_audit.py     # ~180 automated checks
+python scripts/12_audit.py                     # ~180 automated checks
 python scripts/06_filter_pocket_candidates.py
 python scripts/07_tier4_pocket_vina_batch.py
 python analysis/audit_novelty_and_scores.py

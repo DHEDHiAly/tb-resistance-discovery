@@ -53,3 +53,7 @@ data/pdb/**/*.pdb
 analysis/results/hotspot_model/*.pkl
 analysis/results/forecasting/xgboost_model.pkl
 analysis/results/forecasting/all_mutations_scored.csv
+
+# MMPBSA / MD scratch outputs
+analysis/results/*.pdb
+analysis/results/mmpbsa.in

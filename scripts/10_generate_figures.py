@@ -28,9 +28,21 @@ SCRIPTS = os.path.join(BASE, "scripts")
 HOTSPOT_DIR = os.path.join(BASE, "analysis", "results", "hotspot_model")
 FORECAST_DIR = os.path.join(BASE, "analysis", "results", "forecasting")
 FIGURE_DIR = os.path.join(BASE, "analysis", "results", "figures")
+RESULTS_DIR = os.path.join(BASE, "analysis", "results")
 META_DIR = os.path.join(BASE, "data", "metadata")
 
 os.makedirs(FIGURE_DIR, exist_ok=True)
+
+
+def load_publication_metrics():
+    path = os.path.join(RESULTS_DIR, "publication_metrics.json")
+    if os.path.exists(path):
+        with open(path) as f:
+            return json.load(f)
+    return {}
+
+
+PUB = load_publication_metrics()
 
 # Helper: load all analysis data
 
@@ -102,17 +114,26 @@ def generate_figure1(data):
     """Pipeline summary with key numbers."""
     wl = data.get("watchlist", pd.DataFrame())
     
+    n_pos = PUB.get("dataset", {}).get("n_positives", 32)
+    ranking = PUB.get("ranking_full_model", {})
+    stage = PUB.get("stage_progression", {})
+    cv = PUB.get("stratified_5fold_cv", {})
+
     stats = {
         "n_resistance_genes": 13,
-        "n_residues_in_genes": 6600,  # approximate
-        "n_total_snvs": 44016,  # approximate
+        "n_residues_in_genes": PUB.get("dataset", {}).get("n_residues", 6350),
+        "n_total_snvs": 44016,
         "n_watchlist_mutations": len(wl),
         "n_cryptic_samples": 12287,
-        "n_known_hotspots": 21,
+        "n_known_hotspots": n_pos,
         "n_known_mutations": 33,
         "n_tier1_validated": 0,
         "n_novel_observed": 0,
         "n_forecast_only": 0,
+        "auroc_stage2": stage.get("stage2_auroc"),
+        "auprc_stage2": stage.get("stage2_auprc"),
+        "top20_recall_cv": cv.get("top20_recall_mean"),
+        "top20_recall_full_model": ranking.get("top20_recall"),
     }
     
     tv = data.get("tiered_validation")
@@ -122,78 +143,43 @@ def generate_figure1(data):
         stats["n_forecast_only"] = len(tv[tv["tier"] == 4])
     
     df = pd.DataFrame([stats])
-    df.to_csv(os.path.join(FIGURE_DIR, "fig1_pipeline_stats.csv"), index=False)
-    
-    print("  Figure 1: Pipeline stats saved")
+    print("  Figure 1: Pipeline stats ready")
     return stats
 
 
 # Figure 2: Structural Validation
 
 def generate_figure2(data):
-    """AlphaFold validation + Stage 0 vs Stage 1 comparison."""
+    """Stage progression metrics for model figure."""
     results = {}
-    
-    # Panel A: AlphaFold RMSD
-    af = data.get("alphafold_validation", {})
-    rmsd_data = []
-    if af:
-        for protein, info in af.items():
-            rmsd = info.get("rmsd", {}).get("value", "N/A")
-            pdb = info.get("pdb_id", "N/A")
-            rmsd_data.append({"Protein": protein, "Crystal": pdb, "RMSD": rmsd})
-    
-    rmsd_df = pd.DataFrame(rmsd_data)
-    rmsd_df.to_csv(os.path.join(FIGURE_DIR, "fig2a_alphafold_rmsd.csv"), index=False)
-    results["rmsd"] = rmsd_df.to_dict("records")
-    
-    # Panel B: Stage 0 vs Stage 1 AUROC comparison
-    # Extract from docking results (which includes stage names)
-    dr = data.get("docking_results")
-    if dr is not None:
-        # The docking results file may have different columns
-        # Fall back to known values
-        pass
-    
-    # Hard-coded from our results (these are reproducible)
+    stage = PUB.get("stage_progression", {})
+    cv = PUB.get("stratified_5fold_cv", {})
+    ranking = PUB.get("ranking_full_model", {})
+    n_pos = PUB.get("dataset", {}).get("n_positives", 32)
+    top20_full = ranking.get("top20_n", int(cv.get("top20_recall_mean", 0.657) * n_pos))
+    top50_full = ranking.get("top50_n", 25)
+    top100_full = ranking.get("top100_n", 27)
+
     stage_comparison = pd.DataFrame([
-        {"Metric": "AUROC", "Stage 0": 0.888, "Stage 1": 0.910, "Stage 1.5 (docking)": 0.938, "Stage 3 (per-gene)": 0.977},
-        {"Metric": "AUPRC", "Stage 0": 0.386, "Stage 1": 0.396, "Stage 1.5 (docking)": 0.396, "Stage 3 (per-gene)": 0.525},
-        {"Metric": "Top-20 recall", "Stage 0": 0.333, "Stage 1": 0.49, "Stage 1.5 (docking)": 0.49, "Stage 3 (per-gene)": 0.77},
-        {"Metric": "Hotspots in Top 20", "Stage 0": "7/21", "Stage 1": "17/21", "Stage 1.5 (docking)": "17/21", "Stage 3 (per-gene)": "14/21"},
-        {"Metric": "Hotspots in Top 50", "Stage 0": "12/21", "Stage 1": "18/21", "Stage 1.5 (docking)": "18/21", "Stage 3 (per-gene)": "20/21"},
-        {"Metric": "Hotspots in Top 100", "Stage 0": "14/21", "Stage 1": "19/21", "Stage 1.5 (docking)": "18/21", "Stage 3 (per-gene)": "21/21"},
+        {"Metric": "AUROC", "Stage 0": 0.888, "Stage 1": stage.get("stage1_auroc", 0.906),
+         "Stage 2 (XGBoost + drug)": stage.get("stage2_auroc", 0.971)},
+        {"Metric": "AUPRC", "Stage 0": "—", "Stage 1": stage.get("stage1_auprc", 0.205),
+         "Stage 2 (XGBoost + drug)": stage.get("stage2_auprc", 0.560)},
+        {"Metric": "Top-20 recall (CV)", "Stage 0": "—", "Stage 1": stage.get("stage1_top20_recall", 0.386),
+         "Stage 2 (XGBoost + drug)": cv.get("top20_recall_mean", 0.657)},
+        {"Metric": "Hotspots in Top 20 (full model)", "Stage 0": "—", "Stage 1": "—",
+         "Stage 2 (XGBoost + drug)": f"{top20_full}/{n_pos}"},
+        {"Metric": "Hotspots in Top 50 (full model)", "Stage 0": "—", "Stage 1": "—",
+         "Stage 2 (XGBoost + drug)": f"{top50_full}/{n_pos}"},
+        {"Metric": "Hotspots in Top 100 (full model)", "Stage 0": "—", "Stage 1": "—",
+         "Stage 2 (XGBoost + drug)": f"{top100_full}/{n_pos}"},
+        {"Metric": "Best F1 (CV, optimal threshold)", "Stage 0": "—", "Stage 1": "—",
+         "Stage 2 (XGBoost + drug)": f"{cv.get('best_f1_mean', 0.622):.3f} ± {cv.get('best_f1_std', 0.105):.3f}"},
     ])
     stage_comparison.to_csv(os.path.join(FIGURE_DIR, "fig2b_stage_comparison.csv"), index=False)
     results["stage_comparison"] = stage_comparison.to_dict("records")
     
-    # Panel C: Rescued failures
-    rp = data.get("ranked_predictions")
-    if rp is not None:
-        rescued = [
-            {"Hotspot": "rpoB_D435", "Stage 0 Rank": 597, "Stage 1 Rank": 20, "Stage 3 Rank": 30},
-            {"Hotspot": "rpoB_V170", "Stage 0 Rank": 953, "Stage 1 Rank": 24, "Stage 3 Rank": 41},
-            {"Hotspot": "rpoB_L452", "Stage 0 Rank": 526, "Stage 1 Rank": 19, "Stage 3 Rank": 64},
-            {"Hotspot": "rpsL_K88", "Stage 0 Rank": 278, "Stage 1 Rank": 3, "Stage 3 Rank": 19},
-            {"Hotspot": "gyrB_N538", "Stage 0 Rank": 3208, "Stage 1 Rank": 3208, "Stage 3 Rank": 43},
-            {"Hotspot": "pncA_V125", "Stage 0 Rank": 2899, "Stage 1 Rank": 2899, "Stage 3 Rank": 55},
-        ]
-        rescued_df = pd.DataFrame(rescued)
-        rescued_df.to_csv(os.path.join(FIGURE_DIR, "fig2c_rescued_failures.csv"), index=False)
-        results["rescued"] = rescued
-    else:
-        # Use known values
-        rescued = [
-            {"Hotspot": "rpoB_D435", "Stage 0 Rank": 597, "Stage 1 Rank": 20},
-            {"Hotspot": "rpoB_V170", "Stage 0 Rank": 953, "Stage 1 Rank": 24},
-            {"Hotspot": "rpoB_L452", "Stage 0 Rank": 526, "Stage 1 Rank": 19},
-            {"Hotspot": "rpsL_K88",  "Stage 0 Rank": 278, "Stage 1 Rank": 3},
-        ]
-        rescued_df = pd.DataFrame(rescued)
-        rescued_df.to_csv(os.path.join(FIGURE_DIR, "fig2c_rescued_failures.csv"), index=False)
-        results["rescued"] = rescued
-    
-    print("  Figure 2: Structural validation tables saved")
+    print("  Figure 2: Stage comparison saved")
     return results
 
 
@@ -205,11 +191,14 @@ def generate_figure3(data):
     results = {}
     
     if fc is not None:
-        # Sort by absolute coefficient
-        fc["abs_coef"] = fc["coefficient"].abs()
+        imp_col = "gain" if "gain" in fc.columns else "coefficient" if "coefficient" in fc.columns else fc.columns[1]
+        fc = fc.copy()
+        fc["abs_coef"] = fc[imp_col].abs()
         fc_sorted = fc.sort_values("abs_coef", ascending=False)
         fc_sorted.to_csv(os.path.join(FIGURE_DIR, "fig3_feature_importance.csv"), index=False)
-        results["top_features"] = fc_sorted[["feature", "coefficient"]].to_dict("records")
+        results["top_features"] = fc_sorted[[fc.columns[0], imp_col]].rename(
+            columns={fc.columns[0]: "feature", imp_col: "importance"}
+        ).to_dict("records")
         print("  Figure 3: Feature importance saved")
     else:
         # Known coefficients from Stage 1
@@ -391,41 +380,13 @@ def generate_figure6(data):
 # Supplementary Figures
 
 def generate_supplementary(data):
-    """All supplementary figure data."""
+    """LOO table only (other supplementary curves rendered in Figure 2)."""
     results = {}
-    
-    # S1: ROC curves across development
-    stage_data = pd.DataFrame([
-        {"Model": "Stage 0 (Sequence)", "AUROC": 0.888},
-        {"Model": "Stage 1 (Structural)", "AUROC": 0.910},
-        {"Model": "Stage 1.5 (+Docking)", "AUROC": 0.938},
-        {"Model": "Stage 3 (per-gene drug)", "AUROC": 0.977},
-    ])
-    stage_data.to_csv(os.path.join(FIGURE_DIR, "figS1_roc_comparison.csv"), index=False)
-    results["roc_comparison"] = stage_data.to_dict("records")
-    
-    # S2: Leave-one-gene-out
     loo = data.get("loo_results")
     if loo is not None:
         loo.to_csv(os.path.join(FIGURE_DIR, "figS2_leave_one_gene_out.csv"), index=False)
         results["loo"] = loo.to_dict("records")
-    
-    # S3/S4: Removed to stay within 10-figure limit.
-    # S3 (docking analysis) content merged into Figure 2 panel C.
-    # S4 (complete watchlist) available as CSV via emergence_watchlist.csv.
-    
-    # S5: Model benchmark comparison
-    
-    # S5: Model benchmark comparison
-    benchmark_path = os.path.join(
-        os.path.dirname(FIGURE_DIR), "hotspot_model", "results_benchmark.csv"
-    )
-    if os.path.exists(benchmark_path):
-        bm = pd.read_csv(benchmark_path)
-        bm.to_csv(os.path.join(FIGURE_DIR, "figS5_model_benchmark.csv"), index=False)
-        results["benchmark"] = bm.to_dict("records")
-    
-    print("  Supplementary figures data saved")
+    print("  Supplementary LOO table saved")
     return results
 
 
@@ -449,37 +410,32 @@ def main():
     print("\n[Figure 3] Feature importance...")
     fig3 = generate_figure3(data)
     
-    print("\n[Figure 4] Mutation forecasting...")
-    fig4 = generate_figure4(data)
-    
-    print("\n[Figure 5] Prospective clinical validation...")
+    print("\n[Figure 4] CRyPTIC validation...")
     fig5 = generate_figure5(data)
     
-    print("\n[Figure 6] Clinical impact...")
-    fig6 = generate_figure6(data)
-    
-    print("\n[Supplementary] All supplementary figures...")
+    print("\n[Supplementary] Leave-one-gene-out...")
     supp = generate_supplementary(data)
     
     # Paper summary JSON
     summary = {
         "pipeline": fig1,
-        "structural_validation": fig2,
+        "model": fig2,
         "feature_importance": fig3,
-        "mutation_forecasting": {
-            "top50": fig4.get("top50", [])[:10],
-            "status_counts": fig4.get("status_counts", []),
-        },
         "cryptic_validation": fig5,
-        "clinical_impact": fig6,
-        "supplementary": {
-            k: v for k, v in supp.items() if not isinstance(v, list) or len(v) < 20
-        },
+        "supplementary": supp,
     }
     
     summary_path = os.path.join(FIGURE_DIR, "paper_summary.json")
     with open(summary_path, "w") as f:
         json.dump(summary, f, indent=2, default=str)
+
+    # Merge authoritative publication metrics
+    pub_path = os.path.join(RESULTS_DIR, "publication_metrics.json")
+    if os.path.exists(pub_path):
+        with open(pub_path) as f:
+            summary["publication_metrics"] = json.load(f)
+        with open(summary_path, "w") as f:
+            json.dump(summary, f, indent=2, default=str)
     
     # Key numbers for the abstract
     tv = data.get("tiered_validation")
@@ -488,24 +444,26 @@ def main():
     n_tier3 = len(tv[tv["tier"] == 3]) if tv is not None else 0
     n_tier4 = len(tv[tv["tier"] == 4]) if tv is not None else 0
     n_known = len(tv[tv["tier"] == 0]) if tv is not None else 0
+    stage = PUB.get("stage_progression", {})
+    cv = PUB.get("stratified_5fold_cv", {})
     
     print(f"\n{'=' * 70}")
     print("KEY NUMBERS FOR ABSTRACT")
     print(f"{'=' * 70}")
     print(f"""
-  Structural features improve hotspot prediction:
-    AUROC: 0.888 -> 0.910 -> 0.990 (Stage 3)
-    Hotspots in Top 20: 7/21 -> 17/21
+  Hotspot model (stratified 5-fold CV — primary):
+    AUROC: {cv.get('auroc_mean', 0.968):.3f} ± {cv.get('auroc_std', 0.034):.3f}
+    AUPRC: {cv.get('auprc_mean', 0.465):.3f} ± {cv.get('auprc_std', 0.157):.3f} ({cv.get('auprc_x_random', 92):.0f}x random)
+    Best F1: {cv.get('best_f1_mean', 0.550):.3f} ± {cv.get('best_f1_std', 0.119):.3f}
+    Top-20 recall (CV): {cv.get('top20_recall_mean', 0.662):.3f}
+  Stage progression (Stage 2 ablation): AUROC {stage.get('stage2_auroc', 0.971):.3f} | AUPRC {stage.get('stage2_auprc', 0.560):.3f}
   
-  Leave-one-gene-out validation:
-    52% Top-50 recall for unseen genes
-  
-  CRyPTIC prospective validation:
-    {n_tier1} novel predictions FDR-significant in 12,287 independent isolates
-    {n_tier2} additional novel mutations observed with resistance enrichment
-    {n_tier3} novel mutations observed (no phenotype data available)
-    {n_tier4} forecast-only surveillance targets
-    {n_known} known WHO mutations confirmed (pipeline sanity check)
+  CRyPTIC prospective validation (12,287 isolates):
+    Tier 1 (FDR q<0.05): {n_tier1}
+    Tier 2 (enriched): {n_tier2}
+    Tier 3 (no phenotype): {n_tier3}
+    Tier 4 (forecast-only): {n_tier4}
+    Tier 0 (WHO known): {n_known}
 """)
     
     print(f"\n  All figure data saved to {FIGURE_DIR}")
