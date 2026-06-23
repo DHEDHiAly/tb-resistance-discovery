@@ -7,6 +7,7 @@ Dependencies: pip install matplotlib seaborn
 import json
 import os
 import pickle
+import sys
 import warnings
 import numpy as np
 import pandas as pd
@@ -54,8 +55,8 @@ def fig1_pipeline():
         (1, 6.0, "Known Resistance\nHotspots", "#2c3e50", "21 known residues\n33 known mutations"),
         (3, 4.5, "Structural Feature\nLearning", "#2980b9", "SASA, ESM-2,\n3D contact density,\nDrug distance"),
         (5, 3.0, "Hotspot\nPrediction", "#27ae60", "Score ~6,600 residues\nAUROC 0.910\n17/21 in Top 20"),
-        (7, 1.5, "Mutation\nForecasting", "#e67e22", "315 SNV-accessible\ncandidates\nP(emergence) score"),
-        (9, 0.0, "CRyPTIC\nValidation", "#c0392b", "12,287 isolates\n22 FDR-significant\n81 observed"),
+        (7, 1.5, "Mutation\nForecasting", "#e67e22", "309 SNV-accessible\ncandidates\nP(emergence) score"),
+        (9, 0.0, "CRyPTIC\nValidation", "#c0392b", "12,287 isolates\n24 FDR-significant\n117 observed"),
     ]
     
     for x, y, title, color, desc in steps:
@@ -79,7 +80,7 @@ def fig1_pipeline():
     
     # Key numbers footer
     stats_text = ("13 resistance genes  |  ~6,600 residues  |  44,016 possible SNVs  |  "
-                  "315 watchlist candidates  |  12,287 CRyPTIC isolates")
+                  "309 watchlist candidates  |  12,287 CRyPTIC isolates")
     ax.text(5, -0.3, stats_text, ha="center", va="center",
             fontsize=7.5, color="gray", style="italic")
     
@@ -131,12 +132,11 @@ def fig2_structural():
     ax2.set_title("B  Stage Comparison", loc="left", fontweight="bold")
     
     stage_data = [
-        ["Metric", "Stage 0\n(Sequence)", "Stage 1\n(Structural)", "Stage 3\n(+Drug)"],
+        ["Metric", "Stage 0\n(Sequence)", "Stage 1\n(Structural)", "Stage 2\n(+Drug proximity)"],
         ["AUROC", "0.888", "0.910", "0.990"],
-        ["AUPRC", "0.386", "0.396", "0.525"],
         ["Top-20 Recall", "0.333", "0.490", "0.810"],
-        ["Hotspots Top50", "12/21", "18/21", "20/27"],
-        ["Hotspots Top100", "14/21", "19/21", "27/27"],
+        ["Hotspots Top50", "12/21", "18/21", "20/21"],
+        ["Hotspots Top100", "14/21", "19/21", "21/21"],
     ]
     
     table2 = ax2.table(cellText=stage_data, loc="center",
@@ -161,7 +161,7 @@ def fig2_structural():
     x = np.arange(len(genes))
     w = 0.3
     bars1 = ax3.bar(x - w/2, s1_auroc, w, label="Stage 1 (no drug)", color="#2980b9", alpha=0.7)
-    bars3 = ax3.bar(x + w/2, s3_auroc, w, label="Stage 3 (+drug proximity)", color="#27ae60", alpha=0.8)
+    bars3 = ax3.bar(x + w/2, s3_auroc, w, label="Stage 2 (+drug proximity)", color="#27ae60", alpha=0.8)
     
     for bar, val in zip(bars3, s3_auroc):
         ax3.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.01,
@@ -200,7 +200,7 @@ def fig2_structural():
     height = 0.35
     bars0 = ax4.barh(y_pos - height/2, s0_rank, height, label="Stage 0 (invisible)",
                       color="#e74c3c", alpha=0.5)
-    bars3 = ax4.barh(y_pos + height/2, s3_rank, height, label="Stage 3 (+drug proximity)",
+    bars3 = ax4.barh(y_pos + height/2, s3_rank, height, label="Stage 2 (+drug proximity)",
                       color="#27ae60", alpha=0.8)
     
     for bar, rank in zip(bars3, s3_rank):
@@ -320,15 +320,15 @@ def fig4_forecasting():
     watchlist_data = [
         ["Rank", "Mutation", "Gene", "Score", "Status"],
         ["1", "D435V", "rpoB", "0.612", "Known"],
-        ["2", "H445Y", "rpoB", "0.610", "Known"],
-        ["3", "A90T", "gyrA", "0.596", "Forecast"],
-        ["4", "S315G", "katG", "0.587", "Validated"],
-        ["5", "S91L", "gyrA", "0.587", "Forecast"],
-        ["6", "G406S", "embB", "0.587", "Validated"],
-        ["7", "M306T", "embB", "0.584", "Observed"],
-        ["8", "Q10R", "pncA", "0.574", "Observed"],
-        ["9", "S450L", "rpoB", "0.574", "Known"],
-        ["10", "A20T", "pncA", "0.574", "Forecast"],
+        ["2", "D94G", "gyrA", "0.610", "Known"],
+        ["3", "H445Y", "rpoB", "0.608", "Known"],
+        ["4", "S450L", "rpoB", "0.605", "Known"],
+        ["5", "S315T", "katG", "0.598", "Known"],
+        ["6", "A90T", "gyrA", "0.596", "Forecast"],
+        ["7", "G406S", "embB", "0.587", "Validated"],
+        ["8", "S315G", "katG", "0.587", "Observed"],
+        ["9", "M306T", "embB", "0.584", "Observed"],
+        ["10", "Q10R", "pncA", "0.574", "Observed"],
     ]
     
     table = ax2.table(cellText=watchlist_data, loc="center",
@@ -373,7 +373,176 @@ def fig4_forecasting():
     print(f"  Saved {path}")
 
 
-# Figure 5: CRyPTIC Validation
+# Figure 5: Precision-Recall curve (final XGBoost, 5-fold OOF)
+
+def fig5_pr_curve():
+    """PR curve from stratified 5-fold out-of-fold XGBoost predictions."""
+    from sklearn.metrics import (
+        PrecisionRecallDisplay,
+        average_precision_score,
+        precision_recall_curve,
+    )
+
+    oof_csv = os.path.join(
+        os.path.dirname(FIGURE_DIR), "hotspot_model", "pr_curve_oof.csv"
+    )
+    if not os.path.exists(oof_csv):
+        print("  Exporting OOF predictions for PR curve...")
+        sys.path.insert(0, os.path.join(BASE, "scripts"))
+        from export_pr_curve_data import export_oof_predictions
+        export_oof_predictions()
+
+    df = pd.read_csv(oof_csv)
+    y_true = df["y_true"].values
+    y_score = df["y_score"].values
+    baseline = y_true.mean()
+    auprc = average_precision_score(y_true, y_score)
+
+    precision, recall, thresholds = precision_recall_curve(y_true, y_score)
+
+    fig, ax = plt.subplots(figsize=(7, 5.5))
+    PrecisionRecallDisplay.from_predictions(
+        y_true,
+        y_score,
+        name=f"XGBoost + structure + drug proximity (AUPRC={auprc:.3f})",
+        color="#2c3e50",
+        linewidth=2.0,
+        ax=ax,
+        plot_chance_level=False,
+    )
+    ax.axhline(
+        y=baseline,
+        color="gray",
+        linestyle="--",
+        linewidth=1,
+        alpha=0.7,
+        label=f"Random baseline ({baseline:.3f})",
+    )
+
+    ax.set_xlabel("Recall")
+    ax.set_ylabel("Precision")
+    ax.set_title(
+        "Precision–Recall Curve — Hotspot Residue Classification\n"
+        "(5-fold stratified CV, out-of-fold scores)",
+        fontweight="bold",
+        fontsize=10,
+    )
+    ax.legend(fontsize=8, loc="upper right")
+    ax.set_xlim(-0.02, 1.02)
+    ax.set_ylim(-0.02, 1.05)
+    ax.grid(alpha=0.3, linestyle="--")
+
+    ax.text(
+        0.5,
+        -0.14,
+        f"{int(y_true.sum())} positive / {len(y_true)} residues  |  "
+        f"positive rate {100 * baseline:.2f}%  |  AUPRC {auprc:.3f} "
+        f"({auprc / baseline:.0f}× random)",
+        ha="center",
+        va="top",
+        fontsize=7.5,
+        style="italic",
+        color="gray",
+        transform=ax.transAxes,
+    )
+
+    plt.tight_layout()
+    path = os.path.join(OUTPUT_DIR, "Figure_5.png")
+    fig.savefig(path)
+    plt.close()
+    print(f"  Saved {path}")
+
+    # Save curve points for downstream use
+    curve_df = pd.DataFrame({"recall": recall, "precision": precision})
+    curve_df.to_csv(os.path.join(OUTPUT_DIR, "fig5_pr_curve_points.csv"), index=False)
+
+
+# Figure 6: CRyPTIC tier breakdown
+
+def fig6_tier_breakdown():
+    """Standalone bar chart of CRyPTIC validation tiers 0–4."""
+    tiers = [
+        "Tier 0\n(WHO known)",
+        "Tier 1\n(FDR sig)",
+        "Tier 2\n(Enriched)",
+        "Tier 3\n(No pheno)",
+        "Tier 4\n(Forecast)",
+    ]
+    counts = [30, 24, 32, 31, 188]
+    colors = ["#7f8c8d", "#27ae60", "#f39c12", "#e74c3c", "#2980b9"]
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+    bars = ax.bar(tiers, counts, color=colors, alpha=0.85, edgecolor="white", linewidth=0.8)
+    for bar, count in zip(bars, counts):
+        ax.text(
+            bar.get_x() + bar.get_width() / 2,
+            bar.get_height() + 4,
+            str(count),
+            ha="center",
+            fontsize=11,
+            fontweight="bold",
+        )
+
+    ax.set_ylabel("Number of watchlist mutations")
+    ax.set_title(
+        "CRyPTIC Prospective Validation — Tier Distribution\n"
+        "(12,287 clinical isolates)",
+        fontweight="bold",
+        fontsize=11,
+    )
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.set_ylim(0, max(counts) * 1.12)
+    ax.grid(axis="y", alpha=0.3, linestyle="--")
+
+    ax.text(
+        0.5,
+        -0.18,
+        "Tier 0–3: observed in CRyPTIC  |  Tier 4: forecast-only (0 carriers)",
+        ha="center",
+        va="top",
+        fontsize=8,
+        style="italic",
+        color="gray",
+        transform=ax.transAxes,
+    )
+
+    plt.tight_layout()
+    path = os.path.join(OUTPUT_DIR, "Figure_6.png")
+    fig.savefig(path)
+    plt.close()
+    print(f"  Saved {path}")
+
+    pd.DataFrame({"tier": range(5), "count": counts, "label": [
+        "Known WHO", "FDR-significant", "Enriched", "No phenotype", "Forecast-only",
+    ]}).to_csv(os.path.join(OUTPUT_DIR, "fig6_tier_counts.csv"), index=False)
+
+
+# Figure 7: PyMOL structural validation (gyrB Q538L)
+
+def fig7_pymol():
+    """Copy PyMOL validation image to figures directory as Figure 7."""
+    import shutil
+    import subprocess
+
+    src = os.path.join(BASE, "data", "pdb", "gyrB_Q538L_validation.png")
+    dst = os.path.join(OUTPUT_DIR, "Figure_7.png")
+    os.makedirs(os.path.dirname(src), exist_ok=True)
+
+    if not os.path.exists(src):
+        with open(src, "wb") as out:
+            subprocess.run(
+                ["git", "show", "HEAD:data/pdb/gyrB_Q538L_validation.png"],
+                cwd=BASE,
+                stdout=out,
+                check=True,
+            )
+
+    shutil.copy2(src, dst)
+    print(f"  Saved {dst} (from {src})")
+
+
+# Legacy supplementary figures (optional)
 
 def fig5_validation():
     fig = plt.figure(figsize=(12, 8))
@@ -691,36 +860,30 @@ def figS5_pr_curves():
 # Main
 
 def main():
-    print("Rendering all paper figures...")
-    
+    print("Rendering paper figures (final list)...")
+
     print("\n[Figure 1] Pipeline schematic")
     fig1_pipeline()
-    
+
     print("\n[Figure 2] Structural validation")
     fig2_structural()
-    
+
     print("\n[Figure 3] Feature importance")
     fig3_features()
-    
+
     print("\n[Figure 4] Mutation forecasting")
     fig4_forecasting()
-    
-    print("\n[Figure 5] CRyPTIC validation")
-    fig5_validation()
-    
-    print("\n[Figure 6] Clinical impact")
-    fig6_impact()
-    
-    print("\n[Figure S1] ROC curves")
-    figS1_roc()
-    
-    print("\n[Figure S2] Leave-one-gene-out")
-    figS2_loo()
-    
-    print("\n[Figure S3] PR curves (model benchmark)")
-    figS5_pr_curves()
-    
-    print(f"\nAll figures saved to {OUTPUT_DIR}/")
+
+    print("\n[Figure 5] Precision-recall curve")
+    fig5_pr_curve()
+
+    print("\n[Figure 6] CRyPTIC tier breakdown")
+    fig6_tier_breakdown()
+
+    print("\n[Figure 7] PyMOL structural validation")
+    fig7_pymol()
+
+    print(f"\nFigures 1–7 saved to {OUTPUT_DIR}/")
 
 
 if __name__ == "__main__":
